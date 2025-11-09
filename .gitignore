@@ -1,0 +1,12 @@
+output/
+k3s-data/
+k3s-server-data/
+k3s-agent-data/
+.env
+.idea/
+.vscode/
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
