@@ -40,6 +40,8 @@ func main() {
 		err = cmdClean(args)
 	case "uninstall":
 		err = cmdUninstall(args)
+	case "kubeconfig":
+		err = cmdKubeconfig(args)
 	case "status":
 		err = cmdStatus(args)
 	case "version", "--version", "-v":
@@ -71,7 +73,8 @@ Commands:
   clean [--full]     Delete cluster and clear ./output ([--full] also wipes ~/.minikube)
   uninstall          Remove cluster, caches, output/ and uninstall minikube+kubectl
                      Flags: [--yes] skip prompt, [--keep-tools] do not remove binaries
-  status             minikube status + kubectl get nodes
+  kubeconfig         Re-export output/kubeconfig.yaml from a running cluster
+  status             minikube status + refresh kubeconfig + kubectl get nodes
   version            Print version
   help               Show this help
 
@@ -587,23 +590,50 @@ func cmdStatus(_ []string) error {
 		return err
 	}
 	p := profileName()
-	if err := runStream(mk, "status", "-p", p); err != nil {
-		fmt.Fprintln(os.Stderr, "(minikube status reported issues)")
+
+	statusErr := runStream(mk, "status", "-p", p)
+	if statusErr != nil {
+		fmt.Fprintln(os.Stderr, "(minikube status reported issues; skipping kubectl)")
+		return nil
+	}
+
+	// Cluster is reportedly running. The API-server port can change after
+	// stop/start (Docker assigns a new random host port), so refresh the
+	// exported kubeconfig before talking to the cluster.
+	kcPath, err := refreshKubeconfig(mk, p)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "warning: failed to refresh kubeconfig:", err)
+		out, _ := outputDir()
+		kcPath = filepath.Join(out, "kubeconfig.yaml")
 	}
 
 	kc, err := findTool("kubectl")
 	if err != nil {
 		return nil
 	}
-	out, err := outputDir()
-	if err != nil {
-		return nil
-	}
-	kcPath := filepath.Join(out, "kubeconfig.yaml")
 	if _, err := os.Stat(kcPath); err == nil {
 		fmt.Println()
 		return runStream(kc, "--kubeconfig", kcPath, "get", "nodes")
 	}
+	return nil
+}
+
+// cmdKubeconfig re-exports output/kubeconfig.yaml from the running cluster.
+// Useful when the file is stale (e.g. after a Docker restart that reassigned
+// the API-server port) and you don't want to do a full `up` cycle.
+func cmdKubeconfig(_ []string) error {
+	mk, err := ensureMinikube()
+	if err != nil {
+		return err
+	}
+	p := profileName()
+
+	kcPath, err := refreshKubeconfig(mk, p)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Kubeconfig refreshed:", kcPath)
+	fmt.Printf("Check: kubectl --kubeconfig %q get nodes\n", kcPath)
 	return nil
 }
 
@@ -623,14 +653,16 @@ func requireDocker() error {
 	return nil
 }
 
-// writeKubeconfig exports a single-file kubeconfig from minikube into ./output/kubeconfig.yaml
-func writeKubeconfig(minikube, profile string) error {
+// refreshKubeconfig writes a flattened, minified kubeconfig for the given
+// minikube profile to ./output/kubeconfig.yaml and returns its path.
+// Silent: prints nothing on its own.
+func refreshKubeconfig(minikube, profile string) (string, error) {
 	out, err := outputDir()
 	if err != nil {
-		return err
+		return "", err
 	}
 	if err := os.MkdirAll(out, 0o755); err != nil {
-		return err
+		return "", err
 	}
 	kcPath := filepath.Join(out, "kubeconfig.yaml")
 
@@ -638,18 +670,26 @@ func writeKubeconfig(minikube, profile string) error {
 		"config", "view", "--flatten", "--minify")
 	f, err := os.Create(kcPath)
 	if err != nil {
-		return fmt.Errorf("create %s: %w", kcPath, err)
+		return "", fmt.Errorf("create %s: %w", kcPath, err)
 	}
 	defer f.Close()
 	cmd.Stdout = f
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("export kubeconfig: %w", err)
+		return "", fmt.Errorf("export kubeconfig: %w", err)
 	}
+	return kcPath, nil
+}
 
+// writeKubeconfig is the chatty wrapper around refreshKubeconfig used by `up`.
+func writeKubeconfig(minikube, profile string) error {
+	kcPath, err := refreshKubeconfig(minikube, profile)
+	if err != nil {
+		return err
+	}
 	fmt.Println()
 	fmt.Println("Kubeconfig written:", kcPath)
 	fmt.Printf("Check: kubectl --kubeconfig %q get nodes\n", kcPath)
-	fmt.Println("Stop (keep profile): mockctl down # alternative: minikube stop -p", profile)
+	fmt.Println("Stop (keep profile): mockctl down --soft # full delete: mockctl down")
 	return nil
 }

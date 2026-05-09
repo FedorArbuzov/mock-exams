@@ -16,7 +16,8 @@
 - `uninstall` — снести всё начисто: все профили minikube, `~/.minikube`, `~/.kube`, очистить `output/` и удалить сами бинарники `minikube` и `kubectl` (через `winget`/`brew`/из `~/.local/bin`). Флаги:
   - `--yes` — без интерактивного подтверждения.
   - `--keep-tools` — не трогать бинарники `minikube`/`kubectl`.
-- `status` — `minikube status` + `kubectl get nodes`.
+- `status` — `minikube status`, затем (если кластер живой) перевыгрузить `output/kubeconfig.yaml` и сделать `kubectl get nodes`. Перевыгрузка нужна, потому что после `down --soft` → `up` или рестарта Docker Desktop порт API-сервера в minikube может смениться, и старый kubeconfig перестанет работать.
+- `kubeconfig` — пересохранить `output/kubeconfig.yaml` без полного `up`-цикла. Полезно, если кластер живой, а файл устарел.
 - `version`, `help`.
 
 ## Использование
@@ -27,6 +28,7 @@
 mockctl install
 mockctl up
 mockctl status
+mockctl kubeconfig    # если status пожаловался на connection refused
 mockctl down
 mockctl clean --full
 mockctl uninstall --yes
