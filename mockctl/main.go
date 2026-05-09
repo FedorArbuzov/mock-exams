@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"flag"
 	"fmt"
@@ -639,18 +640,77 @@ func cmdKubeconfig(_ []string) error {
 
 // ----------------- internal -----------------
 
-// requireDocker is a soft check that docker CLI is reachable.
+// requireDocker is a soft check that docker CLI is reachable and the daemon
+// answers. Error messages are platform-aware so users get an actionable hint
+// for Docker Desktop, plain Linux daemons, and WSL.
 func requireDocker() error {
 	if _, err := exec.LookPath("docker"); err != nil {
-		return errors.New("docker not found in PATH. Install and start Docker Desktop")
+		return fmt.Errorf("docker not found in PATH.\n%s", dockerInstallHint())
 	}
 	cmd := exec.Command("docker", "info")
+	var stderr bytes.Buffer
 	cmd.Stdout = io.Discard
-	cmd.Stderr = io.Discard
+	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
-		return errors.New("docker is installed but not running. Start Docker Desktop and try again")
+		out := strings.ToLower(stderr.String())
+		if strings.Contains(out, "permission denied") && strings.Contains(out, "docker.sock") {
+			return fmt.Errorf("docker is reachable but your user can't talk to the daemon socket.\n%s", dockerGroupHint())
+		}
+		return fmt.Errorf("docker is installed but the daemon is not responding.\n%s", dockerStartHint())
 	}
 	return nil
+}
+
+func dockerInstallHint() string {
+	switch runtime.GOOS {
+	case "windows", "darwin":
+		return "Install and start Docker Desktop: https://www.docker.com/products/docker-desktop"
+	default:
+		if isWSL() {
+			return "Install Docker Desktop on Windows and enable WSL Integration,\nor install docker inside WSL:\n  sudo apt update && sudo apt install -y docker.io"
+		}
+		return "Install docker, e.g. on Debian/Ubuntu:\n  sudo apt update && sudo apt install -y docker.io"
+	}
+}
+
+func dockerStartHint() string {
+	switch runtime.GOOS {
+	case "windows", "darwin":
+		return "Start Docker Desktop and try again."
+	default:
+		hint := "Start the Docker daemon:\n  sudo service docker start\n  # or, if your system uses systemd:\n  sudo systemctl start docker"
+		if isWSL() {
+			hint += "\nIf you rely on Docker Desktop on Windows: launch it and enable WSL Integration\n(Settings -> Resources -> WSL Integration)."
+		}
+		return hint
+	}
+}
+
+func dockerGroupHint() string {
+	hint := "Add yourself to the 'docker' group:\n  sudo usermod -aG docker \"$USER\""
+	if isWSL() {
+		hint += "\nThen, from PowerShell on Windows, run:\n  wsl --shutdown\nReopen WSL and try again."
+	} else {
+		hint += "\nThen log out and back in (or open a new login shell) and try again."
+	}
+	return hint
+}
+
+// isWSL returns true when the current process is running inside Windows
+// Subsystem for Linux. Best-effort check via env var and /proc/version.
+func isWSL() bool {
+	if runtime.GOOS != "linux" {
+		return false
+	}
+	if os.Getenv("WSL_DISTRO_NAME") != "" || os.Getenv("WSL_INTEROP") != "" {
+		return true
+	}
+	b, err := os.ReadFile("/proc/version")
+	if err != nil {
+		return false
+	}
+	s := strings.ToLower(string(b))
+	return strings.Contains(s, "microsoft") || strings.Contains(s, "wsl")
 }
 
 // refreshKubeconfig writes a flattened, minified kubeconfig for the given
