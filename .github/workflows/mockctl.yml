@@ -1,0 +1,151 @@
+name: mockctl
+
+on:
+  push:
+    paths:
+      - 'mockctl/**'
+      - '.github/workflows/mockctl.yml'
+  pull_request:
+    paths:
+      - 'mockctl/**'
+      - '.github/workflows/mockctl.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & vet
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: false
+
+      - name: go vet
+        working-directory: mockctl
+        run: go vet ./...
+
+      - name: Cross-compile all targets
+        working-directory: mockctl
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o dist/mockctl-windows-amd64.exe .
+          GOOS=linux   GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o dist/mockctl-linux-amd64 .
+          GOOS=linux   GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o dist/mockctl-linux-arm64 .
+          GOOS=darwin  GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o dist/mockctl-darwin-amd64 .
+          GOOS=darwin  GOARCH=arm64 go build -trimpath -ldflags "-s -w" -o dist/mockctl-darwin-arm64 .
+          ls -la dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mockctl-binaries
+          path: mockctl/dist/
+          retention-days: 7
+
+  smoke-linux:
+    name: Smoke (linux/amd64)
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: mockctl-binaries
+          path: dist
+
+      - name: Make binary executable
+        run: chmod +x dist/mockctl-linux-amd64
+
+      - name: version
+        run: ./dist/mockctl-linux-amd64 version
+
+      - name: help
+        run: ./dist/mockctl-linux-amd64 help
+
+      # status returns non-zero when there is no cluster yet — that's expected.
+      - name: status (no cluster, expected to be noisy)
+        run: ./dist/mockctl-linux-amd64 status || true
+
+  e2e-linux:
+    name: E2E (linux/amd64, real minikube)
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: mockctl-binaries
+          path: dist
+
+      - name: Make binary executable
+        run: chmod +x dist/mockctl-linux-amd64
+
+      - name: Verify Docker is up
+        run: docker info
+
+      - name: Install minikube and kubectl
+        run: ./dist/mockctl-linux-amd64 install
+
+      - name: Add ~/.local/bin to PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Show installed versions
+        run: |
+          minikube version
+          kubectl version --client
+
+      # Skip addons in CI to keep the run fast and reliable.
+      # Addon enable can race against image pulls on shared runners.
+      - name: Start cluster (no addons)
+        run: ./dist/mockctl-linux-amd64 up --no-addons
+
+      - name: Status
+        run: ./dist/mockctl-linux-amd64 status
+
+      - name: kubectl get nodes
+        run: kubectl --kubeconfig output/kubeconfig.yaml get nodes
+
+      - name: Wait for kube-system to be ready
+        run: |
+          kubectl --kubeconfig output/kubeconfig.yaml \
+            -n kube-system wait --for=condition=ready pod \
+            --all --timeout=180s
+
+      - name: kubectl get pods -A
+        run: kubectl --kubeconfig output/kubeconfig.yaml get pods -A
+
+      - name: Smoke deploy nginx
+        run: |
+          kubectl --kubeconfig output/kubeconfig.yaml create deploy nginx --image=nginx:alpine
+          kubectl --kubeconfig output/kubeconfig.yaml rollout status deploy/nginx --timeout=120s
+          kubectl --kubeconfig output/kubeconfig.yaml delete deploy nginx
+
+      - name: Down (soft stop)
+        run: ./dist/mockctl-linux-amd64 down --soft
+
+      - name: Uninstall
+        run: ./dist/mockctl-linux-amd64 uninstall --yes
+
+      - name: Collect minikube logs on failure
+        if: failure()
+        run: |
+          minikube logs -p mock-exams --file=minikube.log || true
+          ls -la
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: minikube-logs
+          path: |
+            minikube.log
+            output/
+          retention-days: 7
+          if-no-files-found: ignore

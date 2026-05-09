@@ -1,7 +1,6 @@
 output/
-k3s-data/
-k3s-server-data/
-k3s-agent-data/
+tester/dist/
+mockctl/dist/
 .env
 .idea/
 .vscode/

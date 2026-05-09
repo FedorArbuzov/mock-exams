@@ -124,7 +124,8 @@ func ensureReachableHost(cfg *rest.Config) (*rest.Config, error) {
 		if port == "" {
 			port = "6443"
 		}
-		u.Host = net.JoinHostPort("k3s-server", port)
+		// Reach API on the host from a Docker container (e.g. compose) without K8S_API_ENDPOINT.
+		u.Host = net.JoinHostPort("host.docker.internal", port)
 		cfg.Host = u.String()
 		if cfg.TLSClientConfig.ServerName == "" {
 			cfg.TLSClientConfig.ServerName = "localhost"
