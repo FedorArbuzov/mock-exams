@@ -1,6 +1,5 @@
 output/
 tester/dist/
-mockctl/dist/
 .env
 .idea/
 .vscode/
