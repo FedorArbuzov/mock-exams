@@ -46,11 +46,22 @@ jobs:
           path: mockctl/dist/
           retention-days: 7
 
-  smoke-linux:
-    name: Smoke (linux/amd64)
-    runs-on: ubuntu-latest
+  smoke:
+    name: Smoke (${{ matrix.os }})
     needs: build
     timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            binary: mockctl-linux-amd64
+          - os: windows-latest
+            binary: mockctl-windows-amd64.exe
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
 
@@ -59,18 +70,19 @@ jobs:
           name: mockctl-binaries
           path: dist
 
-      - name: Make binary executable
-        run: chmod +x dist/mockctl-linux-amd64
+      - name: Make binary executable (Unix only)
+        if: runner.os != 'Windows'
+        run: chmod +x "dist/${{ matrix.binary }}"
 
       - name: version
-        run: ./dist/mockctl-linux-amd64 version
+        run: ./dist/${{ matrix.binary }} version
 
       - name: help
-        run: ./dist/mockctl-linux-amd64 help
+        run: ./dist/${{ matrix.binary }} help
 
       # status returns non-zero when there is no cluster yet — that's expected.
       - name: status (no cluster, expected to be noisy)
-        run: ./dist/mockctl-linux-amd64 status || true
+        run: ./dist/${{ matrix.binary }} status || true
 
   e2e-linux:
     name: E2E (linux/amd64, real minikube)

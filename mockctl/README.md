@@ -87,7 +87,7 @@ chmod +x build-docker.sh
 В `.github/workflows/mockctl.yml` настроены три job-а:
 
 - `build` — `go vet` + кросс-компиляция всех 5 бинарников, артефакты складываются в `mockctl-binaries`.
-- `smoke-linux` — быстрый дым-тест Linux-бинарника (`version`, `help`, `status`).
-- `e2e-linux` — полный сценарий с реальным minikube на `ubuntu-latest`: `install` → `up --no-addons` → `kubectl get nodes` → деплой `nginx` → `down --soft` → `uninstall --yes`. На падении прикладывает `minikube logs`.
+- `smoke` — быстрый дым-тест бинарников (`version`, `help`, `status`) в матрице `ubuntu-latest` + `windows-latest`. На Windows запуск идёт через Git Bash для кросс-платформенных шагов.
+- `e2e-linux` — полный сценарий с реальным minikube на `ubuntu-latest`: `install` → `up --no-addons` → `kubectl get nodes` → деплой `nginx` → `down --soft` → `uninstall --yes`. На падении прикладывает `minikube logs`. На `windows-latest` e2e не запускаем: на дефолтном Windows-раннере Docker работает в Windows-containers режиме, поднять minikube с `docker`-driver там не получится в разумное время.
 
 Workflow запускается на push/PR в файлы `mockctl/**` и сам workflow, плюс по кнопке `workflow_dispatch`. Аддоны (`metrics-server`/`ingress`) в e2e отключены сознательно — они заметно увеличивают время и могут флакать на медленном пуле образов.
