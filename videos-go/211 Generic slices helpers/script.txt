@@ -1,0 +1,11 @@
+Do I still need hand-rolled helpers?
+
+Less often. slices.Contains, slices.Sort, maps.Keys — std packages are generic and maintained. Prefer them over copied GitHub gists.
+
+When std does not fit, one generic helper in your module beats three typed copies.
+
+Still understand slice internals — helpers do not remove backing array gotchas.
+
+Modern helpers: import slices and maps before writing your own Contains.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Is go just a compiler?
+
+No. The go command is your whole workflow: go run for quick tries, go build for binaries, go test for tests, go fmt for formatting, go vet for common bugs, and go mod for dependencies.
+
+That integration matters. You do not argue about formatters in every repo — gofmt is the law. You do not hunt for ten tools — the toolchain ships together.
+
+Learn the commands early. Seniors assume you run vet and test before every push.
+
+Starter trio: go fmt ./..., go vet ./..., go test ./... — make them muscle memory.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

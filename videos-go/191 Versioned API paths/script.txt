@@ -1,0 +1,11 @@
+How do I ship /v2 safely?
+
+Prefix routes: /v1/users, /v2/users. Run both while clients migrate. Document breaking changes in release notes.
+
+Never silently change JSON shape under the same version path.
+
+Version in URL is simple and visible in logs — header versioning works but is harder to grep.
+
+API versioning: /v1 and /v2 prefixes, overlap during migration.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

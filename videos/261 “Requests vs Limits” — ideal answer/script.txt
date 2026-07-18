@@ -1,0 +1,15 @@
+How do I answer short and correctly?
+
+In simple terms, requests reserve for the scheduler; Limits cap runtime; together they drive QoS.
+
+Concretely, treat that as a testable rule: Requests reserve for the scheduler; Limits cap runtime; together they drive QoS. When reality disagrees, trust cluster signals over the story in your head.
+
+These fields are runtime levers for scheduling, restarts, eviction, and placement — not decorative YAML.
+
+Change one field, watch Ready state and Events, and the concept becomes cause and effect.
+
+Beginner trap: copying a full internet snippet without knowing the failure mode it prevents.
+
+If someone asks tomorrow what this changes, answer with the rule: requests reserve for the scheduler; Limits cap runtime; together they drive QoS.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

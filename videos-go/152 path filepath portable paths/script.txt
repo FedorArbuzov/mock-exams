@@ -1,0 +1,11 @@
+Why not concatenate with slash?
+
+filepath.Join builds OS-correct paths. Windows backslash versus Unix slash breaks naive string concat in cross-platform tools.
+
+filepath.Clean and filepath.Base help normalize paths. Use path package only for URLs and forward-slash-only cases.
+
+CLI tools and file walkers should always use filepath.
+
+Portable paths: filepath.Join — not "dir" + "/" + "file".
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

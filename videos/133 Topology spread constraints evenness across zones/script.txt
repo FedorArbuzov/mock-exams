@@ -1,0 +1,15 @@
+Why can all Pods end up in one zone?
+
+In simple terms, spread constraints keep distribution more even across topology domains.
+
+Concretely, treat that as a testable rule: Spread constraints keep distribution more even across topology domains. When reality disagrees, trust cluster signals over the story in your head.
+
+These fields are runtime levers for scheduling, restarts, eviction, and placement — not decorative YAML.
+
+Change one field, watch Ready state and Events, and the concept becomes cause and effect.
+
+Beginner trap: copying a full internet snippet without knowing the failure mode it prevents.
+
+If someone asks tomorrow what this changes, answer with the rule: spread constraints keep distribution more even across topology domains.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

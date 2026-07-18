@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reel Viewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg0: #0c1118;
+      --bg1: #141c28;
+      --ink: #e8eef7;
+      --muted: #8b9bb0;
+      --line: rgba(232, 238, 247, 0.12);
+      --accent: #3dd6c6;
+      --accent-dim: rgba(61, 214, 198, 0.18);
+      --danger: #ff6b6b;
+      --phone-w: min(420px, 92vw);
+      --phone-h: min(760px, 88vh);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background:
+        radial-gradient(1200px 700px at 15% -10%, #1a2a3d 0%, transparent 55%),
+        radial-gradient(900px 600px at 90% 110%, #16322e 0%, transparent 50%),
+        linear-gradient(160deg, var(--bg0), var(--bg1));
+      color: var(--ink);
+      font-family: "DM Sans", system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    .app {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1.25rem;
+    }
+
+    .side {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 280px;
+      justify-self: end;
+    }
+
+    .side.right { justify-self: start; }
+
+    .brand {
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .headline {
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 16ch;
+    }
+
+    .meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .chip:hover { color: var(--ink); border-color: rgba(232, 238, 247, 0.28); }
+    .chip.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .title-block h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 0.35rem;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .stage {
+      width: var(--phone-w);
+      height: var(--phone-h);
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      background: #000;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 30px 80px rgba(0, 0, 0, 0.55);
+      justify-self: center;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+      display: block;
+    }
+
+    .overlay-top {
+      position: absolute;
+      inset: 0 0 auto 0;
+      padding: 1rem 1rem 2.5rem;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .overlay-top .series-tag {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+
+    .overlay-top .clip-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+    }
+
+    .stage.is-empty video,
+    .stage.is-empty .overlay-top {
+      visibility: hidden;
+    }
+
+    .empty {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.55);
+      pointer-events: none;
+    }
+
+    .empty[hidden] {
+      display: none;
+    }
+
+    .empty-card {
+      width: min(300px, 100%);
+      padding: 1.35rem 1.4rem;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(16, 22, 32, 0.96);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      text-align: center;
+    }
+
+    .empty-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.55rem;
+    }
+
+    .empty-desc {
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: var(--muted);
+      text-wrap: balance;
+    }
+
+    .empty-desc code {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 0.1rem 0.35rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      align-items: stretch;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(20, 28, 40, 0.85);
+      color: var(--ink);
+      border-radius: 16px;
+      padding: 0.85rem 1rem;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-width: 120px;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .btn:active:not(:disabled) { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: transparent;
+      color: #06241f;
+    }
+
+    .btn svg { width: 22px; height: 22px; }
+
+    .jump {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .jump input {
+      width: 4.5rem;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.25);
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 0.55rem 0.6rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.85rem;
+    }
+
+    .list {
+      max-height: min(360px, 42vh);
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding-right: 0.25rem;
+      scrollbar-width: thin;
+      scrollbar-color: #334155 transparent;
+    }
+
+    .list button {
+      text-align: left;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.82rem;
+      padding: 0.45rem 0.55rem;
+      border-radius: 8px;
+      cursor: pointer;
+      line-height: 1.3;
+    }
+
+    .list button:hover { background: rgba(255,255,255,0.05); color: var(--ink); }
+    .list button.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        justify-items: center;
+        overflow: auto;
+      }
+      .side {
+        max-width: var(--phone-w);
+        width: 100%;
+        justify-self: center;
+      }
+      .side.left .headline { max-width: none; }
+      .side.right { order: 3; }
+      .stage { order: 2; }
+      .nav { flex-direction: row; justify-content: center; }
+      .list { max-height: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="side left">
+      <div>
+        <div class="brand">Mock Exams · Reels</div>
+        <h1 class="headline" id="pageTitle">Быстрый просмотр</h1>
+      </div>
+      <div class="filters" id="filters">
+        <button class="chip active" data-series="all">Все</button>
+        <button class="chip" data-series="k8s">Kubernetes</button>
+        <button class="chip" data-series="go">Go</button>
+      </div>
+      <p class="meta" id="counter">—</p>
+      <div class="title-block">
+        <h2 id="title">Загрузка…</h2>
+        <p class="hint">↑↓ или кнопки — следующий / предыдущий. Пробел — пауза. R — сначала.</p>
+      </div>
+    </aside>
+
+    <div class="stage" id="stage">
+      <div class="overlay-top">
+        <div class="series-tag" id="seriesTag"></div>
+        <div class="clip-title" id="clipTitle"></div>
+      </div>
+      <div class="empty" id="empty" hidden>
+        <div class="empty-card">
+          <p class="empty-title" id="emptyTitle">Нет роликов</p>
+          <p class="empty-desc" id="emptyDesc"></p>
+        </div>
+      </div>
+      <video id="player" playsinline controls loop></video>
+    </div>
+
+    <aside class="side right">
+      <div class="nav">
+        <button class="btn" id="prevBtn" title="Предыдущий (↑)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 14l6-6 6 6"/></svg>
+          Вверх
+        </button>
+        <button class="btn primary" id="nextBtn" title="Следующий (↓)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 10l6 6 6-6"/></svg>
+          Вниз
+        </button>
+        <div class="jump">
+          <input id="jumpInput" type="number" min="1" placeholder="#" />
+          <button class="btn" id="jumpBtn" style="min-width:0;padding:0.55rem 0.8rem">Go</button>
+        </div>
+      </div>
+      <div class="list" id="list"></div>
+    </aside>
+  </div>
+
+  <script>
+    const SERIES_LABEL = { k8s: "Kubernetes", go: "Go" };
+
+    let allReels = [];
+    let filtered = [];
+    let index = 0;
+    let seriesFilter = "all";
+
+    const player = document.getElementById("player");
+    const titleEl = document.getElementById("title");
+    const clipTitle = document.getElementById("clipTitle");
+    const seriesTag = document.getElementById("seriesTag");
+    const counter = document.getElementById("counter");
+    const stage = document.getElementById("stage");
+    const empty = document.getElementById("empty");
+    const emptyTitle = document.getElementById("emptyTitle");
+    const emptyDesc = document.getElementById("emptyDesc");
+    const list = document.getElementById("list");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const jumpInput = document.getElementById("jumpInput");
+
+    function applyFilter() {
+      filtered = seriesFilter === "all"
+        ? allReels.slice()
+        : allReels.filter((r) => r.series === seriesFilter);
+      if (index >= filtered.length) index = Math.max(0, filtered.length - 1);
+      renderList();
+      show(index, { autoplay: false });
+    }
+
+    function renderList() {
+      list.innerHTML = filtered.map((r, i) => {
+        const active = i === index ? "active" : "";
+        return `<button type="button" class="${active}" data-i="${i}">${escapeHtml(r.title)}</button>`;
+      }).join("");
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[c]);
+    }
+
+    function emptyMessage() {
+      if (seriesFilter === "go") {
+        return {
+          title: "Нет Go-роликов",
+          desc: "В <code>videos-go/</code> пока нет <code>.mp4</code> в корне глав. Положи файл рядом с <code>script.txt</code>.",
+        };
+      }
+      if (seriesFilter === "k8s") {
+        return {
+          title: "Нет Kubernetes-роликов",
+          desc: "В <code>videos/</code> нет <code>.mp4</code> в корне глав. Ожидается, например, <code>kubernetes-reel.mp4</code>.",
+        };
+      }
+      return {
+        title: "Нет роликов",
+        desc: "Положи <code>.mp4</code> в корень папки главы — рядом с <code>script.txt</code>.",
+      };
+    }
+
+    function setEmptyState(visible, title, descHtml) {
+      stage.classList.toggle("is-empty", visible);
+      empty.hidden = !visible;
+      if (visible) {
+        emptyTitle.textContent = title;
+        emptyDesc.innerHTML = descHtml;
+      }
+    }
+
+    function show(i, { autoplay = true } = {}) {
+      if (!filtered.length) {
+        player.removeAttribute("src");
+        player.load();
+        const msg = emptyMessage();
+        titleEl.textContent = msg.title;
+        clipTitle.textContent = "";
+        seriesTag.textContent = "";
+        counter.textContent = "0 / 0";
+        setEmptyState(true, msg.title, msg.desc);
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        renderList();
+        return;
+      }
+
+      setEmptyState(false);
+      index = Math.max(0, Math.min(i, filtered.length - 1));
+      const reel = filtered[index];
+      const wasPaused = player.paused && player.src;
+
+      if (player.getAttribute("src") !== reel.url) {
+        player.src = reel.url;
+        player.load();
+      }
+
+      titleEl.textContent = reel.title;
+      clipTitle.textContent = reel.title;
+      seriesTag.textContent = SERIES_LABEL[reel.series] || reel.series;
+      counter.textContent = `${index + 1} / ${filtered.length} · ${reel.file}`;
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === filtered.length - 1;
+      jumpInput.value = String(index + 1);
+      renderList();
+
+      const activeBtn = list.querySelector("button.active");
+      if (activeBtn) activeBtn.scrollIntoView({ block: "nearest" });
+
+      if (autoplay) {
+        player.play().catch(() => {});
+      } else if (!wasPaused) {
+        player.play().catch(() => {});
+      }
+    }
+
+    function next() { if (index < filtered.length - 1) show(index + 1); }
+    function prev() { if (index > 0) show(index - 1); }
+
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+
+    document.getElementById("jumpBtn").addEventListener("click", () => {
+      const n = Number(jumpInput.value);
+      if (Number.isFinite(n) && n >= 1) show(n - 1);
+    });
+
+    jumpInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const n = Number(jumpInput.value);
+        if (Number.isFinite(n) && n >= 1) show(n - 1);
+      }
+    });
+
+    document.getElementById("filters").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-series]");
+      if (!btn) return;
+      seriesFilter = btn.dataset.series;
+      document.querySelectorAll("#filters .chip").forEach((c) => {
+        c.classList.toggle("active", c === btn);
+      });
+      index = 0;
+      applyFilter();
+      show(0);
+    });
+
+    list.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-i]");
+      if (!btn) return;
+      show(Number(btn.dataset.i));
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.target.matches("input, textarea")) return;
+      if (e.key === "ArrowDown" || e.key === "j") { e.preventDefault(); next(); }
+      if (e.key === "ArrowUp" || e.key === "k") { e.preventDefault(); prev(); }
+      if (e.key === " " || e.code === "Space") {
+        e.preventDefault();
+        if (player.paused) player.play(); else player.pause();
+      }
+      if (e.key === "r" || e.key === "R") {
+        player.currentTime = 0;
+        player.play().catch(() => {});
+      }
+    });
+
+    let wheelLock = false;
+    document.getElementById("stage").addEventListener(
+      "wheel",
+      (e) => {
+        e.preventDefault();
+        if (wheelLock) return;
+        wheelLock = true;
+        if (e.deltaY > 20) next();
+        else if (e.deltaY < -20) prev();
+        setTimeout(() => { wheelLock = false; }, 350);
+      },
+      { passive: false }
+    );
+
+    fetch("/api/reels")
+      .then((r) => r.json())
+      .then((data) => {
+        allReels = data;
+        applyFilter();
+        show(0);
+      })
+      .catch((err) => {
+        titleEl.textContent = "Не удалось загрузить список";
+        setEmptyState(true, "Ошибка загрузки", `Запусти сервер: <code>python reel-viewer/server.py</code><br><br>${escapeHtml(String(err))}`);
+      });
+  </script>
+</body>
+</html>

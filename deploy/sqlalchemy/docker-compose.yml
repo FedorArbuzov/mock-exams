@@ -1,0 +1,42 @@
+# SQLAlchemy course stack: postgres + lab runner
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mock-sqlalchemy-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: course
+      POSTGRES_PASSWORD: course
+      POSTGRES_DB: shop
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U course -d shop"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    networks:
+      - backend
+
+  lab:
+    build: ./stack
+    container_name: mock-sqlalchemy-lab
+    environment:
+      DATABASE_URL: postgresql+psycopg://course:course@postgres:5432/shop
+      ASYNC_DATABASE_URL: postgresql+asyncpg://course:course@postgres:5432/shop
+    volumes:
+      - ./stack:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  pgdata:

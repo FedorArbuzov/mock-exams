@@ -1,0 +1,11 @@
+What is the smallest HTTP unit?
+
+http.Handler with ServeHTTP(w, r). http.HandlerFunc adapts plain functions — HandlerFunc(myFunc) satisfies Handler.
+
+Everything composes as Handler: mux, middleware, tests with httptest.
+
+One function per route is fine at small scale — split packages as routes grow.
+
+Handler unit: func(w,r) via HandlerFunc — building block of all HTTP code.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

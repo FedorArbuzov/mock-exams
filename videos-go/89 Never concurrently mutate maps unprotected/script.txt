@@ -1,0 +1,11 @@
+Why did my program crash randomly?
+
+Concurrent map writes are undefined behavior in Go — the runtime may panic with fatal error: concurrent map writes. Reads with writes are unsafe too without coordination.
+
+Fix: protect with sync.Mutex, use sync.Map for specific cases, or confine map access to one goroutine.
+
+Never fix map races with "it usually works." Run go test -race.
+
+Map concurrency: one writer goroutine, or a mutex — no exceptions.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

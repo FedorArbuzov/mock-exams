@@ -1,0 +1,11 @@
+How do I find data races?
+
+Run go test -race ./... or go run -race on programs with concurrency. The race detector instruments memory access and reports unsynchronized reads and writes.
+
+It slows execution — use in CI and local tests, not always in prod.
+
+Fix races with mutexes, channels, or confining data to one goroutine. "It works on my laptop" is not synchronization.
+
+Race habit: -race on every PR that touches goroutines or shared state.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

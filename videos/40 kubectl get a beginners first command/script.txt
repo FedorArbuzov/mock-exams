@@ -1,0 +1,13 @@
+You just logged into a cluster - where do you even start?
+
+With kubectl get. It lists objects and their basic status, and it is the command you will run a hundred times a day. kubectl get pods shows Pods in the current namespace. Add dash A or dash dash all-namespaces to see the whole cluster. Add dash o wide for node and IP columns.
+
+Learn to read the columns. For Pods: READY is containers ready over total, STATUS is the phase, RESTARTS is a warning sign, AGE tells you what is new. A high RESTARTS count usually means a crash loop worth investigating.
+
+What beginners get wrong: forgetting the namespace, so get pods looks empty because their workload lives elsewhere. Or staring at one Pod when kubectl get deploy comma rs comma pods would show the whole ownership chain at once.
+
+Practical tip: dash o yaml dumps the full object, dash dash show-labels reveals labels, and dash w watches changes live. Combine them as you learn.
+
+Rule to remember: kubectl get is your eyes - always confirm the namespace first.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

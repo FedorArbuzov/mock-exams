@@ -1,0 +1,13 @@
+What on the node actually watches your Pod?
+
+The kubelet. It is a daemon on every worker node that talks to the API server, receives PodSpecs, and tells the container runtime to start, stop, or restart containers locally.
+
+When you kubectl apply a Deployment, the control plane decides a Pod should exist on node B. The kubelet on node B notices that assignment, pulls the image, creates the container, mounts volumes, runs health probes, and reports Running or CrashLoopBackOff back to the API server.
+
+What breaks: if the kubelet dies on a node, that node goes NotReady. Every Pod on it becomes orphaned to the cluster even if a container process is still alive on disk. Beginners delete and recreate Pods remotely when the local agent is broken.
+
+Practical check: kubectl get nodes and look for NotReady. Then kubectl describe node and read kubelet conditions plus events at the bottom.
+
+Rule to remember: the scheduler picks the node. The kubelet runs the Pod there.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

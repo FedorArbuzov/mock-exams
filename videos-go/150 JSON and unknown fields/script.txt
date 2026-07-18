@@ -1,0 +1,11 @@
+Should I disallow mystery JSON?
+
+For strict APIs, yes. json.NewDecoder(r.Body).DisallowUnknownFields() rejects requests with unexpected keys — catches typos and version skew early.
+
+Loose decoding is fine for exploratory tools. Public APIs benefit from strictness.
+
+Combine with validation after decode — types alone do not enforce business rules.
+
+Strict API: DisallowUnknownFields plus validation layer after decode.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

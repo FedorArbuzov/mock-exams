@@ -1,0 +1,11 @@
+Why is io.Reader famous?
+
+Because it is tiny: one Read method. Tiny interfaces are easy to implement, mock, and compose. Big interfaces lock you to one implementation and hurt testing.
+
+Prefer one or two methods per interface. Compose bigger behavior from small interfaces.
+
+If you cannot name the interface without "Manager" or "Service" in a vague way, it is probably too fat.
+
+Design test: can I mock this interface in five lines? If not, shrink it.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

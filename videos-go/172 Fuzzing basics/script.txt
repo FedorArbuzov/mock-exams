@@ -1,0 +1,11 @@
+Can Go find weird inputs for me?
+
+Fuzz tests with func FuzzParse(f *testing.F) feed random inputs hunting panics and crashes. Go 1.18+ ships native fuzzing.
+
+Seed corpus with f.Add examples, then go test -fuzz=FuzzParse.
+
+Fuzz finds edge cases humans forget — unicode, huge numbers, malformed JSON.
+
+Fuzzing: FuzzXxx plus f.Add seeds — run go test -fuzz.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

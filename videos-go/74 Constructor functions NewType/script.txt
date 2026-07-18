@@ -1,0 +1,11 @@
+Where is my class constructor?
+
+Idiomatic constructors are package functions: func NewClient(cfg Config) (*Client, error). They validate input, set defaults, and return an error instead of panicking on bad config.
+
+Lowercase newClient is fine for internal types. Exported NewFoo signals the supported way to construct Foo.
+
+Constructors often return pointers to mutable services and interfaces to dependencies.
+
+Pattern: NewType(...) (*Type, error) — validate, allocate, return ready object or error.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

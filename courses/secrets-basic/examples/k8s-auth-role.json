@@ -1,0 +1,7 @@
+{
+  "bound_service_account_names": ["checkout-app"],
+  "bound_service_account_namespaces": ["checkout"],
+  "policies": ["course-readonly"],
+  "ttl": "1h",
+  "max_ttl": "24h"
+}

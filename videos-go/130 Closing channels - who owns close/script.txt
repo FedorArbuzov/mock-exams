@@ -1,0 +1,11 @@
+Who is allowed to close?
+
+The sender closes to signal no more values. Receivers read until drained. Never close a channel you do not own. With multiple senders, use sync.Once or a dedicated coordinator — or avoid close and use context cancel instead.
+
+close(ch) on a closed channel panics. Sending on a closed channel panics.
+
+When in doubt, cancel context and let receivers exit — simpler than channel close choreography.
+
+Close rule: one owner, sender side, or use context instead.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

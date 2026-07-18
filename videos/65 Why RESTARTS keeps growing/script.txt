@@ -1,0 +1,13 @@
+The RESTARTS number keeps climbing but STATUS still says Running - what now?
+
+A growing RESTARTS count means the container has died and been recreated that many times. Even if it is Running right now, each restart is a crash you should explain. Four common causes cover most cases.
+
+First, a liveness probe is failing, so Kubernetes kills a container it thinks is unhealthy - often the probe is too strict or the app is just slow to warm up. Second, OOMKilled - the container exceeded its memory limit and got terminated. Third, the process itself crashes on some input or after some time. Fourth, a dependency drops - a database or queue the app cannot live without.
+
+What beginners get wrong: ignoring restarts because the app looks up, or blaming Kubernetes when the app has a real memory leak.
+
+Practical flow: kubectl describe pod - look for OOMKilled and probe failure events. kubectl logs dash dash previous for the crash output. Then right-size memory limits, relax the liveness probe, or fix the crash.
+
+Rule to remember: rising RESTARTS is never noise - check probes, OOM, and logs previous.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

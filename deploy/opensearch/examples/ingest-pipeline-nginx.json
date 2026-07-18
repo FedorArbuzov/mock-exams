@@ -1,0 +1,17 @@
+{
+  "description": "Parse simple nginx-style log line in message field",
+  "processors": [
+    {
+      "grok": {
+        "field": "message",
+        "patterns": ["%{WORD:method} %{URIPATHPARAM:path} %{NUMBER:status:int}"]
+      }
+    },
+    {
+      "set": {
+        "field": "parsed",
+        "value": true
+      }
+    }
+  ]
+}

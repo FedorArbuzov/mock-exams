@@ -1,0 +1,11 @@
+Is math/rand OK for secrets?
+
+No. Use crypto/rand for tokens, session IDs, and passwords. math/rand is predictable — fine for simulations, dangerous for security.
+
+crypto/rand.Read fills bytes you encode as hex or base64 for API keys.
+
+Never log generated secrets. Store hashes for passwords, not plaintext.
+
+Secrets: crypto/rand — math/rand only for non-security randomness.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

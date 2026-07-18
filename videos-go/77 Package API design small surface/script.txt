@@ -1,0 +1,11 @@
+How much should I export?
+
+The minimum stable surface. Export types and functions callers need. Keep helpers unexported lowercase. Every export is a promise you maintain across versions.
+
+Large public APIs are hard to change without breaking importers. Start private, export when a second package truly needs it.
+
+Review question: who outside this package calls this symbol? If nobody, unexport it.
+
+Package design: small public API, large private implementation.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

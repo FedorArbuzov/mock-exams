@@ -1,0 +1,11 @@
+What happens on shutdown?
+
+SIGTERM arrives. Main cancels root context. server.Shutdown with timeout stops new requests and waits for in-flight ones. Then defer closes DB and exit 0.
+
+Without Shutdown, deploys drop active connections — users see 502s.
+
+Mention ReadHeaderTimeout and graceful period alignment with Kubernetes terminationGracePeriodSeconds.
+
+Shutdown answer: signal, cancel ctx, Server.Shutdown, drain, exit.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

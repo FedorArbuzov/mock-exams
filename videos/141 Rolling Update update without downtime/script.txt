@@ -1,0 +1,15 @@
+How do I ship a new version without a full stop?
+
+In simple terms, rolling Update replaces Pods gradually while keeping the service available.
+
+Concretely, treat that as a testable rule: Rolling Update replaces Pods gradually while keeping the service available. When reality disagrees, trust cluster signals over the story in your head.
+
+This is how you move faster under pressure: name the layer, pick one proof, then change only what that proof supports.
+
+If you skip the model, you will thrash — restarting things, editing YAML at random, and calling it debugging.
+
+Beginner trap: knowing the buzzword while having no next check.
+
+If someone asks tomorrow what this changes, answer with the rule: rolling Update replaces Pods gradually while keeping the service available.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

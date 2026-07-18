@@ -1,0 +1,11 @@
+Go projects converge on one standard folder layout. How should I structure a real repo?
+
+Put executables under a cmd folder — one small main package per binary, like an API server, a worker, or a migration tool. Put private shared code under an internal folder. Put only deliberate public libraries at the repo root, or under a pkg folder if your team uses that convention.
+
+This layout scales. New hires know where mains live and what is safe to import from outside.
+
+Avoid dumping everything in package main at the root — it becomes untestable soup.
+
+Standard shape: cmd for binaries, internal for private libs, go.mod at root.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

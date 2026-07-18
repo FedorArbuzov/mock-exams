@@ -1,0 +1,11 @@
+How do I model domains without classes?
+
+Describe behavior with small interfaces and compose structs. A PaymentProcessor interface, a Service struct holding dependencies, methods that orchestrate.
+
+No inheritance tree — just data structures plus functions that operate on them through interfaces at boundaries.
+
+Document behavior in interface names and method docs, not in deep class hierarchies.
+
+Domain modeling: structs for data, interfaces for roles, composition for sharing.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

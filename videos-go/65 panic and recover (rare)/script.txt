@@ -1,0 +1,11 @@
+Is panic my exception system?
+
+No. panic is for programmer bugs and truly unrecoverable states — not for file not found or bad user input. Those return errors.
+
+recover can catch a panic, but only use it at package boundaries like HTTP middleware to prevent one request from crashing the process.
+
+Libraries should return errors. Only main or top-level handlers should decide to exit or panic.
+
+Production rule: errors for expected failure, panic for impossible states you cannot continue.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,37 @@
+# Redis lab — single instance (courses redis-basic, часть intermediate)
+# Host: localhost:6379  |  Docker network: redis:6379
+
+services:
+  redis:
+    image: redis:7.2-alpine
+    container_name: mock-redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    command:
+      - redis-server
+      - /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./config/redis-single.conf:/usr/local/etc/redis/redis.conf:ro
+      - ./config/users.acl:/usr/local/etc/redis/users.acl:ro
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: mock-redis-commander
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  redis-data:

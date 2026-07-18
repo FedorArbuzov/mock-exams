@@ -1,0 +1,11 @@
+How do I practice concurrency?
+
+Build a worker pool: jobs channel, N workers, results or errors, context cancel on shutdown, errgroup if failures should stop siblings.
+
+Add metrics: jobs processed, queue depth, worker errors.
+
+Break it on purpose — leak a goroutine, run -race, fix it. That teaches more than reading slides.
+
+Practice project: worker pool with cancel, errgroup, and -race clean.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

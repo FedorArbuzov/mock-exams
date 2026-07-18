@@ -1,0 +1,11 @@
+Go organizes code into two nested units. Are package and module the same?
+
+No. A module is the versioned unit declared in your project's module file — usually your whole repo or service. A package is one directory of source files that compile together under one package name.
+
+One module contains many packages. An import path loads a specific package from that module.
+
+Mixing the terms causes real bugs: you fetch a module but write code in packages inside it.
+
+Memory hook: module equals dependency identity, package equals compile unit in a folder.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+How do CLIs signal failure?
+
+With an exit call, or by returning a non-zero status from main. Convention: zero means success, anything else means failure. Shell scripts and CI read that status code — not your printed output.
+
+In Go, many errors return up to main, which exits with a failure code. Libraries should return errors; only main should trigger the exit.
+
+If your CLI always exits zero even when it fails, cron jobs and pipelines silently succeed. That is a production bug.
+
+CLI rule: on error, print to stderr, exit non-zero. Scripts depend on it.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

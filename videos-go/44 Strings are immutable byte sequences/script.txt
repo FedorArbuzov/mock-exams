@@ -1,0 +1,11 @@
+Can I change the first byte of a string to capital A?
+
+No. Strings in Go are immutable byte sequences. Writing to index zero of name does not compile. The runtime treats every string as read-only data you can share safely across goroutines.
+
+To edit text, convert to a rune slice, change the runes, then convert back with string of runes. That is the right path when you need to uppercase one letter in a name. For building a new string in a loop - like joining CSV rows - use strings.Builder. Each WriteString appends without copying the whole string every time.
+
+The failure mode is concatenation with plus-equals inside a loop. That allocates a fresh string on every iteration and can turn linear work into quadratic slowdown. Immutability makes sharing safe but surprises people coming from mutable string languages.
+
+Remember this - a string is read-only bytes. Build changes with Builder, not plus-equals in a loop.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

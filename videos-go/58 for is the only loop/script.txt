@@ -1,0 +1,11 @@
+Where is while?
+
+There is no while keyword. for is the only loop. for condition { } is your while. for { } is infinite. for i := 0; i < n; i++ is classic C-style.
+
+One loop keyword means less syntax to learn and fewer style debates.
+
+Infinite loops need a break, return, or channel receive to exit — otherwise you hang a goroutine forever.
+
+Master for: three forms, one keyword — while, classic, and range.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

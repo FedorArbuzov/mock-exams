@@ -1,0 +1,48 @@
+import React from "react";
+import {AbsoluteFill, useCurrentFrame} from "remotion";
+import {COLORS, FONTS} from "../../../../../shared/constants";
+import {Caption} from "../../../../../shared/components/Caption";
+import {Checkmark} from "../../../../../shared/components/Checkmark";
+import {progress01} from "../../../../../shared/utils/animations";
+
+type Props = {text: string; durationInFrames: number};
+
+const ITEMS = ["modules", "errors", "interfaces", "concurrency", "one project"];
+
+export const Scene5HiringBar: React.FC<Props> = ({text, durationInFrames}) => {
+  const frame = useCurrentFrame();
+
+  return (
+    <AbsoluteFill>
+      {ITEMS.map((c, i) => {
+        const delay = 8 + i * 18;
+        const rowIn = progress01(frame, delay, delay + 12);
+        const checkIn = progress01(frame, delay + 10, delay + 22);
+        return (
+          <div
+            key={c}
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: 540 + i * 110,
+              transform: `translate(-50%, -50%) translateY(${(1 - rowIn) * 14}px)`,
+              opacity: rowIn,
+              display: "flex",
+              alignItems: "center",
+              gap: 22,
+              width: 480,
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{color: COLORS.white, fontFamily: FONTS.sans, fontSize: 26, fontWeight: 680}}>
+              {c}
+            </div>
+            <Checkmark progress={checkIn} size={78} />
+          </div>
+        );
+      })}
+
+      <Caption text={text} durationInFrames={durationInFrames} />
+    </AbsoluteFill>
+  );
+};

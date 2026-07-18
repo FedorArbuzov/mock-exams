@@ -1,5 +1,13 @@
 output/
+site/
+.venv-pdf/
+.venv-docs/
+courses/.pages
+courses/**/.pages
+dist/
 tester/dist/
+# Copy of courses/ staged for `-tags embed` builds (see mockctl build-embed scripts).
+mockctl/courses/
 .env
 .idea/
 .vscode/
@@ -8,3 +16,14 @@ tester/dist/
 .env.development.local
 .env.test.local
 .env.production.local
+deploy/gitops/config/repo.env
+node_modules/
+remotion/out/
+
+# Local build artifacts, logs, and editor state (not for the repo)
+.cursor/
+mockctl/mockctl.exe
+mockctl.exe
+mockctl_build_log.txt
+mockctl_web_stdout.log
+mockctl_web_stderr.log

@@ -1,0 +1,192 @@
+# 15. Lab: Probes and Resources
+
+The goal: see liveness and readiness actually do something, and watch how Pods behave under resource limits.
+
+## Setup
+
+Enable metrics-server on minikube so `kubectl top` works:
+
+```bash
+minikube -p mock-exams addons enable metrics-server
+```
+
+## Task 1. readinessProbe
+
+Create a Pod that isn't ready right away:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ready-demo
+  labels:
+    app: ready
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27
+      ports:
+        - containerPort: 80
+      readinessProbe:
+        exec:
+          command: ["sh", "-c", "[ -f /tmp/ready ]"]
+        initialDelaySeconds: 1
+        periodSeconds: 2
+```
+
+```bash
+kubectl apply -f ready-demo.yaml
+kubectl get pod ready-demo -w
+```
+
+**What you'll see:** `READY 0/1` — the readinessProbe keeps failing because `/tmp/ready` doesn't exist yet.
+
+Now "get it ready":
+
+```bash
+kubectl exec ready-demo -- touch /tmp/ready
+kubectl get pod ready-demo
+```
+
+**Check:** within a few seconds, `READY 1/1`.
+
+## Task 2. livenessProbe and restarts
+
+A Pod whose liveness check starts failing after about a minute:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: live-demo
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "touch /tmp/healthy; sleep 30; rm /tmp/healthy; sleep 600"]
+      livenessProbe:
+        exec:
+          command: ["test", "-f", "/tmp/healthy"]
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        failureThreshold: 2
+```
+
+```bash
+kubectl apply -f live-demo.yaml
+kubectl get pod live-demo -w
+```
+
+**What you'll see:** after roughly 40 seconds, `RESTARTS` starts climbing — the liveness check is failing and the container keeps getting restarted.
+
+```bash
+kubectl describe pod live-demo
+```
+
+Scroll down to the **Events** section at the bottom of the output — that's where the restarts and probe failures show up.
+
+## Task 3. Resources and Pending
+
+Create a Pod asking for an absurd amount of memory:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: big
+spec:
+  containers:
+    - name: web
+      image: nginx:1.27
+      resources:
+        requests:
+          memory: "100Gi"
+```
+
+```bash
+kubectl apply -f big.yaml
+kubectl get pod big
+kubectl describe pod big
+```
+
+**Check:** the Pod sits in `Pending`, with a `FailedScheduling` event in the **Events** section. Delete it once you've seen it.
+
+## Task 4. OOMKilled
+
+A Pod that tries to grab more memory than it's allowed:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hungry
+spec:
+  containers:
+    - name: app
+      image: polinux/stress
+      resources:
+        requests:
+          memory: "32Mi"
+        limits:
+          memory: "64Mi"
+      command: ["stress"]
+      args: ["--vm", "1", "--vm-bytes", "200M", "--vm-hang", "1"]
+```
+
+```bash
+kubectl apply -f hungry.yaml
+kubectl get pod hungry -w
+kubectl describe pod hungry
+```
+
+**What you'll see:** look at `Last State` and the events near the bottom — `OOMKilled`, and the container gets restarted.
+
+Delete it once you're done.
+
+## Task 5. QoS classes
+
+Create three Pods:
+
+- **best-effort** — no requests/limits at all.
+- **burstable** — requests set, no limits (or limits above requests).
+- **guaranteed** — requests equal to limits, for both CPU and memory.
+
+Check the class assigned to each:
+
+```bash
+# bash / zsh
+for p in best-effort burstable guaranteed; do
+  echo "$p: $(kubectl get pod $p -o jsonpath='{.status.qosClass}')"
+done
+```
+
+```powershell
+# PowerShell
+foreach ($p in @('best-effort', 'burstable', 'guaranteed')) {
+  $class = kubectl get pod $p -o jsonpath='{.status.qosClass}'
+  Write-Host "$p`: $class"
+}
+```
+
+**Check:** `BestEffort`, `Burstable`, and `Guaranteed`, respectively.
+
+## Task 6. Metrics
+
+```bash
+kubectl top node
+kubectl top pod -A
+```
+
+**Check:** you see actual CPU/memory usage. If it complains that metrics aren't available yet, wait a minute and try again.
+
+## Cleanup
+
+```bash
+kubectl delete pod ready-demo live-demo big hungry best-effort burstable guaranteed --ignore-not-found
+```
+
+## Check yourself
+
+1. What's the practical difference between a failed livenessProbe and a failed readinessProbe?
+2. Why does `requests` matter more than `limits` for **scheduling**?
+3. What QoS class does a Pod get if you don't set `resources` at all? Why is that not great?

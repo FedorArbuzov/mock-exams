@@ -1,0 +1,11 @@
+Your first hour with Go should hit a few concrete milestones. What should I have working tonight?
+
+Four things: go version prints a stable release, your editor shows gopls diagnostics, a hello program runs, and go fmt plus go vet are habits you actually ran once.
+
+Create a folder, initialize a module, write package main, run it. That proves toolchain, modules, and editor agree.
+
+Do not install five linters on hour one. Nail the core loop first: edit, format, vet, test, run.
+
+First-hour checklist: version OK, hello runs, format on save, vet clean.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

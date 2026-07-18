@@ -1,0 +1,11 @@
+I know Python — why switch?
+
+Python wins when you need speed of experimentation: notebooks, data pipelines, quick CRUD with Django or FastAPI. Go wins when you need predictable performance, static types, and a concurrency model that does not fight you at scale.
+
+In Python, a typo might surface at runtime. In Go, many bugs fail at compile time. In Python, scaling often means more processes and careful async. In Go, goroutines and channels are first-class.
+
+You do not have to abandon Python. But for long-running APIs and infra tools, Go reduces operational weight.
+
+Rule of thumb: prototype in Python if the domain fits; ship core services in Go when reliability and deploy simplicity matter.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

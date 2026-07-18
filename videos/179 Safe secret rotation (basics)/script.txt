@@ -1,0 +1,17 @@
+How do I rotate tokens without service downtime?
+
+In simple terms, rotation means updating the Secret, recreating Pods, and verifying readiness.
+
+Concretely, treat that as a testable rule: Rotation means updating the Secret, recreating Pods, and verifying readiness. When reality disagrees, trust cluster signals over the story in your head.
+
+Objects encode intent. A Deployment keeps N healthy copies. A Job runs to completion. Labels are how other objects find your Pods.
+
+Before more YAML, ask what lifecycle you want: long-running, one-shot, per-node, or identity-stable — then choose the matching object.
+
+Beginner trap: creating naked Pods and turning ops into babysitting.
+
+For the video, a tiny readinessProbe block — path and port only, huge font.
+
+If someone asks tomorrow what this changes, answer with the rule: rotation means updating the Secret, recreating Pods, and verifying readiness.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

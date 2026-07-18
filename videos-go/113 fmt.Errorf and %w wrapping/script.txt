@@ -1,0 +1,11 @@
+How do I add context without losing the cause?
+
+Wrap with fmt.Errorf("load user %d: %w", id, err). The %w verb keeps the original error in the chain so errors.Is and errors.As still work.
+
+Wrap at boundaries: HTTP handler, repository layer, CLI command — where context helps humans.
+
+Do not wrap every line — noisy messages hide the root cause.
+
+Wrap pattern: operation failed: %w — one useful layer per hop.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+What should /health return?
+
+Split liveness and readiness. Liveness: process up — simple 200. Readiness: can serve traffic — DB connected, migrations done, dependencies OK.
+
+Do not put deep checks on liveness — flapping restarts kill pods. Readiness can fail when dependencies are down.
+
+Kubernetes uses both probes differently — conflating them causes outages.
+
+Health endpoints: /healthz live, /readyz ready — different checks.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

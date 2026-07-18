@@ -1,0 +1,11 @@
+Is debug logging safe?
+
+Not if it prints tokens, passwords, or full Authorization headers. Structured logs still leak secrets into Elasticsearch if you are careless.
+
+Redact known fields. Use slog with ReplaceAttr to mask secrets globally.
+
+Debug one request in staging — not production printf of bodies.
+
+Security logging: redact tokens and passwords — always.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

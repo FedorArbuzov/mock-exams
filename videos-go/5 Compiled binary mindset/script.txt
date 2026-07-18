@@ -1,0 +1,11 @@
+Where is my virtualenv for Go?
+
+There is not one — and that is the point. Go modules track dependencies in go.mod, but the artifact you ship is a compiled binary. Run go build, copy one file to the server, done.
+
+That changes how you think about deploys. No "works on my machine" Python version mismatch. No JVM tuning on every host. The binary bundles your code; the OS runs it.
+
+Tradeoff: you compile per target OS and architecture when cross-building. But GOOS and GOARCH make that straightforward.
+
+Mental model: Go is compile once, ship a binary, run anywhere compatible — not install a runtime stack first.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

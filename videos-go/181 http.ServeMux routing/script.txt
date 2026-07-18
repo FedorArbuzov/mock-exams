@@ -1,0 +1,11 @@
+How do I map paths to handlers?
+
+Use http.ServeMux — Go 1.22+ supports method and path patterns like GET /items/{id}. Register handlers with mux.HandleFunc or mux.Handle.
+
+Match order and pattern syntax matter — read the docs for your Go version.
+
+Start with stdlib mux before importing routers — many apps never need more.
+
+Routing: ServeMux patterns, register per route, method-aware in modern Go.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

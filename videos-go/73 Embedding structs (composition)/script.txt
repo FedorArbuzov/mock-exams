@@ -1,0 +1,11 @@
+Is this inheritance?
+
+No. Embedding promotes fields and methods of an inner struct to the outer type. It is composition — build bigger types from smaller ones without subclass hierarchies.
+
+type Server struct { http.Handler } gives Server the methods of Handler if they match.
+
+Embedding is powerful and easy to misuse. Prefer explicit fields when promotion hides structure.
+
+Go pattern: compose structs, embed interfaces for extension points — not base classes.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

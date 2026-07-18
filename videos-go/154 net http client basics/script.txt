@@ -1,0 +1,11 @@
+How do I call an API?
+
+Use http.Client with a Timeout. Bare http.Get has no default timeout — hung connections stall forever.
+
+Build requests with http.NewRequestWithContext so cancelation propagates. Check resp.StatusCode and read Body with defer Close.
+
+Reuse Client instances — they manage connection pooling.
+
+Client rule: &http.Client{Timeout: 10*time.Second} — never naked http.Get in prod.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

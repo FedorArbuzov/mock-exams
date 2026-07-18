@@ -1,0 +1,15 @@
+Which dashboard should I open first?
+
+In simple terms, start with the service's RED/Golden Signals and Pod/node utilization.
+
+Concretely, treat that as a testable rule: Start with the service's RED/Golden Signals and Pod/node utilization. When reality disagrees, trust cluster signals over the story in your head.
+
+Trust a few signals mapped to user pain: errors, latency, saturation, restarts, Ready replicas.
+
+Alert only on pages you will actually act on — noise trains teams to ignore everything.
+
+Beginner trap: forty dashboards and no trusted symptom.
+
+If someone asks tomorrow what this changes, answer with the rule: start with the service's RED/Golden Signals and Pod/node utilization.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

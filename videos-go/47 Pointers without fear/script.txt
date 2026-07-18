@@ -1,0 +1,11 @@
+Do I need pointer arithmetic to write real Go code?
+
+No. Go pointers are simpler than C pointers. A pointer holds an address so you can mutate shared state or avoid copying a large struct on every function call. There is no pointer math — you cannot add one to a pointer and walk through memory like in C.
+
+Use address-of to take a pointer from a variable, and star to read or write the value it points to. Dereferencing a nil pointer panics at runtime, so treat nil as optional and check before you star. That one check saves hours of debugging.
+
+Pointers are not scary — they are explicit sharing. Go removed the dangerous half of pointers and kept the useful half. You get mutation in place, efficient passing of big structs, and nil to signal not present without extra wrapper types.
+
+Safe habit: pointer receivers when a method mutates state, address-of when you need shared ownership, and nil checks before every dereference.
+
+Master Go faster. Theory, hands-on labs, and interview questions - link in bio.

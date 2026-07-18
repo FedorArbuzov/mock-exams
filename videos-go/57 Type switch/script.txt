@@ -1,0 +1,11 @@
+How do I branch on dynamic type?
+
+Use a type switch: switch v := x.(type) { case string: ... case int: ... default: ... }. Each case gives you the concrete type without a chain of if assertions.
+
+This is how JSON decoders, log formatters, and plugin systems handle mixed inputs cleanly.
+
+Always include default for unexpected types. Returning an error beats panicking on unknown input.
+
+Pattern: type switch at the boundary, concrete logic in each case.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Why not exceptions?
+
+Because errors are values you pass explicitly. Functions return error as the last value. Callers handle, wrap, or propagate. Nothing jumps the stack magically.
+
+That makes failure visible in code review and greppable in logs. No hidden control flow.
+
+It feels verbose until you debug production without a mystery stack trace from a library you did not know could throw.
+
+Go philosophy: errors are part of the function contract, not a side channel.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

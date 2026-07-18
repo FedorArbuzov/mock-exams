@@ -1,0 +1,11 @@
+Should I always go get -u everything?
+
+No. Update dependencies deliberately — read changelogs, run full tests, update one major dependency at a time when possible.
+
+Blind updates break builds on Friday and hide which library caused the regression.
+
+Use dependabot or renovate with CI — not manual -u on everything monthly panic.
+
+Dependency hygiene: targeted updates, changelog, full test suite green.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

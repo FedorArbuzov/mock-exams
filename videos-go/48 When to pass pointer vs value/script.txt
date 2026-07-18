@@ -1,0 +1,11 @@
+Should everything be a pointer in Go?
+
+No. Values are the default because they are simple, safe, and cheap for small data. The caller gets an independent copy, so there are no surprise mutations through hidden shared state. Pass a pointer when you need to mutate the caller's data, when the struct is large and copying wastes memory and CPU, or when nil means something meaningful like optional fields in JSON APIs.
+
+For methods, use pointer receivers when the method mutates state or the struct is big. Value receivers work fine for tiny immutable types and read-only operations where copying costs almost nothing. Consistency matters too — if one method on a type uses a pointer receiver, the rest usually should as well.
+
+The failure mode is pointer everything — nil checks everywhere, escape analysis gets harder, and readability drops fast. Start with a value. Reach for a pointer only when you have a concrete reason, not by default.
+
+Rule: small and read-only — value. Mutate, large, or optional nil — pointer.
+
+Master Go faster. Theory, hands-on labs, and interview questions - link in bio.

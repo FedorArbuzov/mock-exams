@@ -1,0 +1,11 @@
+What makes a Go service deployable?
+
+Config from environment, logs to stdout as structured JSON, stateless processes behind a load balancer, graceful shutdown on SIGTERM, and health endpoints for orchestrators.
+
+One binary, one responsibility, horizontal scale by adding replicas.
+
+These habits map directly to Kubernetes and Docker without framework magic.
+
+Twelve-factor Go: env config, stdout logs, stateless, graceful stop.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

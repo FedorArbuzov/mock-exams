@@ -1,0 +1,23 @@
+{
+  "name": "typescript-basic-labs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Лабораторные работы курса typescript-basic",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "hello": "tsx hello.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

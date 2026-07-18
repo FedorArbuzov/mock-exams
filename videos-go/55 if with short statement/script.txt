@@ -1,0 +1,11 @@
+Why put err := on the if line?
+
+It scopes the temporary variable to the if/else chain. if f, err := os.Open(name); err != nil { ... } keeps f and err out of the rest of the function.
+
+That is idiomatic Go error handling — tight scope, early return, happy path unindented below.
+
+You can also use if err = do(); err != nil when err already exists — do not := and shadow.
+
+Idiom: open and check in one if line, return on error, continue with f below.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

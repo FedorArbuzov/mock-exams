@@ -1,0 +1,15 @@
+Why a separate metrics system if `describe` exists?
+
+In simple terms, prometheus stores time series and alerts on trends, not just snapshots.
+
+Concretely, treat that as a testable rule: Prometheus stores time series and alerts on trends, not just snapshots. When reality disagrees, trust cluster signals over the story in your head.
+
+Delivery quality is a bored repeatable path: pinned image, Git as source of truth, sync, smoke, rollback.
+
+If humans must remember secret dashboard clicks, drift is already invited.
+
+Beginner trap: kubectl edit in prod with no path back to Git.
+
+If someone asks tomorrow what this changes, answer with the rule: prometheus stores time series and alerts on trends, not just snapshots.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

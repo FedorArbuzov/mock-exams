@@ -1,0 +1,11 @@
+Go documentation is not written externally — it lives right above your code. Where does it actually come from?
+
+From comments directly above exported declarations. The comment should start with the name — a sentence like UserService handles becomes the documentation for that type.
+
+Go's doc tooling and the public package site render those comments directly. Undocumented exports look unfinished in review.
+
+Do not document unexported helpers unless the reasoning is genuinely tricky. Do document every exported type, function, and package.
+
+Doc habit: write the comment before you export the name — it forces you to name things well.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

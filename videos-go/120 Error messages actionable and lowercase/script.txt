@@ -1,0 +1,11 @@
+How should error strings look?
+
+Usually lowercase, no trailing period, no "Error:" prefix — they get wrapped and logged into larger messages. Make them actionable: include ids, fields, operations.
+
+Bad: "Something went wrong." Good: "parse config line 42: invalid port".
+
+Wrapping adds layers: fmt.Errorf("create user: %w", err) — each layer adds context.
+
+Message style: lowercase, specific, wrap with operation name.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

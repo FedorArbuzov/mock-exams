@@ -1,0 +1,11 @@
+Should every struct have an interface?
+
+No. That is interface pollution — extra types nobody mocks and nobody swaps. Add an interface when you have two implementations, need a test fake, or must decouple packages.
+
+Premature interfaces make refactors painful: every method rename touches interface plus impl plus mock.
+
+Start concrete. Extract interface when pain appears — not before.
+
+Rule: interface when you need substitution, not by default.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

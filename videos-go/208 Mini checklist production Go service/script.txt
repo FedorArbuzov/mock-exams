@@ -1,0 +1,9 @@
+What do I verify before prod?
+
+HTTP client and server timeouts, context cancelation everywhere, structured logs, metrics if you can, liveness and readiness probes, graceful shutdown, pinned module versions, and no secrets in logs or images.
+
+Run go test -race. Run load smoke after deploy.
+
+Production checklist: timeouts, cancel, logs, health, shutdown, pinned deps.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

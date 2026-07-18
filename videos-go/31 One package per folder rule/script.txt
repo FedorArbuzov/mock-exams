@@ -1,0 +1,11 @@
+Go groups source files into packages by folder, not by declaration. Can two packages share a directory?
+
+No — every directory holds exactly one package, aside from separate test files. You cannot mix two different package names in the same folder.
+
+If you need two packages, make two folders. This sounds strict, but it keeps builds predictable.
+
+The package name usually matches the directory name, but it does not have to — matching names still saves confusion.
+
+Gotcha: files in the same folder with different package declarations fail to compile. Split directories instead.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

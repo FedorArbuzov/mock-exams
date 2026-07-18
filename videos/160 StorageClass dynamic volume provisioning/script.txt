@@ -1,0 +1,15 @@
+Why can't a PVC bind sometimes?
+
+In simple terms, storageClass defines how and with what parameters volumes are provisioned.
+
+Concretely, treat that as a testable rule: StorageClass defines how and with what parameters volumes are provisioned. When reality disagrees, trust cluster signals over the story in your head.
+
+Pods can be replaced. Data usually cannot. Know where bytes live, how volumes are provisioned, and what delete does.
+
+A backup never restored is a story, not a plan — rehearse restore in a throwaway namespace.
+
+Beginner trap: treating persistent claims like temporary EmptyDir.
+
+If someone asks tomorrow what this changes, answer with the rule: storageClass defines how and with what parameters volumes are provisioned.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,15 @@
+Which release strategy is enough to start?
+
+In simple terms, rolling is the default; Blue/Green is a fast switch; Canary carefully shifts traffic share.
+
+Concretely, treat that as a testable rule: Rolling is the default; Blue/Green is a fast switch; Canary carefully shifts traffic share. When reality disagrees, trust cluster signals over the story in your head.
+
+Most traffic outages are mismatches: selector, port, namespace, readiness, or Ingress rules with no controller.
+
+Trace one request hop by hop — client, edge, Service, endpoints, Ready Pod — and stop at the first broken hop.
+
+Beginner trap: blaming app code before confirming endpoints exist.
+
+If someone asks tomorrow what this changes, answer with the rule: rolling is the default; Blue/Green is a fast switch; Canary carefully shifts traffic share.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Channels always, right?
+
+Not always. Share memory by communicating when natural — but protect shared state with sync.Mutex when multiple goroutines mutate the same struct or map.
+
+Mutex is fine. Document invariants, lock short sections, never hold locks while calling unknown code.
+
+Channels move ownership; mutexes guard in-place state. Pick the simpler correct tool.
+
+Concurrency choice: channel for transfer, mutex for shared mutable state.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

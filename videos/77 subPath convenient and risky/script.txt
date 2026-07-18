@@ -1,0 +1,15 @@
+Why mount a single file via subPath?
+
+In simple terms, subPath mounts one file, but ConfigMap/Secret updates may not be picked up.
+
+Concretely, treat that as a testable rule: subPath mounts one file, but ConfigMap/Secret updates may not be picked up. When reality disagrees, trust cluster signals over the story in your head.
+
+These fields are runtime levers for scheduling, restarts, eviction, and placement — not decorative YAML.
+
+Change one field, watch Ready state and Events, and the concept becomes cause and effect.
+
+Beginner trap: copying a full internet snippet without knowing the failure mode it prevents.
+
+If someone asks tomorrow what this changes, answer with the rule: subPath mounts one file, but ConfigMap/Secret updates may not be picked up.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

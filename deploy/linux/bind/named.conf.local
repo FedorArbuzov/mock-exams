@@ -1,0 +1,4 @@
+zone "lab.local" {
+    type master;
+    file "/etc/bind/custom/db.lab.local";
+};

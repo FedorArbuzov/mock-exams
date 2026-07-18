@@ -1,0 +1,13 @@
+How do you keep dev and prod from colliding in one cluster?
+
+Namespaces. A Namespace is a logical partition inside a single cluster. Names only have to be unique within a Namespace, so you can have a Service called api in dev and another called api in prod without a clash. It is the natural boundary for teams and environments.
+
+Namespaces also carry policy. You attach ResourceQuotas to cap CPU and memory, LimitRanges for defaults, and RBAC RoleBindings so a team only touches its own space. Network policies can isolate traffic between them.
+
+What beginners get wrong: assuming Namespaces are a hard security wall. They are not - they are organizational, and Pods can still talk across them by default unless you add NetworkPolicies. Another trap: forgetting the namespace flag and creating resources in default, then wondering where they went.
+
+Practical check: kubectl get ns lists them. Add dash n to scope any command, or set it in your context so you stop guessing.
+
+Rule to remember: Namespaces organize a cluster - they do not fully isolate it.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

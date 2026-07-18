@@ -1,0 +1,35 @@
+# HashiCorp Vault — dev mode for courses secrets-* (NOT for production)
+# docker compose up -d
+
+services:
+  vault:
+    image: hashicorp/vault:1.16
+    container_name: mock-vault
+    hostname: vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: course
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      VAULT_ADDR: http://127.0.0.1:8200
+    cap_add:
+      - IPC_LOCK
+    healthcheck:
+      test: ["CMD", "vault", "status", "-format=json"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+  # Optional: echo server to simulate app reading VAULT_TOKEN from env (labs)
+  demo-app:
+    image: curlimages/curl:8.7.1
+    container_name: mock-vault-demo
+    profiles: ["demo"]
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: course
+    entrypoint: ["sleep", "infinity"]
+    depends_on:
+      vault:
+        condition: service_healthy

@@ -1,0 +1,15 @@
+Which skills actually matter at career start?
+
+In simple terms, basics of manifests, kubectl, diagnostics, networking, resources, and releases.
+
+Concretely, treat that as a testable rule: Basics of manifests, kubectl, diagnostics, networking, resources, and releases. When reality disagrees, trust cluster signals over the story in your head.
+
+Strong answers include a tradeoff and a next check. Slogans collapse under follow-up questions.
+
+Practice teaching the idea in thirty seconds, then debug the matching failure in a sandbox until both connect.
+
+Beginner trap: fluency without diagnosis skill.
+
+If someone asks tomorrow what this changes, answer with the rule: basics of manifests, kubectl, diagnostics, networking, resources, and releases.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

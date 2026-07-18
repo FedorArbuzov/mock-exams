@@ -1,0 +1,11 @@
+How do I detach from the backing array?
+
+Use copy(dst, src) into a buffer you own, or slices.Clone in modern Go. That breaks sharing so later appends on one slice do not stomp another.
+
+copy returns how many elements copied — useful with partial buffers.
+
+When passing subslices to long-lived goroutines, clone first unless you designed the sharing intentionally.
+
+Detach when lifetime or mutation independence matters.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

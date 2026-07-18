@@ -1,0 +1,15 @@
+How do I deploy one chart to both dev and prod?
+
+In simple terms, swap values files per environment without rewriting templates.
+
+Concretely, treat that as a testable rule: Swap values files per environment without rewriting templates. When reality disagrees, trust cluster signals over the story in your head.
+
+Delivery quality is a bored repeatable path: pinned image, Git as source of truth, sync, smoke, rollback.
+
+If humans must remember secret dashboard clicks, drift is already invited.
+
+Beginner trap: kubectl edit in prod with no path back to Git.
+
+If someone asks tomorrow what this changes, answer with the rule: swap values files per environment without rewriting templates.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

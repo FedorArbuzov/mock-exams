@@ -1,0 +1,11 @@
+How do I write a Go test?
+
+Create foo_test.go in the same package. func TestSomething(t *testing.T) { ... }. Run go test ./... from module root.
+
+Use t.Fatal or t.Errorf for failures. Table-driven tests with t.Run scale cleanly.
+
+Tests live beside code — no separate test tree required.
+
+Test starter: TestName(t *testing.T), table of cases, go test -v.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

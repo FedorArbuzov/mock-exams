@@ -1,0 +1,13 @@
+What do Running, Pending, and CrashLoopBackOff actually mean?
+
+The STATUS column is a short summary of a Pod's phase and current condition - the cluster's one-word answer to how are you. Running means containers are up. Pending means not scheduled or not ready yet. Completed means a Job finished. CrashLoopBackOff means the container keeps dying and Kubernetes is backing off between restarts.
+
+But STATUS is only a headline, not the story. It tells you something is wrong, not why. The reason lives in describe and Events, and the app-level detail lives in logs.
+
+What beginners get wrong: treating STATUS as a full diagnosis and refreshing get pods hoping it flips to Running. Or panicking at ContainerCreating, which is often just a normal in-progress state.
+
+Practical flow: read STATUS to classify the problem, glance at READY and RESTARTS in the same row, then kubectl describe pod for Events, then logs for the crash reason.
+
+Rule to remember: STATUS is the headline - describe and logs are the article.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

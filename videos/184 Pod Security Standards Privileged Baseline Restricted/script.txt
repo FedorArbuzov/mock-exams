@@ -1,0 +1,15 @@
+How do I quickly judge how dangerous a Pod is?
+
+In simple terms, pSS defines levels of restrictions on container and host privileges.
+
+Concretely, treat that as a testable rule: PSS defines levels of restrictions on container and host privileges. When reality disagrees, trust cluster signals over the story in your head.
+
+Security is blast-radius math: who can read this, who can change this, and what a stolen identity can do next.
+
+Prefer dedicated ServiceAccounts, narrow Roles, and explicit NetworkPolicy over convenient shared defaults.
+
+Beginner trap: cluster-admin culture and default ServiceAccount everywhere.
+
+If someone asks tomorrow what this changes, answer with the rule: pSS defines levels of restrictions on container and host privileges.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

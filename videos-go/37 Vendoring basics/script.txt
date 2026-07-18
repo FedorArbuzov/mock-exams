@@ -1,0 +1,11 @@
+Go modules download dependencies remotely by default. Should I vendor them?
+
+Sometimes. Vendoring copies your dependencies straight into the repository, so builds use those exact files — helpful for air-gapped CI, reproducible releases, or corporate policy.
+
+Most teams rely on checksums and the module cache instead. Vendoring adds repo size and update chores.
+
+If you vendor, commit that folder and build in vendor mode. If you don't, keep your checksums strict in CI.
+
+Decision: vendor when you must hermetically seal your dependencies — otherwise tidy plus checksums is enough.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

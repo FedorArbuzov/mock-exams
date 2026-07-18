@@ -1,0 +1,11 @@
+Why did the client get 200 on error?
+
+Because you wrote the error body but never called w.WriteHeader(400). Default status is 200 once Write happens.
+
+Set status before body. Use http.Error for simple cases. Map domain errors explicitly in handlers.
+
+Clients and load balancers trust status codes — not JSON fields saying error:true.
+
+Response rule: WriteHeader first, or http.Error — never implicit 200 on failure.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

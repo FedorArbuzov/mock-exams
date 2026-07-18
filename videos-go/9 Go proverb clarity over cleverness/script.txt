@@ -1,0 +1,11 @@
+What does idiomatic Go even mean?
+
+It means code a new teammate can read without decoding your personal framework. Clear names, small functions, explicit error handling, and composition over inheritance tricks.
+
+The Go community repeats: clear is better than clever. That shows up in reviews: rejected PRs often are not wrong — they are just too magical.
+
+Clever one-liners age badly. Boring code survives job changes, on-call nights, and junior contributors.
+
+Daily habit: name things for what they do, return errors instead of hiding them, and delete abstractions nobody asked for.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

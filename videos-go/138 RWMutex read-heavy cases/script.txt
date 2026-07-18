@@ -1,0 +1,11 @@
+All locks are the same?
+
+sync.RWMutex allows many concurrent readers or one writer. Useful when reads dominate and writes are rare — caches, config snapshots.
+
+It is slower than Mutex for write-heavy workloads. Benchmark before assuming RWMutex helps.
+
+Always pair with defer mu.Unlock() or defer mu.RUnlock() immediately after lock.
+
+Read-heavy: RWMutex with short write sections — measure first.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

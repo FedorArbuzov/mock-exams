@@ -1,0 +1,11 @@
+Should I generic everything?
+
+No. Use generics when you have real duplication — min of two types, set operations, container helpers — not for aesthetics.
+
+If a plain function or interface reads clearer, keep it. Generics add compile-time complexity readers must parse.
+
+Good generic: removes three copy-pasted functions. Bad generic: saves five lines once.
+
+Generics rule: remove duplication you actually have — not hypothetical duplication.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

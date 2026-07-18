@@ -1,0 +1,11 @@
+Mutex for a counter feels heavy
+
+For simple counters and flags, sync/atomic offers lock-free operations: atomic.AddInt64, atomic.LoadInt64. Faster for hot stats paths when you do not need complex invariants.
+
+Atomics do not replace mutexes for multi-field updates that must stay consistent together.
+
+Use atomics for metrics; mutex for structured state.
+
+Counter hot path: atomic.Add — mutex when multiple fields must update together.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

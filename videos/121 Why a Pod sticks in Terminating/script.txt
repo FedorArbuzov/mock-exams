@@ -1,0 +1,15 @@
+I deleted the Pod but it won't disappear?
+
+In simple terms, causes include finalizers, long shutdown hooks, or volume issues.
+
+Concretely, treat that as a testable rule: Causes include finalizers, long shutdown hooks, or volume issues. When reality disagrees, trust cluster signals over the story in your head.
+
+When it breaks, walk a short path: Pod status, Events, logs --previous, then the owner like a Deployment or Job. Random restarts are not a strategy.
+
+Your job is to name the layer: image pull, config, crash, scheduling, or a controller recreating bad state on purpose.
+
+Beginner trap: deleting Pods in a loop and calling it troubleshooting.
+
+If someone asks tomorrow what this changes, answer with the rule: causes include finalizers, long shutdown hooks, or volume issues.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

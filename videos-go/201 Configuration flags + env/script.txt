@@ -1,0 +1,11 @@
+Where should config live?
+
+flag package for CLI args users pass at runtime. Environment variables for service config in deploy environments. Validate all config once at startup and fail fast.
+
+Do not read os.Getenv scattered through handlers — centralize in a Config struct loaded in main.
+
+12-factor: env for config, flags for operator overrides on CLIs.
+
+Config: flag for CLI, env for services, validate at startup.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

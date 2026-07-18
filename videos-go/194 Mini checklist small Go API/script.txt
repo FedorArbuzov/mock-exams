@@ -1,0 +1,9 @@
+When is my API good enough for prod?
+
+When it has server timeouts, graceful shutdown, separate liveness and readiness, structured logs with request IDs, explicit error to status mapping, and validated inputs at the edge.
+
+Also: context on outbound calls, pinned dependencies, CI running test and race, and secrets from env — not code.
+
+Prod API checklist: timeouts, shutdown, health, logs, errors — five pillars.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

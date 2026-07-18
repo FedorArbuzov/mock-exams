@@ -1,0 +1,118 @@
+# Linux course lab stack — see README.md
+# Network 172.28.0.0/24
+
+name: mock-linux
+
+services:
+  lab:
+    build: .
+    container_name: mock-linux-lab
+    hostname: lab
+    environment:
+      LAB_HOSTNAME: lab
+    networks:
+      labnet:
+        ipv4_address: 172.28.0.10
+    privileged: true
+    cgroup: host
+    volumes:
+      - lab-data:/var/lib/lab-data
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /run/lock
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+
+  srv1:
+    build: .
+    container_name: mock-linux-srv1
+    hostname: srv1
+    environment:
+      LAB_HOSTNAME: srv1
+    networks:
+      labnet:
+        ipv4_address: 172.28.0.11
+    privileged: true
+    cgroup: host
+    volumes:
+      - srv1-data:/var/lib/lab-data
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /run/lock
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+
+  srv2:
+    build: .
+    container_name: mock-linux-srv2
+    hostname: srv2
+    environment:
+      LAB_HOSTNAME: srv2
+    networks:
+      labnet:
+        ipv4_address: 172.28.0.12
+    privileged: true
+    cgroup: host
+    volumes:
+      - srv2-data:/var/lib/lab-data
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /run/lock
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+
+  web:
+    build: .
+    container_name: mock-linux-web
+    hostname: web
+    environment:
+      LAB_HOSTNAME: web
+    networks:
+      labnet:
+        ipv4_address: 172.28.0.20
+    privileged: true
+    cgroup: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /run/lock
+    cap_add:
+      - NET_ADMIN
+
+  dns:
+    build: .
+    container_name: mock-linux-dns
+    hostname: dns
+    environment:
+      LAB_HOSTNAME: dns
+    networks:
+      labnet:
+        ipv4_address: 172.28.0.53
+    privileged: true
+    cgroup: host
+    volumes:
+      - ./bind:/etc/bind/custom:ro
+    tmpfs:
+      - /run
+      - /run/lock
+    cap_add:
+      - NET_ADMIN
+
+networks:
+  labnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+
+volumes:
+  lab-data:
+  srv1-data:
+  srv2-data:

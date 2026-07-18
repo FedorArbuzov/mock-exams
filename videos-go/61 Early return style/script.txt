@@ -1,0 +1,11 @@
+Why so many guard clauses?
+
+Because Go favors flat happy paths. Check errors first and return. Check invalid input and return. The main logic stays at the left margin, easy to scan.
+
+Deep else nesting hides the real story. Early returns make functions read like a checklist.
+
+This pairs naturally with if err != nil { return err } — the most common Go line after import.
+
+Structure: validate, return on failure, do the real work last.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

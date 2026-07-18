@@ -1,0 +1,15 @@
+Is the problem in code or in the cluster?
+
+In simple terms, compare app metrics with node metrics to localize the bottleneck.
+
+Concretely, treat that as a testable rule: Compare app metrics with node metrics to localize the bottleneck. When reality disagrees, trust cluster signals over the story in your head.
+
+Trust a few signals mapped to user pain: errors, latency, saturation, restarts, Ready replicas.
+
+Alert only on pages you will actually act on — noise trains teams to ignore everything.
+
+Beginner trap: forty dashboards and no trusted symptom.
+
+If someone asks tomorrow what this changes, answer with the rule: compare app metrics with node metrics to localize the bottleneck.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

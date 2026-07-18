@@ -1,0 +1,11 @@
+Where do conversions live?
+
+strconv.Atoi, strconv.ParseInt, strconv.FormatInt for numbers. strings.Split, Trim, Contains, HasPrefix for text. Keep parsing at boundaries — HTTP params, env vars, config files.
+
+Parse once, use typed values inside. Repeated string parsing in hot loops is a smell.
+
+Always check errors from Parse functions — they return (value, err).
+
+Parse rule: strconv for numbers, strings for text, check err every time.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

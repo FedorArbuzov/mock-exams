@@ -1,0 +1,15 @@
+Why do weird kinds appear in the cluster?
+
+In simple terms, a CRD extends the Kubernetes API with new resource types for your domain.
+
+Concretely, treat that as a testable rule: A CRD extends the Kubernetes API with new resource types for your domain. When reality disagrees, trust cluster signals over the story in your head.
+
+These fields are runtime levers for scheduling, restarts, eviction, and placement — not decorative YAML.
+
+Change one field, watch Ready state and Events, and the concept becomes cause and effect.
+
+Beginner trap: copying a full internet snippet without knowing the failure mode it prevents.
+
+If someone asks tomorrow what this changes, answer with the rule: a CRD extends the Kubernetes API with new resource types for your domain.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

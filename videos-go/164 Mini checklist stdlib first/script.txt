@@ -1,0 +1,11 @@
+Should I reach for a framework?
+
+Try stdlib first. net/http, encoding/json, database/sql, and log/slog cover many services. Add chi, gin, or echo when routing ergonomics truly help — not on day one.
+
+Every framework is dependencies plus opinions. Know what the stdlib already solves.
+
+Seniors respect stdlib fluency more than framework trivia.
+
+Stdlib first: HTTP, JSON, context, slog — frameworks only when pain is real.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

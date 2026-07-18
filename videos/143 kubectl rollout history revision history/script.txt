@@ -1,0 +1,17 @@
+How do I know what to roll back to after a bad update?
+
+In simple terms, revision history helps pick a stable rollback point.
+
+Concretely, treat that as a testable rule: Revision history helps pick a stable rollback point. When reality disagrees, trust cluster signals over the story in your head.
+
+Keep a tiny trusted command set. Short commands survive stress and stay readable when shown large on a phone screen.
+
+Know what each command proves: get is inventory, describe is why, logs are the app voice, rollout is release health.
+
+Beginner trap: pasting flag encyclopedias you cannot explain.
+
+For the video, huge text: kubectl rollout history deploy/web.
+
+If someone asks tomorrow what this changes, answer with the rule: revision history helps pick a stable rollback point.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

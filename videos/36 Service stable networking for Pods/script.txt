@@ -1,0 +1,13 @@
+Pods come and go with new IPs - how do you give an app a stable address?
+
+A Service. Pods are ephemeral; each restart gets a new IP. A Service gives you one stable virtual IP and a DNS name that never changes, then load-balances traffic to whichever Pods currently match its selector. Clients talk to the Service, not to individual Pods.
+
+The default type is ClusterIP - reachable only inside the cluster, perfect for service-to-service calls. NodePort and LoadBalancer expose it outside. Behind the scenes the Service keeps an Endpoints list of healthy Pod IPs, updated as Pods come and go.
+
+What breaks: the Service selector matches no Pods, so Endpoints is empty and connections hang. Or targetPort does not match the container's real port, so traffic reaches the Service but dies at the Pod.
+
+Practical check: kubectl get endpoints to confirm Pods are attached, and kubectl get svc to see the ClusterIP and ports. From another Pod, curl the Service DNS name.
+
+Rule to remember: Pods are cattle with changing IPs - a Service is the stable front door.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,6 @@
+# Зависимости для scripts/build-courses-pdf.py (backend: playwright)
+# После pip install выполните: playwright install chromium
+
+markdown>=3.7
+Pygments>=2.18
+playwright>=1.49

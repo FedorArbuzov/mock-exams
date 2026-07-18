@@ -1,0 +1,15 @@
+Where do I start thinking about cluster risks?
+
+In simple terms, identify assets, likely attack paths, and minimum protective controls.
+
+Concretely, treat that as a testable rule: Identify assets, likely attack paths, and minimum protective controls. When reality disagrees, trust cluster signals over the story in your head.
+
+Security is blast-radius math: who can read this, who can change this, and what a stolen identity can do next.
+
+Prefer dedicated ServiceAccounts, narrow Roles, and explicit NetworkPolicy over convenient shared defaults.
+
+Beginner trap: cluster-admin culture and default ServiceAccount everywhere.
+
+If someone asks tomorrow what this changes, answer with the rule: identify assets, likely attack paths, and minimum protective controls.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

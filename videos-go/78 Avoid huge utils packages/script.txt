@@ -1,0 +1,11 @@
+Is utils.go a smell?
+
+Often yes. A junk-drawer utils package becomes a dependency magnet with no cohesion. Prefer domain names: timeutil, httputil, or better — put helpers beside the code that uses them.
+
+If a helper is only used once, inline it. If used across one domain, keep it in that package.
+
+utils grows forever because nobody owns deleting dead code.
+
+Naming rule: package name should answer what lives here — never just utils.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

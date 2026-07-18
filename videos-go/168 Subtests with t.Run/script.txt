@@ -1,0 +1,11 @@
+How do I isolate cases?
+
+t.Run("missing email", func(t *testing.T) { ... }) creates subtests with isolated failure reporting. Run one subtest: go test -run TestUser/missing_email.
+
+Subtests enable parallel testing with t.Parallel when safe.
+
+Structure mirrors table-driven tests — combine both for clarity.
+
+Subtests: t.Run name plus table cases — filter with go test -run.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

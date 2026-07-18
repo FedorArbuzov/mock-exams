@@ -1,0 +1,95 @@
+# Python Celery course stack: API + worker + beat + flower + rabbitmq + redis
+services:
+  api:
+    build: ./stack
+    container_name: mock-celery-api
+    command: uvicorn shop.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8093:8000"
+    environment: &celery_env
+      CELERY_BROKER_URL: amqp://course:course@rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+    networks:
+      - backend
+
+  worker:
+    build: ./stack
+    container_name: mock-celery-worker
+    command: celery -A shop.celery_app worker --loglevel=info --concurrency=2 -Q default,orders,reports
+    environment: *celery_env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+
+  beat:
+    build: ./stack
+    container_name: mock-celery-beat
+    command: celery -A shop.celery_app beat --loglevel=info
+    environment: *celery_env
+    depends_on:
+      - worker
+    networks:
+      - backend
+
+  flower:
+    build: ./stack
+    container_name: mock-celery-flower
+    command: celery -A shop.celery_app flower --port=5555
+    ports:
+      - "5555:5555"
+    environment: *celery_env
+    depends_on:
+      - worker
+    networks:
+      - backend
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: mock-celery-rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: course
+      RABBITMQ_DEFAULT_PASS: course
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+    networks:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    container_name: mock-celery-redis
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - backend
+
+networks:
+  backend:

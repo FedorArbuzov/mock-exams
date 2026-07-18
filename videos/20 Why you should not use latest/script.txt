@@ -1,0 +1,11 @@
+Why is the latest tag a trap in Kubernetes?
+
+Because latest is not a version - it is just a label that moves. Two nodes can pull latest on different days and run different code, and you cannot tell what is live from the manifest. Rollbacks become guesswork when every release points at the same tag.
+
+What breaks: you push a new latest, but running Pods keep the old cached image, so nothing changes on deploy. Or a Pod reschedules, pulls a newer latest than its neighbors, and now your replicas are inconsistent. Debugging gets painful because kubectl describe shows latest everywhere.
+
+Practical fix: pin an explicit tag like v1 dot 4 dot 2, or better, pin the image digest with the at sha256 form. That makes each deploy reproducible and each rollback exact. Let your CI stamp the tag from the commit.
+
+Rule to remember: latest hides the version - pin a tag or a digest.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

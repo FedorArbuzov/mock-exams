@@ -1,0 +1,11 @@
+How do Go engineers structure cases?
+
+Table-driven: tests := []struct{ name string; in int; want int }{...}. for _, tt := range tests { t.Run(tt.name, func(t *testing.T) { ... }) }.
+
+Adding a case is one struct row — no copy-paste test functions.
+
+Name each case clearly — failures show which row broke.
+
+Table pattern: slice of cases, t.Run per name, one assertion style.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

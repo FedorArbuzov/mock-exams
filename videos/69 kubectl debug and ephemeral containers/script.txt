@@ -1,0 +1,13 @@
+There is no shell in the image - how do you debug inside the Pod?
+
+kubectl debug. Modern images are often distroless or scratch - no shell, no curl, no tools - which is great for security but painful when you need to look inside. An ephemeral container solves this: kubectl debug attaches a temporary container into a running Pod, sharing its process and network namespace.
+
+Now you get a full toolbox next to the failing app without rebuilding the image. Inspect its processes, curl a dependency using the Pod's own network, or check the mounted filesystem - all from a debug container that carries the tools the app image deliberately left out.
+
+What beginners get wrong: trying kubectl exec on a distroless image and getting no such file for sh. Or forgetting that ephemeral containers are temporary and cannot be removed individually - they vanish when the Pod goes.
+
+Practical flow: kubectl debug dash it your-pod dash dash image equals busybox dash dash target equals app-container. Pick an image that has the tools you need, then investigate the live Pod without touching the manifest.
+
+Rule to remember: no shell in the image means kubectl debug, not exec.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

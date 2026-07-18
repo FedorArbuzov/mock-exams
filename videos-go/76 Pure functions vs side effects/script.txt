@@ -1,0 +1,11 @@
+Why are my tests painful?
+
+Probably because business logic is tangled with database, HTTP, and filesystem calls. Pure functions that take data and return data are trivial to table-test.
+
+Push IO to the edges. Keep the center deterministic. That is the same lesson as hexagonal architecture, just smaller.
+
+If you need mocks everywhere, your functions may be doing too much.
+
+Testability rule: separate decide from do — logic without IO in the middle.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+When is a string error not enough?
+
+When callers need structured data: field name, retry delay, HTTP status, upstream code. Define a type with Error() string plus fields, then errors.As at the boundary.
+
+fmt.Errorf alone is fine for most internal wrapping. Custom types appear at package edges.
+
+Keep Error() messages lowercase without trailing punctuation — Go convention.
+
+Structured errors: type with fields + Error() + errors.As at the handler.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

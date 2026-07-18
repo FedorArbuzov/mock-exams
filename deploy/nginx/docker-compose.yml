@@ -1,0 +1,45 @@
+# nginx lab — edge reverse proxy + backends (courses nginx-basic/intermediate)
+# docker compose up -d --build
+
+services:
+  api:
+    build: ./backends/api
+    container_name: mock-nginx-api
+    hostname: api
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  static:
+    image: nginx:1.27-alpine
+    container_name: mock-nginx-static
+    hostname: static
+    volumes:
+      - ./backends/static/html:/usr/share/nginx/html:ro
+    networks:
+      - internal
+
+  edge:
+    image: nginx:1.27-alpine
+    container_name: mock-nginx-edge
+    hostname: edge
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/conf.d:/etc/nginx/conf.d:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./logs:/var/log/nginx
+    depends_on:
+      - api
+      - static
+    networks:
+      - internal
+
+networks:
+  internal:

@@ -1,0 +1,11 @@
+Where do I validate JSON?
+
+At the handler edge: decode, validate required fields and ranges, then call domain logic with clean types. Keep handlers thin — validation is an adapter concern.
+
+Use simple checks first; reach for validation libraries when rules explode.
+
+Return 400 with clear messages for client mistakes — 500 only for server faults.
+
+Validation edge: decode, validate struct, then domain — errors map to 400.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

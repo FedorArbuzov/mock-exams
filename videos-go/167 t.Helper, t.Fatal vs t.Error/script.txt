@@ -1,0 +1,11 @@
+When should the test stop?
+
+t.Fatal stops the current test function immediately — use when later steps are meaningless without this one passing. t.Error records failure but continues — useful for collecting multiple assertion misses in one pass.
+
+t.Helper marks wrapper functions so failures report the real line in the test, not the helper.
+
+Pick Fatal for setup failures; Error for independent assertions.
+
+Test control: Fatal on broken setup, Error on multiple checks.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

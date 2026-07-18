@@ -1,0 +1,13 @@
+Need node, IP, or extra fields fast?
+
+kubectl get dash o wide. The default table is compact. Wide mode adds the columns you actually use while debugging - for Pods that often means node name, pod IP, and nominating details that the short view hides.
+
+Why it helps: you see which node a Pod landed on without describe, spot IP conflicts, and correlate with node problems. For nodes, wide may show kernel, container runtime, and OS fields depending on version. It is the same get command with more signal.
+
+What beginners get wrong: staring at the default columns during an incident and then running ten describes. Or forgetting that wide is still not full YAML - for complete fields use dash o yaml. Also assuming every resource type gains useful wide columns - some barely change.
+
+Practical tip: alias kubectl get pods dash o wide, and combine with dash A when you need the whole cluster view. Learn which wide columns matter for Pods and Services first.
+
+Rule to remember: when the table feels thin, add dash o wide before you dig deeper.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Is context a DI bag?
+
+It should not be. context.WithValue is for request-scoped data like trace IDs — not for injecting databases and loggers. Use constructor parameters for required dependencies.
+
+Abusing context values creates hidden globals and untestable functions.
+
+If a dependency is required, make it a function parameter or struct field.
+
+Context values: trace ID yes, *sql.DB no.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

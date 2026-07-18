@@ -1,0 +1,11 @@
+How do high-QPS services cut GC pressure?
+
+sync.Pool holds reusable temporary objects — byte buffers, structs reset on Get. Reduces allocation rate on hot paths.
+
+Reset state in Get before reuse — pooled objects may contain stale data.
+
+Pool is an optimization — benchmark first. Wrong pooling adds bugs.
+
+Pool pattern: Get, reset fields, Put — only after profiling proves need.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

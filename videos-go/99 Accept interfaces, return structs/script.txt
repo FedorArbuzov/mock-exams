@@ -1,0 +1,11 @@
+What should function signatures look like?
+
+Accept interfaces at boundaries — depend on io.Reader, not *os.File. Return concrete structs or pointers from constructors so callers get a clear type to use.
+
+This is the Accept interfaces, return structs principle from the Go proverb.
+
+It keeps dependencies minimal and construction explicit.
+
+Signature habit: parameters are interfaces, return values are concrete types.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

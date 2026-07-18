@@ -1,0 +1,11 @@
+Where do I put behavior?
+
+On methods — functions with a receiver. func (u User) Greet() string binds Greet to type User. Methods can use value or pointer receivers.
+
+Use methods when the operation clearly belongs to a type. Use package-level functions when the type is not central.
+
+Methods are how Go does OOP without inheritance — behavior beside data.
+
+Choice: method when it is about the receiver; plain func when it is a transformation.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

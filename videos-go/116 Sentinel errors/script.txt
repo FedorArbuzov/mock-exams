@@ -1,0 +1,11 @@
+When do I export var ErrX = errors.New(...)?
+
+When callers must branch on an expected condition — not found, conflict, canceled. Export the sentinel, document when it returns, and keep the message stable.
+
+Do not export every error. Most failures stay private strings wrapped upward.
+
+Sentinels are API contracts. Changing them breaks callers who errors.Is on them.
+
+Sentinel rule: exported when callers need to recognize it; private otherwise.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

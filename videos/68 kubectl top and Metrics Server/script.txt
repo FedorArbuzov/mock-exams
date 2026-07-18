@@ -1,0 +1,13 @@
+How do you see CPU and memory usage right in the CLI?
+
+kubectl top. kubectl top nodes shows CPU and memory per node; kubectl top pods shows it per Pod. It is the fastest way to spot what is hot without opening a dashboard - perfect for catching a memory hog or a node under pressure.
+
+But there is a catch: kubectl top needs Metrics Server installed in the cluster. Metrics Server scrapes the kubelets and serves live resource usage. Without it, top returns an error like Metrics API not available - and that confuses beginners into thinking the command is broken.
+
+What beginners get wrong: expecting top to work on a fresh cluster, or confusing its live usage numbers with the requests and limits you set in YAML. top shows actual consumption now; requests and limits are your declared budget.
+
+Practical flow: if top errors, install Metrics Server, then kubectl top pods dash A to find heavy Pods, and kubectl top nodes to see which node is saturated. Compare usage against limits to catch OOM risk.
+
+Rule to remember: kubectl top shows live usage - but only when Metrics Server is running.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

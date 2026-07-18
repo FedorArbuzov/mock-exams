@@ -1,0 +1,11 @@
+Should I retry everything?
+
+No. Retry transient network blips and 503s with backoff. Do not retry validation errors, 404s, or non-idempotent writes without deduplication.
+
+Classify errors: retryable versus fatal. Pass that in typed errors or wrappers.
+
+Retries without idempotency create duplicate charges and duplicate rows.
+
+Retry rule: only idempotent operations, exponential backoff, cap attempts.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

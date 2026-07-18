@@ -1,0 +1,11 @@
+Do I still need to fight GOPATH?
+
+Mostly no. Modules made projects self-contained: your code lives anywhere, and go.mod declares dependencies. GOPATH still exists as a cache and workspace concept, but you do not put all projects under ~/go/src anymore.
+
+GOROOT is where the Go toolchain itself lives. You rarely touch it. GOPATH is where modules are downloaded and cached. Go modules live beside your source.
+
+Confusion hits when tutorials from 2017 tell you to mkdir GOPATH/src/github.com/you. Ignore that for new projects.
+
+Modern rule: create a folder, go mod init, write code — modules handle the rest.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Does Go have first-class functions?
+
+Yes. Functions are values. You can pass them as arguments, return them, and store them in variables. http.HandlerFunc is literally a function type satisfying an interface.
+
+Callbacks, middleware, and functional options all use this feature.
+
+Keep function signatures small. func(context.Context, string) error is readable; huge func types are not.
+
+Pattern: pass behavior as func values when you need hooks without inheritance.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

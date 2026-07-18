@@ -1,0 +1,11 @@
+Why is append slow in a loop?
+
+Repeated append without capacity grows the backing array multiple times — copy on each growth. Preallocate: s := make([]T, 0, expectedLen).
+
+Benchmark with -benchmem to see allocations drop after pre-sizing.
+
+Know expected size from metrics or config — do not guess huge capacities blindly.
+
+Slice perf: make with cap before append loop — cut allocations.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

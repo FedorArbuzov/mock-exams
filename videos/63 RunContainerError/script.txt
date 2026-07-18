@@ -1,0 +1,13 @@
+The image pulled, config looks fine, but the container still won't run - why?
+
+That is RunContainerError. The container runtime accepted the config but failed at the moment of actually starting the process. The image and Pod spec are valid enough to try - the failure is in how the container is launched.
+
+Common causes: the command or args point to a binary that does not exist in the image, so exec fails. A volume mount is broken - a path collision, a read-only filesystem where the app wants to write, or a hostPath that is missing. Or filesystem permissions block the entrypoint from executing.
+
+What beginners get wrong: confusing this with CrashLoopBackOff. There the process runs and then crashes; here it never successfully starts. Also assuming the image is broken when the real issue is a bad command override in the Deployment.
+
+Practical flow: kubectl describe pod and read the Events reason - it often names the exact path or exec error. Verify the container's command, its entrypoint, and every volumeMount path against what the image actually provides.
+
+Rule to remember: RunContainerError means the start failed - check command, mounts, and permissions.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

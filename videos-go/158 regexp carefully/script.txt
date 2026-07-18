@@ -1,0 +1,11 @@
+Is regex always fine?
+
+regexp.Compile once, reuse the regexp. Compiling per request burns CPU. Catastrophic backtracking patterns can hang on small inputs.
+
+For simple prefix or contains checks, strings package beats regex.
+
+Use regex when the pattern is genuinely complex — emails-ish validation, log parsing — not for every split.
+
+Regex rule: compile once at init, simple string ops when enough.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

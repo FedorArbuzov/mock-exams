@@ -1,0 +1,11 @@
+Why did prod race but tests pass?
+
+Because tests did not run -race. Add go test -race ./... to CI for packages with goroutines, shared maps, or caches.
+
+Race detector catches intermittent bugs that unit tests without concurrency stress miss.
+
+Local dev: run -race on packages you change that touch shared state.
+
+CI rule: -race on concurrent packages — every PR.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

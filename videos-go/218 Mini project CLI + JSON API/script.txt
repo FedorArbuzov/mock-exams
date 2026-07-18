@@ -1,0 +1,11 @@
+How do I lock in the course?
+
+Build a small CLI that calls a JSON HTTP API you also write. Include table tests, httptest for handlers, fmt and vet in CI, and go test -race on concurrent code.
+
+One repo, cmd/cli and cmd/server, internal packages, go.mod clean.
+
+Ship it on GitHub — it beats twenty tutorial certificates in interviews.
+
+Capstone: CLI plus API, tests, race check, README with install and run.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

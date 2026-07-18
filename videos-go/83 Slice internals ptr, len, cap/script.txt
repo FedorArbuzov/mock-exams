@@ -1,0 +1,11 @@
+Why did appending change another slice?
+
+Slices are headers: pointer, length, capacity. Two slices can share one backing array. Append may overwrite slots another slice still sees until growth reallocates.
+
+Always reassign: s = append(s, x). If you need independence, copy or clone.
+
+Understanding ptr, len, cap explains half of junior slice bugs.
+
+Mental model: slice is a window on an array — windows can overlap.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

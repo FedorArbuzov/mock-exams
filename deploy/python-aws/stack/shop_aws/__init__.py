@@ -1,0 +1,1 @@
+"""Shop AWS lab package."""

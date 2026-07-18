@@ -1,0 +1,13 @@
+Why did this Pod land on that specific node?
+
+Because the scheduler chose it. After you apply a Pod with no nodeName set, it sits Pending until the scheduler filters all nodes by CPU, memory, taints, tolerations, affinities, and topology rules, then scores the survivors and picks one.
+
+The scheduler only assigns. It does not start containers. The kubelet on the winning node picks up the Pod and runs it.
+
+What breaks: Pods stuck Pending usually mean no node fits. Maybe every node lacks memory, a required nodeSelector does not match, or a taint blocks scheduling. Adding more nodes will not help if affinity rules exclude them. Beginners kubectl delete the Pod repeatedly, but the constraint never changed.
+
+Practical check: kubectl describe pod and scroll to Events. You will see messages like Insufficient cpu or did not tolerate taint.
+
+Rule to remember: Pending without a nodeName means ask the scheduler, not the kubelet.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

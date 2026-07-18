@@ -1,0 +1,11 @@
+Why didn't my background job stop?
+
+Because it never listened to ctx.Done(). Starting cancelation at the top is not enough — every long loop and blocking call must select on ctx or use context-aware APIs.
+
+HTTP requests, database drivers, and gRPC all support context when you pass it.
+
+On shutdown, cancel root context, then wait for goroutines with WaitGroup or errgroup.
+
+Cancel propagation: parent cancels, children check Done and exit promptly.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

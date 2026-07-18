@@ -1,0 +1,11 @@
+How do I break an outer loop?
+
+Use a label: outer: for { for { break outer } }. Labels are legal but easy to abuse. Prefer functions to encapsulate inner loops when clarity suffers.
+
+continue jumps to the next iteration. break exits the innermost loop unless labeled.
+
+Most code never needs labels. If you reach for one, ask whether a small helper function reads better.
+
+Style: break and continue for simple loops; labels only when the alternative is worse.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

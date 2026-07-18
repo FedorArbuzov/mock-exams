@@ -1,0 +1,28 @@
+# RabbitMQ lab — single node + management (courses rabbitmq-basic/intermediate)
+# docker compose up -d
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: mock-rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: course
+      RABBITMQ_DEFAULT_PASS: course
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  rabbitmq-data:

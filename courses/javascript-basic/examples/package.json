@@ -1,0 +1,10 @@
+{
+  "name": "javascript-basic-labs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Лабораторные работы курса javascript-basic",
+  "scripts": {
+    "hello": "node lab/01-hello.js"
+  }
+}

@@ -1,0 +1,11 @@
+Which beliefs hurt juniors?
+
+Panic for normal errors. Goroutines without exit paths. Ignoring err with underscore. Giant interfaces for one mock. Generics everywhere on day one.
+
+Also: comparing wrapped errors with ==, concurrent map writes, and defer inside tight loops without a function wrapper.
+
+Drop these habits early — seniors spot them in the first PR.
+
+Myth bust: errors not panic, bounded goroutines, small interfaces, check err.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

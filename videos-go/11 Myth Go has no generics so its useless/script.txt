@@ -1,0 +1,11 @@
+Didn't Go refuse generics forever?
+
+Go added generics in 1.18, but the culture did not change: use them to remove real duplication, not to build a type framework. A generic Min function or a reusable container can be great. Generic everything is not.
+
+Many idiomatic Go still prefers simple functions and interfaces because they read cleaner in small codebases.
+
+Interview trap: saying Go has no generics dates you. Better answer: generics exist, but Go still favors simplicity first.
+
+Rule: reach for generics when copy-paste or interface{} hacks hurt — not when a plain function already works.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

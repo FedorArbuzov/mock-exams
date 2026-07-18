@@ -1,0 +1,25 @@
+# Подставьте URL через: source config/repo.env && envsubst < bootstrap/root-application.yaml | kubectl apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-root
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: ${MOCK_GITOPS_REPO}
+    targetRevision: ${MOCK_GITOPS_REVISION}
+    path: deploy/gitops/apps
+    directory:
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

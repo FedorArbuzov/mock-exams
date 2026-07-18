@@ -1,0 +1,11 @@
+How do I stop a server cleanly?
+
+Listen for os.Interrupt and syscall.SIGTERM. Cancel root context. Call server.Shutdown with a timeout context to drain in-flight HTTP requests before exit.
+
+Hard os.Exit skips defers and drops active connections — bad for deploys.
+
+Kubernetes sends SIGTERM before killing pods — graceful shutdown is not optional in prod.
+
+Shutdown sequence: signal, cancel, Shutdown with timeout, then exit.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

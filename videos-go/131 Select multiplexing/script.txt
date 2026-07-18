@@ -1,0 +1,11 @@
+How do I wait on multiple channels?
+
+select chooses the first ready case. It can wait on sends, receives, and default for non-blocking tries.
+
+select is how you implement timeouts, cancellation, and fair-ish multiplexing.
+
+Every select in a loop should include ctx.Done() for cancelable work.
+
+Pattern: select { case work := <-jobs: ... case <-ctx.Done(): return }.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

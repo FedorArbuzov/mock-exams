@@ -1,0 +1,15 @@
+A favorite interviewer trick question?
+
+In simple terms, new Pods on that node won't be managed correctly; already running containers may keep going, but state control breaks.
+
+Concretely, treat that as a testable rule: New Pods on that node won't be managed correctly; already running containers may keep going, but state control breaks. When reality disagrees, trust cluster signals over the story in your head.
+
+Separate the brain from the factory floor. Control-plane failure and worker failure can look identical to users and are completely different to operators.
+
+Ask four questions: can I reach the API, can Pods schedule, is the node Ready, and is the workload itself healthy?
+
+Beginner trap: saying 'Kubernetes is down' without naming a layer.
+
+If someone asks tomorrow what this changes, answer with the rule: new Pods on that node won't be managed correctly; already running containers may keep going, but state control breaks.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

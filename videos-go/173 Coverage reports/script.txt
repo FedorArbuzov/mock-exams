@@ -1,0 +1,11 @@
+How much is tested?
+
+go test -cover shows statement coverage percentage. go test -coverprofile=c.out then go tool cover -html=c.out for line heatmaps.
+
+Coverage guides gaps — it is not a quality score. 100% coverage with bad assertions still lies.
+
+Aim for critical paths covered, not a vanity number.
+
+Coverage: use -cover to find gaps, not as the goal itself.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

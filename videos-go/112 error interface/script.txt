@@ -1,0 +1,11 @@
+What is an error really?
+
+The error interface: any type with Error() string. errors.New makes simple errors. fmt.Errorf formats them. Custom structs add fields like HTTP status or error codes.
+
+Errors are values like ints — comparable with errors.Is, inspectable with errors.As.
+
+Treat error as a first-class return type, not a comment.
+
+Type fact: if it has Error() string, it is an error — std or custom.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

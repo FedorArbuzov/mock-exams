@@ -1,0 +1,11 @@
+Can I build for Linux from Windows?
+
+Yes. GOOS=linux GOARCH=amd64 go build -o myapp . Cross-compilation is built in — no extra toolchain for common targets.
+
+Script release builds for multiple platforms in CI matrix jobs.
+
+CGO complicates cross-compile — pure Go builds are easiest.
+
+Cross-build: set GOOS and GOARCH, go build — one command per target.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

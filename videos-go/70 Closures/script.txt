@@ -1,0 +1,11 @@
+Why does my goroutine print the wrong i?
+
+Closures capture variables by reference, not by value. In a loop, all goroutines may see the final value of i unless you copy it: i := i before go func() { use(i) }().
+
+Go 1.22+ fixed loop variable semantics in many cases, but understanding capture still matters for older code and nested closures.
+
+Always ask: what does this closure close over, and when does it run?
+
+Concurrency habit: pass loop variables as parameters to the goroutine func(i int).
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

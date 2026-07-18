@@ -1,0 +1,13 @@
+How do you see fresh events instead of a jumbled mess?
+
+kubectl get events dash dash sort-by equals dot lastTimestamp. By default, events come back in a confusing order, and during an incident you want the newest failure reasons at the bottom, right where your eyes land. Sorting by last timestamp gives you a clean timeline.
+
+Events are the cluster's short-term memory: FailedScheduling, Pulling, Pulled, Failed, Unhealthy, Killing, BackOff. Read together in time order, they tell the story of what the scheduler and kubelet just did to your workload.
+
+What beginners get wrong: reading unsorted events and misjudging what happened first. Or forgetting that events are namespaced - add dash A for the whole cluster - and that they expire, usually after about an hour, so a quiet event list can just mean the failure aged out.
+
+Practical tip: add dash A to sweep all namespaces, or dash n to focus. Combine with kubectl get events dash dash field-selector to filter by a specific object when the list is noisy.
+
+Rule to remember: sort events by time - the latest reasons are what you actually need.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

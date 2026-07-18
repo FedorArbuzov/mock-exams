@@ -1,0 +1,11 @@
+Go modules have a few objective health signals you can check anytime. When is my module clean?
+
+When your build passes, tidy changes nothing, tests pass, your module path is intentional, and every exported symbol has a doc comment.
+
+Also check: no surprise replace directives, no mystery indirect dependencies you can't explain, and CI runs formatting, vet, and tests.
+
+A clean module is boring to clone — that's the goal. New contributors run two commands and they're unblocked.
+
+Module health check: build, tidy, test, document exports.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

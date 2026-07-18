@@ -1,0 +1,11 @@
+Why create type UserID int when int already works?
+
+Because defined types are distinct at compile time. You cannot pass a plain int where a UserID is required, even though both are ints under the hood. That catches mixing order IDs with user IDs before the bug reaches production — the compiler rejects the call instead of corrupting data silently.
+
+A type alias — type Alias equals int — is just another name for the exact same type. Aliases help migration and readability during refactors but do not add any type safety. Old and new names are interchangeable everywhere, which is exactly why you should not use aliases to model domain concepts.
+
+Use defined types when the name carries domain meaning: UserID, OrderID, cents, meters. They document intent in signatures and prevent accidental cross-wiring. Use aliases for API compatibility or legacy renames, not for catching logic mistakes.
+
+Rule: distinct meaning in your domain — defined type. Same type, new name during refactor — alias.
+
+Master Go faster. Theory, hands-on labs, and interview questions - link in bio.

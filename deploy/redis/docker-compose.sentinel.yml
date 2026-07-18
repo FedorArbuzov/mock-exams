@@ -1,0 +1,69 @@
+# Sentinel HA — redis-intermediate (auto failover lab)
+# docker compose -f docker-compose.sentinel.yml up -d
+# Master (initial): localhost:6379  |  Sentinel query: localhost:26379
+
+services:
+  redis-master:
+    image: redis:7.2-alpine
+    container_name: mock-redis-sentinel-master
+    hostname: redis-master
+    ports:
+      - "6379:6379"
+    command: redis-server --port 6379 --bind 0.0.0.0 --protected-mode no --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  redis-replica-1:
+    image: redis:7.2-alpine
+    container_name: mock-redis-sentinel-replica-1
+    hostname: redis-replica-1
+    command: redis-server --port 6379 --bind 0.0.0.0 --protected-mode no --replicaof redis-master 6379
+    depends_on:
+      redis-master:
+        condition: service_healthy
+
+  redis-replica-2:
+    image: redis:7.2-alpine
+    container_name: mock-redis-sentinel-replica-2
+    hostname: redis-replica-2
+    command: redis-server --port 6379 --bind 0.0.0.0 --protected-mode no --replicaof redis-master 6379
+    depends_on:
+      redis-master:
+        condition: service_healthy
+
+  sentinel-1:
+    image: redis:7.2-alpine
+    container_name: mock-redis-sentinel-1
+    hostname: sentinel-1
+    ports:
+      - "26379:26379"
+    volumes:
+      - ./config/sentinel.conf:/usr/local/etc/redis/sentinel.conf:ro
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    depends_on:
+      - redis-master
+      - redis-replica-1
+      - redis-replica-2
+
+  sentinel-2:
+    image: redis:7.2-alpine
+    container_name: mock-redis-sentinel-2
+    hostname: sentinel-2
+    volumes:
+      - ./config/sentinel.conf:/usr/local/etc/redis/sentinel.conf:ro
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    depends_on:
+      - sentinel-1
+
+  sentinel-3:
+    image: redis:7.2-alpine
+    container_name: mock-redis-sentinel-3
+    hostname: sentinel-3
+    volumes:
+      - ./config/sentinel.conf:/usr/local/etc/redis/sentinel.conf:ro
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    depends_on:
+      - sentinel-1

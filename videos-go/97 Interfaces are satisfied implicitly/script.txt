@@ -1,0 +1,11 @@
+Where is implements Keyword?
+
+There is none. If type T has all methods interface I requires, T implements I automatically. No declaration, no ceremony.
+
+That lets interfaces be defined by the consumer, not the producer — small interfaces like io.Reader spread everywhere.
+
+The flip side: you discover implementation satisfaction at compile time when you assign, not when you define the type.
+
+Interface rule: if the methods match, it implements — silently and powerfully.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

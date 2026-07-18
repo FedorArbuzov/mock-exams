@@ -1,0 +1,11 @@
+How do I add auth logging once?
+
+Middleware wraps http.Handler. func logging(next http.Handler) http.Handler { return HandlerFunc(func(w,r) { log; next.ServeHTTP(w,r) }) }.
+
+Chain middleware: auth(logging(mux)). Each layer handles one concern.
+
+Use response wrappers to capture status codes if your logger needs them.
+
+Middleware pattern: wrap Handler, call next.ServeHTTP — compose cross-cutting concerns.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

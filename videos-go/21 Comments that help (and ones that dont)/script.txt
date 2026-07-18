@@ -1,0 +1,11 @@
+Should every line have a comment?
+
+No. Comment why something is true, not what the code obviously does. Bad: increment i. Good: retry budget exhausted, stop hammering upstream.
+
+Exported functions and types need doc comments that start with the name — something like "ParseConfig reads the config file." That text becomes your generated documentation.
+
+Comments that lie are worse than none. If behavior changes, update the comment in the same PR.
+
+Review rule: if a comment repeats the function name in English, delete it. If it explains a non-obvious invariant, keep it.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

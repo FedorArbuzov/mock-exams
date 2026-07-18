@@ -1,0 +1,11 @@
+How do I control string printing?
+
+Implement fmt.Stringer with func (t T) String() string. Logs and fmt.Printf use it automatically.
+
+Keep String safe — no panics, no secrets. It is for humans debugging, not serialization.
+
+Stringer beats manual formatting sprinkled everywhere.
+
+Debug tip: String() on IDs and enums makes logs readable instantly.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

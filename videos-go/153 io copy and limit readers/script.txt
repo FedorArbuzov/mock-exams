@@ -1,0 +1,11 @@
+How do I stream safely?
+
+io.Copy(dst, src) moves bytes without loading everything into RAM. io.LimitReader caps how much you read — critical for user uploads and untrusted inputs.
+
+Always set max body size on HTTP handlers. Unbounded ReadAll on attacker-controlled streams is a DoS vector.
+
+Streaming is the default mindset for files and network in Go.
+
+Stream safety: io.Copy plus LimitReader on untrusted input.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

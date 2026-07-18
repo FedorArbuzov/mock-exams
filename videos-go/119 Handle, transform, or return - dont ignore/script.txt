@@ -1,0 +1,11 @@
+Is _ = err ever OK?
+
+Almost never. Ignoring errors hides data loss, auth bypasses, and partial writes. At minimum log at the boundary with reason.
+
+If you truly must ignore — rare cleanup cases — comment why loudly.
+
+go vet and linters flag many ignored errors. Treat err != nil as non-optional unless documented.
+
+Discipline: handle, wrap and return, or log — never silent underscore.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

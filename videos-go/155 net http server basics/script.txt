@@ -1,0 +1,11 @@
+Can Go be my API server?
+
+Yes. net/http is production-proven. Register handlers on a mux, listen with http.Server, set timeouts on the server struct — ReadHeaderTimeout, IdleTimeout.
+
+Handler signature: func(w http.ResponseWriter, r *http.Request). Implement http.Handler or use HandlerFunc.
+
+Start simple with stdlib before importing heavy frameworks.
+
+Server basics: mux, Handler, http.Server with timeouts, graceful Shutdown.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

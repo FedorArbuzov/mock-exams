@@ -1,0 +1,11 @@
+How do I keep images tiny?
+
+Multi-stage Dockerfile: build stage with golang image, run go build -ldflags="-s -w" for smaller binary, copy binary into distroless or alpine runtime.
+
+No compiler or source in final image — smaller attack surface and faster pulls.
+
+CGO off for static binary: CGO_ENABLED=0 GOOS=linux go build.
+
+Docker Go: build stage, copy static binary, minimal runtime image.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

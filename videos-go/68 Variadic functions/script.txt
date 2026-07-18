@@ -1,0 +1,11 @@
+How does fmt.Println take many args?
+
+Variadic functions use ...T in the parameter list. Inside the function, args is a slice of T. fmt.Println is the famous example.
+
+You can spread a slice with fn(slice...) when calling a variadic function.
+
+Use variadics for constructors and formatters — not for hiding required parameters.
+
+Define sparingly: variadic options are great; variadic required data is confusing.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

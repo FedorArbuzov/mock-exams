@@ -1,0 +1,11 @@
+When do I compile?
+
+Use go run for quick experiments — it compiles to a temporary binary and runs it immediately. Use go build or go install when you want an artifact you can ship or put on your path.
+
+go run is perfect while learning. Production and CI should build a named binary so you know exactly what shipped.
+
+Common mistake: debugging with go run but never verifying the built binary behaves the same. Build it before you tag a release.
+
+Habit: prototype with go run, commit only once a full build passes cleanly.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

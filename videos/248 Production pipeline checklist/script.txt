@@ -1,0 +1,15 @@
+When is a pipeline ready for prod?
+
+In simple terms, build, scan, deploy, smoke, alerts, and a clear rollback path.
+
+Concretely, treat that as a testable rule: Build, scan, deploy, smoke, alerts, and a clear rollback path. When reality disagrees, trust cluster signals over the story in your head.
+
+Delivery quality is a bored repeatable path: pinned image, Git as source of truth, sync, smoke, rollback.
+
+If humans must remember secret dashboard clicks, drift is already invited.
+
+Beginner trap: kubectl edit in prod with no path back to Git.
+
+If someone asks tomorrow what this changes, answer with the rule: build, scan, deploy, smoke, alerts, and a clear rollback path.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

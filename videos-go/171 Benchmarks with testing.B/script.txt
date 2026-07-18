@@ -1,0 +1,11 @@
+How do I know if I made it faster?
+
+Write benchmarks: func BenchmarkFoo(b *testing.B) { for i := 0; i < b.N; i++ { Foo() } }. Run go test -bench=. -benchmem.
+
+Read ns/op and allocations per op. Optimize only after benchmarks prove a hotspot.
+
+Compare before and after on the same machine with -count for stability.
+
+Benchmark habit: prove slow before optimizing — benchmem shows allocations.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

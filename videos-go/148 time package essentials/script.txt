@@ -1,0 +1,11 @@
+How do I store timestamps?
+
+Use time.Time — not strings, not int unless you have a protocol reason. Store and compute in UTC, convert to local only for display.
+
+Parse with time.Parse using explicit layouts like time.RFC3339. "2006-01-02" is Go's reference layout mnemonic.
+
+Compare with Before and After, not string compare on formatted dates.
+
+Time rule: time.Time in UTC internally, RFC3339 on the wire.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

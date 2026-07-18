@@ -1,0 +1,73 @@
+# Three-node cluster for quorum queue labs (optional, rabbitmq-intermediate)
+# docker compose -f docker-compose.cluster.yml up -d
+# AMQP: localhost:5672,5673,5674  |  Management: 15672,15673,15674
+
+x-rabbitmq: &rabbitmq-common
+  image: rabbitmq:3.13-management-alpine
+  environment: &rabbit-env
+    RABBITMQ_DEFAULT_USER: course
+    RABBITMQ_DEFAULT_PASS: course
+    RABBITMQ_ERLANG_COOKIE: mock-exams-rabbitmq-cookie
+  volumes:
+    - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+    - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+  healthcheck:
+    test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+    interval: 10s
+    timeout: 10s
+    retries: 12
+
+services:
+  rabbitmq-1:
+    <<: *rabbitmq-common
+    container_name: mock-rabbitmq-1
+    hostname: rabbitmq-1
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      <<: *rabbit-env
+      RABBITMQ_NODENAME: rabbit@rabbitmq-1
+    volumes:
+      - rabbitmq-1-data:/var/lib/rabbitmq
+      - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+
+  rabbitmq-2:
+    <<: *rabbitmq-common
+    container_name: mock-rabbitmq-2
+    hostname: rabbitmq-2
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    environment:
+      <<: *rabbit-env
+      RABBITMQ_NODENAME: rabbit@rabbitmq-2
+    volumes:
+      - rabbitmq-2-data:/var/lib/rabbitmq
+      - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    depends_on:
+      - rabbitmq-1
+
+  rabbitmq-3:
+    <<: *rabbitmq-common
+    container_name: mock-rabbitmq-3
+    hostname: rabbitmq-3
+    ports:
+      - "5674:5672"
+      - "15674:15672"
+    environment:
+      <<: *rabbit-env
+      RABBITMQ_NODENAME: rabbit@rabbitmq-3
+    volumes:
+      - rabbitmq-3-data:/var/lib/rabbitmq
+      - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    depends_on:
+      - rabbitmq-1
+
+volumes:
+  rabbitmq-1-data:
+  rabbitmq-2-data:
+  rabbitmq-3-data:

@@ -1,0 +1,11 @@
+Is nil slice usable?
+
+Yes for many operations. append works on nil slices. len and range work. But nil and empty slice are not identical everywhere — JSON encodes nil as null and empty as [].
+
+APIs sometimes distinguish "not loaded" nil from "loaded but empty" slice.
+
+Use empty slice literal when you want non-nil empty: return []T{}, not var s []T, if callers care.
+
+Semantics: nil means absent optional; empty slice means present but zero length.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

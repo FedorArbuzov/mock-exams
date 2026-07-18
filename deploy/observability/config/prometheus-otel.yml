@@ -1,0 +1,7 @@
+# Merge via docker-compose.otel.yml — extra scrape for OTel (mount replaces or use file_sd)
+# For labs: add to prometheus.yml job otel-collector:8889 after starting otel overlay
+
+scrape_configs:
+  - job_name: otel-collector
+    static_configs:
+      - targets: ["otel-collector:8889"]

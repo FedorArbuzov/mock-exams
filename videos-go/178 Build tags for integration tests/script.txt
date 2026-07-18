@@ -1,0 +1,11 @@
+How do I skip slow tests locally?
+
+Build tags: //go:build integration at top of file. Run default tests without tag; CI runs go test -tags=integration.
+
+Keeps go test ./... fast on laptops while full suite runs in pipeline.
+
+Document how to run integration tests in README.
+
+Tags: //go:build integration gates slow tests — CI enables them.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

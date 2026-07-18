@@ -7,7 +7,7 @@
 - **ConfigMap** — обычные значения (URL'ы, фичефлаги, конфиги).
 - **Secret** — пароли, токены, ключи. Хранится **base64-кодированным** (это **не** шифрование, это просто кодирование), и у объекта обычно более жёсткий RBAC.
 
-> Важно: **Secret по умолчанию не шифруется**. Для шифрования в etcd нужно настроить **encryption at rest** на уровне кластера, либо хранить секреты во внешнем менеджере (Vault, AWS Secrets Manager и т.д.).
+> Важно: **Secret по умолчанию не шифруется**. Для шифрования в etcd нужно настроить **encryption at rest** на уровне кластера, либо хранить секреты во внешнем менеджере (Vault, AWS Secrets Manager и т.д.). Практика Vault + **Kubernetes auth**: [secrets-basic/10-kubernetes-vault](../secrets-basic/10-kubernetes-vault.md) ([`deploy/vault`](../../deploy/vault/README.md)).
 
 ## ConfigMap: что внутри
 

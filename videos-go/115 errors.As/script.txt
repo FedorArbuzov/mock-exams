@@ -1,0 +1,11 @@
+How do I extract a structured error type?
+
+errors.As(err, &target) finds the first error in the chain assignable to target's type. Use a pointer to the variable you want filled.
+
+Custom error types carry fields: type ValidationError struct { Field string; Msg string }.
+
+As powers HTTP mappers that need status codes from typed errors.
+
+Extract: var ve ValidationError; if errors.As(err, &ve) { ... }.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

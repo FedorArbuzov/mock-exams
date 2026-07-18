@@ -1,0 +1,11 @@
+Are named return values idiomatic Go?
+
+Sometimes. A signature like func parse returning n int and err error lets defer adjust n or log on exit. Named results document what a tiny function returns and pair well with defer cleanup at the function boundary — perfect for small parsers and resource wrappers.
+
+But overuse makes functions harder to read. Readers must track mutable named returns across many branches and early returns. Avoid named returns in long functions packed with business logic where the names blur into noise instead of helping.
+
+A naked return with no values in a long function is a code smell. A bare return forces readers to hunt for the named variables instead of seeing the values right at the exit. Explicit return values read clearer in anything non-trivial — say what you return at the point you return it.
+
+Guideline: named returns for small functions with defer; explicit returns everywhere else.
+
+Master Go faster. Theory, hands-on labs, and interview questions - link in bio.

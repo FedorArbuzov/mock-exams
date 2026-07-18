@@ -1,0 +1,11 @@
+Why heap allocations matter?
+
+Escape analysis decides stack versus heap. Values that escape to heap cost GC cycles. Hot paths with many allocations show up as latency spikes under load.
+
+go build -gcflags=-m shows escapes in compile output — noisy but educational.
+
+Fix real hotspots: reuse buffers with sync.Pool, preallocate slices, pass pointers only when needed.
+
+Perf concept: fewer escapes on hot path — profile to find them.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+[Unit]
+Description=Lab hello oneshot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo hello > /tmp/lab-hello.txt'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

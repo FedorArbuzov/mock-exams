@@ -1,0 +1,11 @@
+What does good err code look like?
+
+Every error checked. Wrapped with %w at boundaries. Inspected with errors.Is and errors.As — not string contains. Never silently dropped. Mapped to user-safe messages at the edge.
+
+Run linters that catch ignored errors. Tests cover sentinel paths.
+
+Good error handling is boring and visible — that is the feature.
+
+Error checklist: check, wrap, Is/As, map once, never ignore.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

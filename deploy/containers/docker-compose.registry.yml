@@ -1,0 +1,14 @@
+# Local registry for push/pull labs
+# docker compose -f docker-compose.yml -f docker-compose.registry.yml up -d
+
+services:
+  registry:
+    image: registry:2
+    container_name: mock-registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry-data:/var/lib/registry
+
+volumes:
+  registry-data:

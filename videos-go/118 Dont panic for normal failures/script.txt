@@ -1,0 +1,11 @@
+File not found — panic?
+
+No. Return os.ErrNotExist or wrap it. Panic is for invariant violations: index out of range you should never hit, impossible state after validation.
+
+Users, networks, and databases fail normally. Errors handle that. Panic means the program is broken.
+
+Libraries must not panic on public inputs. Main may exit; servers should isolate request panics if absolutely needed.
+
+Failure split: expected problems return error, programmer bugs may panic.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

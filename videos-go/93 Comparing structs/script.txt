@@ -1,0 +1,11 @@
+Can I use == on structs?
+
+Yes if every field is comparable — no slices, maps, or functions inside. Otherwise compare field by field or use reflect sparingly.
+
+Comparable structs make tests easy: if got != want { t.Fatal(...) }.
+
+For structs with slices, use cmp.Diff or custom Equal methods.
+
+Equality: == when comparable; custom Equal or cmp when not.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

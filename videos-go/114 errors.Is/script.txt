@@ -1,0 +1,11 @@
+How do I check for a sentinel error?
+
+errors.Is(err, ErrNotFound) walks the wrap chain. Do not compare err == ErrNotFound when wrapping is in play — Is sees through %w layers.
+
+Define sentinel errors for expected conditions: ErrNotFound, ErrConflict, ErrUnauthorized.
+
+Sentinels are for control flow, not for displaying to users — map them to messages at the edge.
+
+Check: if errors.Is(err, ErrNotFound) { return 404 } — not string contains hacks.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

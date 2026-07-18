@@ -1,0 +1,11 @@
+Why test from another package?
+
+package foo_test imports foo as external client would — only exported symbols accessible. Catches accidental reliance on unexported helpers.
+
+External tests are integration-flavored unit tests — good for API contract checks.
+
+Keep fast unit tests in package foo; export-facing tests in foo_test.
+
+External test: package foo_test — tests the public API surface only.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

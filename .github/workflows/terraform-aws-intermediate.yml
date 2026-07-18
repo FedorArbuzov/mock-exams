@@ -1,0 +1,39 @@
+name: terraform-aws-intermediate
+
+on:
+  pull_request:
+    paths:
+      - "courses/aws-intermediate/**"
+      - ".github/workflows/terraform-aws-intermediate.yml"
+  push:
+    branches: [main]
+    paths:
+      - "courses/aws-intermediate/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: courses/aws-intermediate/projects/image-platform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
+      - name: Build lambda zips (handler only for CI)
+        run: |
+          cd lambda && zip -j ../lambda.zip handler.py
+          cd ../lambda-api && zip -j ../lambda-api.zip api_handler.py
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
+
+  tfsec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          working_directory: courses/aws-intermediate/projects/image-platform
+          soft_fail: true

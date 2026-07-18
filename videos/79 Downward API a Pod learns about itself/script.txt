@@ -1,0 +1,15 @@
+How can an app learn its name, namespace, limits?
+
+In simple terms, downward API injects Pod metadata into env or files without hardcoding.
+
+Concretely, treat that as a testable rule: Downward API injects Pod metadata into env or files without hardcoding. When reality disagrees, trust cluster signals over the story in your head.
+
+These fields are runtime levers for scheduling, restarts, eviction, and placement — not decorative YAML.
+
+Change one field, watch Ready state and Events, and the concept becomes cause and effect.
+
+Beginner trap: copying a full internet snippet without knowing the failure mode it prevents.
+
+If someone asks tomorrow what this changes, answer with the rule: downward API injects Pod metadata into env or files without hardcoding.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

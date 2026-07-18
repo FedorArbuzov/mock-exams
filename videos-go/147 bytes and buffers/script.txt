@@ -1,0 +1,11 @@
+String builder or bytes.Buffer?
+
+Both build strings efficiently. strings.Builder is preferred for pure string assembly. bytes.Buffer handles mixed bytes and strings.
+
+Never concatenate strings in a loop with plus — quadratic allocations.
+
+For HTTP bodies and file buffers, bytes.Buffer or io.Copy patterns win.
+
+Build text: strings.Builder in loops — not s += piece.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

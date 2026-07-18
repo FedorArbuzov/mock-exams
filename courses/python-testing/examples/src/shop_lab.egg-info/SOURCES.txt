@@ -1,0 +1,12 @@
+pyproject.toml
+src/shop/__init__.py
+src/shop/async_utils.py
+src/shop/cart.py
+src/shop/pricing.py
+src/shop/users.py
+src/shop_lab.egg-info/PKG-INFO
+src/shop_lab.egg-info/SOURCES.txt
+src/shop_lab.egg-info/dependency_links.txt
+src/shop_lab.egg-info/requires.txt
+src/shop_lab.egg-info/top_level.txt
+tests/test_pricing_starter.py

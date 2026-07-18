@@ -1,0 +1,11 @@
+Why return (T, error) everywhere?
+
+Because Go has no exceptions. Errors are part of the function signature — visible in the type, impossible to ignore without a deliberate blank identifier.
+
+Callers decide: handle, wrap, or return up the stack. Control flow stays explicit in the source.
+
+That verbosity buys reliability. You always know which lines can fail.
+
+Signature habit: if it can fail, return error as the last value.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

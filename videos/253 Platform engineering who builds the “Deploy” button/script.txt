@@ -1,0 +1,15 @@
+Who should build golden paths for developers?
+
+In simple terms, a platform team packages safe, convenient self-service workflows.
+
+Concretely, treat that as a testable rule: A platform team packages safe, convenient self-service workflows. When reality disagrees, trust cluster signals over the story in your head.
+
+This is how you move faster under pressure: name the layer, pick one proof, then change only what that proof supports.
+
+If you skip the model, you will thrash — restarting things, editing YAML at random, and calling it debugging.
+
+Beginner trap: knowing the buzzword while having no next check.
+
+If someone asks tomorrow what this changes, answer with the rule: a platform team packages safe, convenient self-service workflows.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

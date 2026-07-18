@@ -1,0 +1,11 @@
+Explain interfaces in 30 seconds
+
+Interfaces are satisfied implicitly — if your type has the methods, it implements the interface. Small interfaces compose — io.Reader, io.Writer.
+
+Accept interfaces at boundaries, return concrete types from constructors.
+
+Classic gotcha: typed nil pointer inside interface is not nil — check err != nil properly.
+
+Interview answer: implicit satisfaction, small interfaces, nil interface gotcha.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

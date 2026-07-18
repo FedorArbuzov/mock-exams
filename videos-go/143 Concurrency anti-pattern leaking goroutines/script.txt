@@ -1,0 +1,11 @@
+Why does memory grow forever?
+
+Leaked goroutines. Every goroutine blocked forever on a channel or lock holds stack and references, preventing GC of connected objects.
+
+Common causes: forgotten close, missing ctx cancel, WaitGroup mismatch, sending without receivers.
+
+Profile goroutines with pprof goroutine endpoint when heap climbs but traffic is flat.
+
+Leak fix: every go statement needs an exit — cancel, close, timeout, or completion.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

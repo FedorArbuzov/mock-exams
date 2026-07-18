@@ -1,0 +1,11 @@
+Where do I go when shorts end?
+
+Read real stdlib source — fmt, net/http, context. Contribute a small fix to an open source Go project. Build one production-shaped service with deploy, logs, and tests.
+
+If you are platform-minded, connect Go to Kubernetes tooling. If backend, deepen databases and observability.
+
+Courses end. Reps and code review begin. Keep shipping small programs weekly.
+
+Next steps: stdlib reading, open source PR, one real service in production.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

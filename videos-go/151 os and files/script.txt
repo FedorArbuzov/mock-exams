@@ -1,0 +1,11 @@
+How do I read a config file?
+
+os.ReadFile for small files entirely in memory. os.Open plus defer Close for streaming. Check errors on every step.
+
+File permissions matter in prod — world-readable config with secrets is a security incident.
+
+Prefer env vars for secrets over committed files. Files for non-secret defaults.
+
+File IO: ReadFile for small configs, Open with defer for large, never ignore Close errors.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

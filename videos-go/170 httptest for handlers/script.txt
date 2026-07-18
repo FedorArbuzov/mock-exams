@@ -1,0 +1,11 @@
+How do I test HTTP without a real port?
+
+httptest.NewRecorder records ResponseWriter output. Call your handler directly: handler.ServeHTTP(rec, req). Assert status, headers, body.
+
+Build requests with httptest.NewRequest. No network flake, tests run fast.
+
+This is how you test middleware chains too — wrap and record.
+
+HTTP test: NewRequest plus NewRecorder plus ServeHTTP — no listening socket.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

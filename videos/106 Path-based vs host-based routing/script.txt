@@ -1,0 +1,15 @@
+When split by domain vs by path?
+
+In simple terms, host for different apps/brands; path for parts of one domain.
+
+Concretely, treat that as a testable rule: Host for different apps/brands; path for parts of one domain. When reality disagrees, trust cluster signals over the story in your head.
+
+Most traffic outages are mismatches: selector, port, namespace, readiness, or Ingress rules with no controller.
+
+Trace one request hop by hop — client, edge, Service, endpoints, Ready Pod — and stop at the first broken hop.
+
+Beginner trap: blaming app code before confirming endpoints exist.
+
+If someone asks tomorrow what this changes, answer with the rule: host for different apps/brands; path for parts of one domain.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

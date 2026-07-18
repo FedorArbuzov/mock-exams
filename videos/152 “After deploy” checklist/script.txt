@@ -1,0 +1,17 @@
+What do I watch in the first minutes after release?
+
+In simple terms, rollout, errors, latency, readiness, and smoke checks.
+
+Concretely, treat that as a testable rule: Rollout, errors, latency, readiness, and smoke checks. When reality disagrees, trust cluster signals over the story in your head.
+
+Strong answers include a tradeoff and a next check. Slogans collapse under follow-up questions.
+
+Practice teaching the idea in thirty seconds, then debug the matching failure in a sandbox until both connect.
+
+Beginner trap: fluency without diagnosis skill.
+
+For the video, a tiny readinessProbe block — path and port only, huge font.
+
+If someone asks tomorrow what this changes, answer with the rule: rollout, errors, latency, readiness, and smoke checks.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

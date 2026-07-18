@@ -1,0 +1,15 @@
+How do I lock in the whole course?
+
+In simple terms, deployment + Service + Ingress + Config/Secret + probes + HPA + pipeline.
+
+Concretely, treat that as a testable rule: Deployment + Service + Ingress + Config/Secret + probes + HPA + pipeline. When reality disagrees, trust cluster signals over the story in your head.
+
+Delivery quality is a bored repeatable path: pinned image, Git as source of truth, sync, smoke, rollback.
+
+If humans must remember secret dashboard clicks, drift is already invited.
+
+Beginner trap: kubectl edit in prod with no path back to Git.
+
+If someone asks tomorrow what this changes, answer with the rule: deployment + Service + Ingress + Config/Secret + probes + HPA + pipeline.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

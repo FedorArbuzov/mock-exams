@@ -1,0 +1,11 @@
+Should every function wrap?
+
+No. Wrap at boundaries where context helps diagnosis — service calling repository, handler calling service. Inner helpers can return raw errors upward.
+
+Wrap spam creates walls of text and breaks grep for root causes.
+
+One good wrap per hop beats three redundant wraps saying the same thing.
+
+Wrap where: crossing package boundaries or adding unique context.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

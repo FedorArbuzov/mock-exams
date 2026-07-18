@@ -1,0 +1,11 @@
+Should I put setup in init()?
+
+Rarely. init runs automatically on import — hard to test, hard to order, surprising in large apps. Prefer explicit Init functions called from main.
+
+init is OK for registering drivers, codecs, or global tables where the language convention expects it.
+
+If startup fails, init cannot return an error — it panics. That is a bad default for config loading.
+
+Explicit beats magic: main calls setup, setup returns errors.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

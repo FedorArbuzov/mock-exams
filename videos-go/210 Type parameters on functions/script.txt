@@ -1,0 +1,11 @@
+How do I write Min[T]?
+
+func Min[T cmp.Ordered](a, b T) T { if a < b { return a }; return b }. Constraints from cmp or constraints packages keep generics readable.
+
+Type parameter T goes in square brackets before args. Call like Min(3, 5) — inference usually works.
+
+Keep constraints as small as possible — Ordered, comparable, or custom interface constraints.
+
+Generic func: T cmp.Ordered, bracket syntax, let compiler infer T at call site.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Does slicing copy data?
+
+Usually no. s[low:high] creates a new slice header pointing at the same backing array. Mutating s[i] can affect siblings sharing that array.
+
+Use copy or slices.Clone when you need an independent buffer. Sub-slices are views, not copies.
+
+This matters when you pass sub-slices to goroutines or reuse a large buffer for small pieces.
+
+Safety: slice for view, copy or Clone for ownership transfer.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Is this interface justified?
+
+Ask four questions: Is it small? Defined by the consumer? Satisfied implicitly by real types? Do you have a second implementation or a test fake that needs it?
+
+If all yes, keep it. If it exists "for testing someday," delete it until someday arrives.
+
+Good interfaces make mocks trivial and APIs stable. Bad interfaces multiply files with no benefit.
+
+Interface checklist: small, consumer-side, implicit, proven need.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

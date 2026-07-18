@@ -1,0 +1,11 @@
+What should CI run every PR?
+
+go fmt check, go vet ./..., go test ./..., go test -race on concurrent packages, and go build ./... or build your main packages. Fast feedback beats slow nightly-only quality.
+
+Cache modules in CI. Fail on lint and test like any other language.
+
+Optional: golangci-lint, vulnerability scan with govulncheck.
+
+CI minimum: fmt, vet, test, race where needed, build.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

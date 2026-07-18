@@ -1,0 +1,17 @@
+# Пример multistage для курса (не используется стендом напрямую)
+# Сборка артефакта в тяжёлом образе, runtime — минимальный
+
+FROM python:3.12-slim AS builder
+WORKDIR /src
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+COPY app.py .
+
+FROM python:3.12-slim AS runtime
+WORKDIR /app
+RUN useradd -m -u 10001 appuser
+COPY --from=builder /install /usr/local
+COPY --from=builder /src/app.py .
+USER appuser
+EXPOSE 8080
+CMD ["python", "app.py"]

@@ -1,0 +1,17 @@
+Why does the cluster start drifting without limits?
+
+In simple terms, requests reserve capacity; limits cap peak container consumption.
+
+Concretely, treat that as a testable rule: Requests reserve capacity; limits cap peak container consumption. When reality disagrees, trust cluster signals over the story in your head.
+
+These fields are runtime levers for scheduling, restarts, eviction, and placement — not decorative YAML.
+
+Change one field, watch Ready state and Events, and the concept becomes cause and effect.
+
+Beginner trap: copying a full internet snippet without knowing the failure mode it prevents.
+
+For the video, a tiny resources YAML block — large font, few lines, phone-readable.
+
+If someone asks tomorrow what this changes, answer with the rule: requests reserve capacity; limits cap peak container consumption.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

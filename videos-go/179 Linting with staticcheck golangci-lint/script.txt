@@ -1,0 +1,11 @@
+Is vet enough forever?
+
+go vet catches common mistakes. staticcheck and golangci-lint find more: unused code, subtle bugs, style issues. Add linters as the project grows.
+
+Run linters in CI with the same config locally — .golangci.yml in repo root.
+
+Lint failures should block merge like test failures.
+
+Lint stack: vet always, golangci-lint when the repo grows past toy size.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

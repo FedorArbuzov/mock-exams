@@ -1,0 +1,11 @@
+How does Go handle errors?
+
+Errors are values returned as the last result. Wrap with fmt.Errorf and %w to add context. Inspect with errors.Is for sentinels and errors.As for typed errors.
+
+No try/catch. Every failure path is visible in the source.
+
+Good answer mentions: do not ignore err, wrap at boundaries, map to HTTP status at edge.
+
+Interview answer: return error, wrap %w, Is and As — not exceptions.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

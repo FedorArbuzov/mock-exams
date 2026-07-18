@@ -1,0 +1,11 @@
+What projects deserve Go first?
+
+CLIs, HTTP APIs, background workers, proxies, and Kubernetes-adjacent tooling are sweet spots. Anything that needs lots of concurrent I/O — requests, queues, streams — fits Go's goroutine model well.
+
+Go also shines for internal platform tools: deploy agents, log forwarders, small services that must start fast and use little memory.
+
+You will see Go less often in rich desktop GUIs, heavy ML training, or domains where another ecosystem already owns the libraries.
+
+Quick filter: if the job is network-bound, long-running, and team-maintained, Go is probably a strong choice.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

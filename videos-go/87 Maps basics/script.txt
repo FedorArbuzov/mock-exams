@@ -1,0 +1,11 @@
+What's Go's dictionary type?
+
+map[K]V — hash table with fast lookups. Keys must be comparable: strings, ints, structs without slices inside. Values can be anything.
+
+Declare with make(map[string]int) or a literal. Nil maps are readable but writes panic.
+
+Iteration order is intentionally random — never depend on key order in production logic.
+
+Map basics: make before write, comma-ok for lookup, no concurrent writes.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

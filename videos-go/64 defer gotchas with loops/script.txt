@@ -1,0 +1,11 @@
+Why did all deferred closes pile up?
+
+Because defer runs when the function returns, not when the loop iteration ends. A defer inside a for loop without a nested function stacks defers until the function exits — maybe thousands of open files.
+
+Fix: wrap the loop body in func() { ... defer f.Close() ... }() so defer runs each iteration.
+
+Same pattern applies to mutex unlocks and HTTP body closes in loops.
+
+Loop rule: never defer inside a bare for — defer inside a function called per iteration.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

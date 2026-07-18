@@ -1,0 +1,11 @@
+Where does auth belong?
+
+In middleware wrapping protected routes. Check Authorization header or session cookie, validate token, attach user to context, or return 401 before handler runs.
+
+Public routes skip auth middleware. Admin routes add another layer.
+
+Fail closed: invalid token means reject — not anonymous access.
+
+Auth middleware: validate once, reject 401, pass user on context if needed.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

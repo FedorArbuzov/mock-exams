@@ -1,0 +1,11 @@
+My function is slow with big structs
+
+Passing a large struct by value copies every field. Pass a pointer or pass only the fields you need. Measure with benchmarks before chasing micro-optimizations.
+
+Sometimes the fix is redesign: store IDs instead of whole nested structs in hot paths.
+
+Copy cost hits hardest in tight loops and channel sends of big values.
+
+Performance hint: pointer or slim struct in hot paths — benchmark to confirm.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

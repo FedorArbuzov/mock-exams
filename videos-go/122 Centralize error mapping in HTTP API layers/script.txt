@@ -1,0 +1,11 @@
+Where do I turn errors into status codes?
+
+Once at the HTTP edge. Handlers map errors.Is(err, ErrNotFound) to 404, validation errors to 400, unknown to 500 with safe client message.
+
+Do not sprinkle http.Status in repository code — keep domain errors transport-agnostic.
+
+Central mapping keeps APIs consistent and tests focused on domain errors.
+
+HTTP edge: errors.Is and errors.As in one place — not status codes in SQL layer.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

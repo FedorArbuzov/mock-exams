@@ -1,0 +1,11 @@
+How do I avoid 12-parameter constructors?
+
+Use functional options or a config struct. Options: NewServer(WithPort(8080), WithTimeout(5*time.Second)). Config struct: NewServer(ServerConfig{...}).
+
+Both scale better than positional parameters where callers forget which int is which.
+
+Options shine when defaults are good and overrides are rare. Config structs shine when many fields move together.
+
+API design: start small, add options or config when parameters multiply.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

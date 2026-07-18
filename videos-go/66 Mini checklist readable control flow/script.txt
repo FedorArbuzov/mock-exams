@@ -1,0 +1,13 @@
+What does clean Go branching look like?
+
+Early returns on errors and invalid input. Small switch statements instead of elseif chains. defer for cleanup. Almost no panic in library code.
+
+Readers should see the happy path without scrolling through failure branches.
+
+If a function needs a flowchart, split it into smaller functions.
+
+Readable Go feels boring — that is the compliment.
+
+Checklist: guard clauses, defer cleanup, panic only at the top.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,13 @@
+Whose identity does a Pod use when it calls the cluster API?
+
+A ServiceAccount. Users authenticate as themselves, but Pods authenticate as a ServiceAccount. Every Pod gets one - if you do not set it, it uses the namespace's default. Kubernetes mounts a token into the Pod so code can talk to the API server as that identity.
+
+RBAC then decides what that identity may do. You bind a Role or ClusterRole to the ServiceAccount, granting exactly the verbs and resources it needs - list Pods, read a specific Secret, nothing more. That is least privilege for workloads.
+
+What beginners get wrong: giving the default ServiceAccount broad cluster-admin rights, so every Pod in the namespace becomes dangerous if compromised. Or wondering why an in-cluster client gets Forbidden - the ServiceAccount simply lacks the RoleBinding.
+
+Practical check: kubectl get serviceaccount, and kubectl auth can-i to test what a given account is allowed to do. Create dedicated accounts per app.
+
+Rule to remember: Pods act as a ServiceAccount - scope its RBAC tightly.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

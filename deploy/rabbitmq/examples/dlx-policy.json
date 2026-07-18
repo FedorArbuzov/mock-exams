@@ -1,0 +1,9 @@
+{
+  "queue": "orders.work",
+  "durable": true,
+  "auto_delete": false,
+  "arguments": {
+    "x-dead-letter-exchange": "dlx.orders",
+    "x-dead-letter-routing-key": "failed"
+  }
+}

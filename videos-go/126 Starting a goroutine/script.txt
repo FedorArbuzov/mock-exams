@@ -1,0 +1,11 @@
+How do I run code concurrently?
+
+go doWork() starts a goroutine. But starting is the easy part. Plan how it ends: WaitGroup, context cancel, channel close, or errgroup.
+
+A goroutine without an exit path leaks memory and file descriptors until process death.
+
+Pass context into long work. Tie lifetime to requests or shutdown signals.
+
+Never naked go func() without answering: how does this stop?
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

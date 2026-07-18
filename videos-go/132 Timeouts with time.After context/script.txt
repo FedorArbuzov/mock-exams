@@ -1,0 +1,11 @@
+How do I stop waiting forever?
+
+Combine select with time.After for deadlines or, better, with context.Context deadlines. ctx, cancel := context.WithTimeout(parent, 5*time.Second) then select on work versus ctx.Done().
+
+Bare time.After in tight loops can leak timers — context is preferred for request-scoped timeouts.
+
+Always defer cancel() after WithTimeout or WithCancel.
+
+Timeout habit: context.WithTimeout plus select — not sleep guesses.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

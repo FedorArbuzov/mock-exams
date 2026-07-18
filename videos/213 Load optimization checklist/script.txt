@@ -1,0 +1,15 @@
+How do I speed a service up systematically?
+
+In simple terms, go step by step: metrics → hypothesis → change → validate → roll back if needed.
+
+Concretely, treat that as a testable rule: Go step by step: metrics → hypothesis → change → validate → roll back if needed. When reality disagrees, trust cluster signals over the story in your head.
+
+Strong answers include a tradeoff and a next check. Slogans collapse under follow-up questions.
+
+Practice teaching the idea in thirty seconds, then debug the matching failure in a sandbox until both connect.
+
+Beginner trap: fluency without diagnosis skill.
+
+If someone asks tomorrow what this changes, answer with the rule: go step by step: metrics → hypothesis → change → validate → roll back if needed.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

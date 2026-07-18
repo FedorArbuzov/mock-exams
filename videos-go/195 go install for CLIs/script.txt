@@ -1,0 +1,11 @@
+How do I ship a command-line tool?
+
+go install path/to/cmd/mytool@version builds a binary into your GOPATH bin or GOBIN. Module path should be clear — users install with the full module path.
+
+Tag releases with semver. CLIs are great Go projects — single binary distribution wins.
+
+Document install line in README: go install github.com/you/tool@latest.
+
+CLI ship: cmd/ layout, go install, semver tags.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,5 +1,7 @@
 # 2. Docker vs containerd
 
+> Практика образов и compose — [`containers-basic`](../containers-basic/README.md) ([`deploy/containers`](../../deploy/containers/README.md)). Здесь — как это ложится на Kubernetes.
+
 ## Коротко
 
 - **Docker** — это **набор инструментов** для разработчика: CLI (`docker`), демон, сборка образов, реестр, сеть и т.д.
@@ -49,3 +51,5 @@ kubectl get nodes -o wide
 
 - На своей машине вы по-прежнему пользуетесь **Docker** (собрать образ, толкнуть в registry, запустить локально).
 - В кластере контейнеры запускает **containerd**, и для пользователя кластера это **прозрачно** — вы работаете через `kubectl`, а не напрямую с runtime.
+
+Под капотом — **namespaces** и **cgroups** Linux ([`linux-advanced`](../linux-advanced/01-namespaces.md), [`linux-advanced/03-cgroups`](../linux-advanced/03-cgroups.md)).

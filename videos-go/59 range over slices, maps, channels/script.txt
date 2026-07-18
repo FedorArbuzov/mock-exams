@@ -1,0 +1,11 @@
+What does range give me?
+
+Over a slice or array: index and value. Over a map: key and value. Over a channel: values until closed. Over a string: index and rune.
+
+Map iteration order is randomized on purpose — do not depend on key order. If you need sorted keys, collect keys and sort them.
+
+For slices, value is a copy unless you use index to mutate slice[i].
+
+Range rule: map order is random; channel range until close; string range gives runes.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+My function is a Christmas tree of braces
+
+Flatten it. Replace else branches with early returns. Extract nested blocks into named helper functions with clear names.
+
+Each level of indentation is a cognitive tax. Future readers — including you at 3 a.m. — will miss a branch.
+
+Go does not reward clever nesting. It rewards functions small enough to hold in your head.
+
+Refactor trigger: more than two levels of else — extract or return early.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Is Go just a simpler Java?
+
+Partly — but the mental model is different. Go has no class inheritance, no annotations maze, and no giant frameworks baked into the culture. You model behavior with structs, methods, interfaces, and composition.
+
+In Java you implement interfaces explicitly. In Go, if your type has the methods, it satisfies the interface — no implements keyword. That keeps APIs small and mockable.
+
+Go also pushes explicit error returns instead of exceptions, and favors flat functions over deep hierarchies.
+
+Beginner shift: stop looking for classes. Start with data structs plus small interfaces at the boundaries.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

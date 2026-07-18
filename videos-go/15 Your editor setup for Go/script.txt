@@ -1,0 +1,11 @@
+VS Code or GoLand?
+
+Either works. What matters is gopls — the Go language server — giving you jump-to-definition, rename, and live errors. VS Code with the Go extension is free and common. GoLand is polished if your company pays.
+
+Do not waste a week comparing editors. Pick one, install the Go plugin, open a folder with go.mod, and confirm autocomplete works on fmt.Println.
+
+Also enable format on save with gofmt. Future you will thank you in code review.
+
+Setup done when: errors show inline, go test runs from the editor, and fmt on save works.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Go has a folder name with real compiler enforcement behind it. How do I hide code from outsiders?
+
+Put packages under an internal directory. Go enforces that code inside it can only be imported by packages inside the parent tree. External modules cannot import your internal packages even if the repo is public.
+
+That is stronger than lowercase unexported names — it is a compiler rule, not a convention.
+
+Layout example: a cmd folder holding your main program, an internal folder holding private database code, and top-level packages only for intentional public API.
+
+Use internal for anything that is not a supported import surface.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

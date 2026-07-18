@@ -105,3 +105,65 @@ mockctl uninstall --yes # снести всё, включая minikube/kubectl
 | Долго висит на `Verifying ingress addon...` | Подождите 1-2 минуты или используйте `mockctl up --no-addons` |
 
 Подробности по командам и сборке: [`mockctl/README.md`](mockctl/README.md).
+
+## Linux (курсы `linux-*`)
+
+```bash
+cd deploy/linux
+docker compose build
+docker compose up -d
+docker compose exec lab bash
+```
+
+Стенд: **lab** (172.28.0.10), **srv1** (172.28.0.11), **srv2**, **web**, **dns**. Пользователь: `course` / `course`.
+
+Подробнее: [`deploy/linux/README.md`](deploy/linux/README.md). Маршрут: [`courses/linux-basic`](courses/linux-basic/README.md) → intermediate → advanced.
+
+## GitLab (курсы `gitlab-*`)
+
+Для CI/CD-курсов — GitLab CE в Docker (**4+ ГБ RAM**):
+
+```bash
+docker compose -f deploy/gitlab/docker-compose.yml up -d
+```
+
+Откройте [http://localhost:8929](http://localhost:8929), пароль root:
+
+```bash
+docker exec mock-gitlab grep 'Password:' /etc/gitlab/initial_root_password
+```
+
+Регистрация runner: [`deploy/gitlab/README.md`](deploy/gitlab/README.md).
+
+## AWS LocalStack (курсы `aws-*`)
+
+```bash
+docker compose -f deploy/localstack/docker-compose.yml up -d
+```
+
+## PostgreSQL (курсы `postgresql-*`)
+
+```bash
+cd deploy/postgres
+docker compose build
+docker compose up -d
+psql "postgresql://course:course@localhost:5432/course"
+```
+
+Образ включает `hypopg`, `pgaudit`, `pg_trgm` (мини-курсы performance / security / developer).
+
+pgAdmin: [http://localhost:5050](http://localhost:5050). Подробнее: [`deploy/postgres/README.md`](deploy/postgres/README.md).
+
+**Flyway** (курс `postgresql-developer`): [Flyway CLI](https://flywaydb.org/download).
+
+**MinIO** (курс `postgresql-ops`, опционально):
+
+```bash
+docker compose -f deploy/postgres/docker-compose.yml -f deploy/postgres/docker-compose.ops.yml up -d
+```
+
+Специализации: [`postgresql-performance`](courses/postgresql-performance/README.md), [`postgresql-developer`](courses/postgresql-developer/README.md), [`postgresql-ops`](courses/postgresql-ops/README.md), [`postgresql-security`](courses/postgresql-security/README.md).
+
+## Карта курсов
+
+[`courses/devops-path.md`](courses/devops-path.md)

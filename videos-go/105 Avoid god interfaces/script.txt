@@ -1,0 +1,11 @@
+My interface has 20 methods
+
+Split it. Fat interfaces force every mock and implementation to stub methods nobody uses. They freeze design because adding a method breaks all implementers.
+
+Define interfaces where they are consumed — often in the test file or caller package — with only methods that caller needs.
+
+If only one implementation exists and no test seam, you may not need an interface yet.
+
+Smell: interface larger than what one caller uses — split by consumer.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

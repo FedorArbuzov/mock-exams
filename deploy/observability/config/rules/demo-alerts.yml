@@ -1,0 +1,22 @@
+groups:
+  - name: demo
+    rules:
+      - alert: DemoHighErrorRate
+        expr: |
+          sum(rate(demo_http_requests_total{status=~"5.."}[5m]))
+          /
+          sum(rate(demo_http_requests_total[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Demo app error rate above 5%"
+          description: "Check demo-app logs and traffic generator."
+
+      - alert: DemoTargetDown
+        expr: up{job="demo-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "demo-app scrape target is down"

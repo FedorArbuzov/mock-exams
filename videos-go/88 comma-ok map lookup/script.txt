@@ -1,0 +1,11 @@
+How do I tell missing from zero value?
+
+Use the comma-ok idiom: v, ok := m[k]. If ok is false, the key was absent. If ok is true, v is the stored value — even if v is zero.
+
+Without ok, a missing key returns the zero value for V, which looks like a legitimate zero.
+
+This matters for counts, flags, and optional settings where zero means something.
+
+Lookup rule: if zero is valid data, always use comma-ok.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

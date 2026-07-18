@@ -1,0 +1,11 @@
+How do I construct a struct clearly?
+
+Use keyed struct literals: User{Name: "Ann", Age: 30}. Keys resist breakage when fields are reordered or added.
+
+Positional literals User{"Ann", 30} break silently when someone inserts a new field.
+
+For small internal structs with obvious order, positional is fine. For APIs and configs, always key your fields.
+
+Literal rule: keyed fields for anything that leaves the package or might evolve.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

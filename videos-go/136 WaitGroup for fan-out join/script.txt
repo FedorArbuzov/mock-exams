@@ -1,0 +1,11 @@
+How do I wait for N workers?
+
+sync.WaitGroup: wg.Add(n) before starting work, defer wg.Done() in each goroutine, wg.Wait() to block until all finish.
+
+WaitGroup joins success paths — it does not collect errors. Pair with err channel or errgroup when failures matter.
+
+Add before go — race if you Add after Wait starts.
+
+Join pattern: Add, go worker with Done, Wait — error handling needs more.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

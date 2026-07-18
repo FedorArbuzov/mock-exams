@@ -1,0 +1,11 @@
+Where does execution start?
+
+In a runnable program, execution starts at func main in package main. That is the only package name allowed to produce a binary with go build.
+
+Other packages are libraries. They compile into your program but do not run by themselves. So every CLI and service begins with package main and a main function.
+
+If you see cannot find package main or main is not in package main, you are building the wrong directory or missing func main.
+
+Starter skeleton: package main, import fmt, func main with your first println — then go run .
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

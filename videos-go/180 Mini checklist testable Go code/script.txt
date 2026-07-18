@@ -1,0 +1,11 @@
+What makes code easy to test?
+
+Small pure functions, dependencies behind interfaces, table-driven cases, no hidden globals, context passed explicitly. Handlers thin — logic in testable packages.
+
+If you need complex setup for every test, refactor constructors and separate IO.
+
+Testable code looks boring: inputs, outputs, errors — no surprise side effects.
+
+Testability: thin handlers, fat testable packages, interfaces at boundaries.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,11 @@
+Why does len on a Cyrillic string give the wrong answer?
+
+Because len counts bytes, not Unicode characters. The Cyrillic letter ye in UTF-8 is often two bytes long. Len of a one-character word can return two. Slice at byte index one and you cut through the middle of the character - users see broken symbols instead of text.
+
+Use range when you need characters. A for loop over name with for character in name yields runes, each a thirty-two-bit code point. byte is one raw octet inside the encoding. rune is one logical character humans read. Count runes with utf8.RuneCountInString when you need a total without looping yourself.
+
+Get this wrong and password limits, SMS segment counts, and max-length form checks lie to users. Fifty runes and fifty bytes describe very different strings. Your validation passes in tests with ASCII and fails in production with real names.
+
+Unicode rule - len for bytes, range for runes, and the utf8 package when you need encoding control.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

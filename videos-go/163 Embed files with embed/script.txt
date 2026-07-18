@@ -1,0 +1,11 @@
+How do I ship static assets in the binary?
+
+//go:embed files/* embeds files at compile time. var templates embed.FS gives you a filesystem interface inside the binary.
+
+Great for HTML templates, migration SQL, and small configs — one artifact to deploy.
+
+Large assets may bloat the binary — measure size. For big static sites, CDN still wins.
+
+Embed: //go:embed directive plus embed.FS — static files in the binary.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

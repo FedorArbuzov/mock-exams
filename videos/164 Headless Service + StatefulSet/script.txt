@@ -1,0 +1,15 @@
+How do DB cluster members find each other via DNS?
+
+In simple terms, a Headless Service gives each StatefulSet Pod its own DNS record.
+
+Concretely, treat that as a testable rule: A Headless Service gives each StatefulSet Pod its own DNS record. When reality disagrees, trust cluster signals over the story in your head.
+
+Objects encode intent. A Deployment keeps N healthy copies. A Job runs to completion. Labels are how other objects find your Pods.
+
+Before more YAML, ask what lifecycle you want: long-running, one-shot, per-node, or identity-stable — then choose the matching object.
+
+Beginner trap: creating naked Pods and turning ops into babysitting.
+
+If someone asks tomorrow what this changes, answer with the rule: a Headless Service gives each StatefulSet Pod its own DNS record.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

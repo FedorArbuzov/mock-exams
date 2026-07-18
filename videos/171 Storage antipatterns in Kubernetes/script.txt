@@ -1,0 +1,15 @@
+Which mistakes most often cause data loss?
+
+In simple terms, no backups, wrong reclaim policy, and keeping state on emptyDir/hostPath.
+
+Concretely, treat that as a testable rule: No backups, wrong reclaim policy, and keeping state on emptyDir/hostPath. When reality disagrees, trust cluster signals over the story in your head.
+
+Pods can be replaced. Data usually cannot. Know where bytes live, how volumes are provisioned, and what delete does.
+
+A backup never restored is a story, not a plan — rehearse restore in a throwaway namespace.
+
+Beginner trap: treating persistent claims like temporary EmptyDir.
+
+If someone asks tomorrow what this changes, answer with the rule: no backups, wrong reclaim policy, and keeping state on emptyDir/hostPath.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

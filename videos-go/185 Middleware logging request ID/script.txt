@@ -1,0 +1,11 @@
+How do I trace one request?
+
+Middleware generates or reads X-Request-ID header, stores in context, adds to slog logger on the request. Every log line for that request shares the ID.
+
+On-call engineers grep one ID and see the full story across services.
+
+Propagate the ID on outbound HTTP calls too.
+
+Tracing: request ID middleware early, attach to context and logs.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

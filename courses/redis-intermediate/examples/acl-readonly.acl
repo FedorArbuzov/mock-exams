@@ -1,0 +1,8 @@
+# Пример ACL для курса redis-intermediate (лаба 10)
+# Подключение: aclfile в redis.conf или ACL LOAD
+#
+# Пользователь readonly: только чтение ключей app:*
+
+user default on nopass ~* &* +@all
+
+user readonly on >readonly-secret ~app:* -@all +@read +ping +info +client|list

@@ -1,0 +1,11 @@
+When is any acceptable?
+
+At decoding boundaries and generic containers before you know the concrete type. json.Unmarshal into map[string]any, then type switch into structs.
+
+Do not pass any through your whole codebase. Restore types as early as possible.
+
+any is a bridge, not a design. Interfaces and generics reduce any sprawl.
+
+Boundary pattern: any in, typed struct out — same function, same package.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

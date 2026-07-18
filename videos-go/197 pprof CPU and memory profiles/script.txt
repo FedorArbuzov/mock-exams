@@ -1,0 +1,11 @@
+My service is slow — where?
+
+Use pprof. Import net/http/pprof on debug builds or go test -cpuprofile=cpu.out -bench=. Then go tool pprof cpu.out.
+
+CPU profile shows hot functions. Heap profile shows allocations. Goroutine profile shows leaks.
+
+Optimize what profiles prove — not what you guess.
+
+Profiling: pprof CPU and heap — measure before rewriting code.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

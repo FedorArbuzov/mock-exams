@@ -1,0 +1,11 @@
+How do I sort structs?
+
+sort.Slice(slice, func(i,j int) bool { return slice[i].Score > slice[j].Score }). Go 1.21+ adds slices.SortFunc with cmp.Compare for cleaner comparisons.
+
+Sorting requires explicit less function — no magic overloads.
+
+Stable sort when equal elements must keep order: sort.SliceStable.
+
+Sort structs: sort.Slice or slices.SortFunc with explicit compare.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

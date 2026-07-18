@@ -1,0 +1,11 @@
+Why did my outer err never update after the check?
+
+Because short declaration declared a new err inside the if block, shadowing the outer one. The outer err stayed nil while the inner err held the real failure — so your caller never saw the error you thought you handled. The code compiles cleanly, which makes this bug especially sneaky.
+
+Classic bug: if err short-declare do open-paren close-paren semicolon err not equal nil when err was already declared outside. Use equals instead of short declaration when assigning to an existing err variable. The fix is one character, but you have to notice the shadow first.
+
+Shadowing also hits loop variables and short declarations in inner scopes. Any time you reuse a name with short declaration inside a narrower block, you may hide the outer binding without a compile error. Go vet and staticcheck can catch some cases — run them in CI.
+
+Fix habit: error handling blocks often want equals err equals do open-paren close-paren, not short declaration, when err already exists in the outer scope.
+
+Master Go faster. Theory, hands-on labs, and interview questions - link in bio.

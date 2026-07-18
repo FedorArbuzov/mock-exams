@@ -1,0 +1,11 @@
+Is append always safe?
+
+Only if you reassign the result. append may return the same slice header or a new one after reallocation. Ignoring the return value drops elements silently in some cases.
+
+Preallocate with make([]T, 0, n) when you know approximate size — fewer allocations in hot loops.
+
+Never append concurrently to the same slice without synchronization.
+
+Append rule: s = append(s, v) — always capture the return.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

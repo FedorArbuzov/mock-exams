@@ -1,0 +1,15 @@
+How do I choose the right Service type?
+
+In simple terms, clusterIP — in-cluster; NodePort — via nodes; LoadBalancer — external load balancer.
+
+Concretely, treat that as a testable rule: ClusterIP — in-cluster; NodePort — via nodes; LoadBalancer — external load balancer. When reality disagrees, trust cluster signals over the story in your head.
+
+Separate the brain from the factory floor. Control-plane failure and worker failure can look identical to users and are completely different to operators.
+
+Ask four questions: can I reach the API, can Pods schedule, is the node Ready, and is the workload itself healthy?
+
+Beginner trap: saying 'Kubernetes is down' without naming a layer.
+
+If someone asks tomorrow what this changes, answer with the rule: clusterIP — in-cluster; NodePort — via nodes; LoadBalancer — external load balancer.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

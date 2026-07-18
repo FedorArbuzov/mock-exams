@@ -1,0 +1,11 @@
+What gets asked on junior Go interviews?
+
+Slices and maps: nil versus empty slice, append sharing backing arrays, comma-ok map lookup, random map iteration order.
+
+Be ready to draw slice header ptr len cap and explain why two slices alias.
+
+Also: when to use pointer receiver and why map concurrent write panics.
+
+Interview drill: explain append aliasing and map ok-idiom out loud.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

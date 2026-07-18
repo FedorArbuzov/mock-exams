@@ -1,0 +1,11 @@
+Do I still write helpers by hand?
+
+Less often. Go 1.21+ added slices and maps packages: slices.Contains, slices.Sort, maps.Keys. They are generic, tested, and readable.
+
+Reach for std helpers before copying Stack Overflow sort code.
+
+Still know how slices work underneath — helpers do not remove the backing array gotchas.
+
+Modern Go: import slices and maps for common ops — write custom only when needed.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

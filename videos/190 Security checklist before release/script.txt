@@ -1,0 +1,15 @@
+What to check before shipping so you don't open a hole?
+
+In simple terms, permissions, secrets, network rules, images, and critical Pod settings.
+
+Concretely, treat that as a testable rule: Permissions, secrets, network rules, images, and critical Pod settings. When reality disagrees, trust cluster signals over the story in your head.
+
+Security is blast-radius math: who can read this, who can change this, and what a stolen identity can do next.
+
+Prefer dedicated ServiceAccounts, narrow Roles, and explicit NetworkPolicy over convenient shared defaults.
+
+Beginner trap: cluster-admin culture and default ServiceAccount everywhere.
+
+If someone asks tomorrow what this changes, answer with the rule: permissions, secrets, network rules, images, and critical Pod settings.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

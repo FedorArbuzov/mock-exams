@@ -1,0 +1,11 @@
+Are goroutines OS threads?
+
+Not one-to-one. Goroutines are lightweight tasks multiplexed onto fewer OS threads by the Go runtime. You can start thousands where threads would choke.
+
+Cheap does not mean free. Each goroutine needs stack memory and a clear exit path.
+
+Goroutines shine for concurrent IO — HTTP, RPC, DB, queues — not for CPU-bound work without GOMAXPROCS awareness.
+
+Concurrency start: goroutine per task is fine until it is not — then worker pools.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

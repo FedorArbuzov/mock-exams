@@ -1,0 +1,11 @@
+# Справочный манифест для gitops-intermediate (Flux CD). Не применяйте вместе с Argo на те же apps без плана.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: mock-exams-gitops
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/FedorArbuzov/mock-exams.git
+  ref:
+    branch: master

@@ -1,0 +1,11 @@
+How does Go glue IO together?
+
+With io.Reader and io.Writer — stream interfaces. Files, network connections, buffers, gzip wrappers, and strings all implement Reader or Writer.
+
+io.Copy connects them without loading entire files into memory. That composability is core Go style.
+
+Learn these two interfaces first — half the stdlib becomes familiar.
+
+IO mindset: everything is a stream — Read in, Write out, Copy between.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

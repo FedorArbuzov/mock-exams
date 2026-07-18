@@ -1,0 +1,11 @@
+How do I get the concrete type back?
+
+Type assertion: v, ok := i.(ConcreteType). Always use the ok form unless panic on wrong type is truly correct.
+
+Type switch handles multiple types in one construct.
+
+Failed assertions mean your assumptions broke — return an error, do not panic in libraries.
+
+Assertion rule: v, ok := i.(T) — prefer ok, fail gracefully.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

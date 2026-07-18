@@ -1,0 +1,13 @@
+Should you write YAML files or just fire kubectl commands by hand?
+
+Both have a place. Imperative means you tell Kubernetes the exact action - kubectl run, kubectl create deployment, kubectl scale. Fast for experiments and one-offs. Declarative means you write a manifest describing the desired end state and run kubectl apply. Kubernetes figures out the diff and makes reality match.
+
+For anything real, declarative wins. Your YAML lives in Git, so you get history, review, and rollback. Re-running apply is safe and idempotent. Imperative changes, by contrast, vanish from memory - nobody knows why prod looks the way it does.
+
+What beginners get wrong: building a cluster with a pile of imperative commands, then being unable to recreate it. Or mixing both, so a hand-edit gets overwritten by the next apply and they think Kubernetes is buggy.
+
+Practical tip: use imperative to learn and to generate YAML with dash dash dry-run equals client dash o yaml, then commit that file and manage it declaratively.
+
+Rule to remember: imperative to explore, declarative to operate.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

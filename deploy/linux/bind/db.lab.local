@@ -1,0 +1,15 @@
+$TTL 300
+@   IN  SOA dns.lab.local. admin.lab.local. (
+        2026051801 ; serial
+        3600       ; refresh
+        600        ; retry
+        86400      ; expire
+        300 )      ; minimum
+
+    IN  NS  dns.lab.local.
+
+dns     IN  A   172.28.0.53
+lab     IN  A   172.28.0.10
+srv1    IN  A   172.28.0.11
+srv2    IN  A   172.28.0.12
+web     IN  A   172.28.0.20

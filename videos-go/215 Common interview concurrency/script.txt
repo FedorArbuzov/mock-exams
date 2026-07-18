@@ -1,0 +1,11 @@
+Goroutines vs threads?
+
+Goroutines are cheap, multiplexed by the Go runtime onto fewer OS threads. Start thousands for IO-bound work with proper lifecycle control.
+
+Communicate with channels or protect shared state with mutex. Use context for cancelation.
+
+Always mention go test -race and goroutine leak risks in interviews.
+
+Interview answer: cheap goroutines, channels or mutex, context cancel, race detector.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,15 @@
+How do I send 5% of traffic to a new version?
+
+In simple terms, weight/header rules at the edge gradually shift traffic to canary.
+
+Concretely, treat that as a testable rule: Weight/header rules at the edge gradually shift traffic to canary. When reality disagrees, trust cluster signals over the story in your head.
+
+Most traffic outages are mismatches: selector, port, namespace, readiness, or Ingress rules with no controller.
+
+Trace one request hop by hop — client, edge, Service, endpoints, Ready Pod — and stop at the first broken hop.
+
+Beginner trap: blaming app code before confirming endpoints exist.
+
+If someone asks tomorrow what this changes, answer with the rule: weight/header rules at the edge gradually shift traffic to canary.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

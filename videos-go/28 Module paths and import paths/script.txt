@@ -1,0 +1,11 @@
+Go identifies every module by a global address. Why do imports look like URLs?
+
+Because import paths must be globally unique. The convention is your module path mirrors your repo's web address.
+
+That is not always a fetchable URL for private repos, but it is still the identity key. Go modules resolve versions from that path plus tags.
+
+Rename your module path carefully — it is a public API for importers. A bad path is painful to fix later.
+
+Rule: module path equals where code is hosted, packages append path segments under it.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

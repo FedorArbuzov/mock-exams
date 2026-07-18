@@ -1,0 +1,11 @@
+Why pass r.Context() down?
+
+Request context carries cancelation when the client disconnects. Pass it to database queries and outbound HTTP so work stops when nobody is listening.
+
+Do not use context.Background inside handlers for request work — you lose deadlines.
+
+database/sql and net/http both honor context when you use the WithContext variants.
+
+Handler rule: ctx := r.Context() — pass to every downstream call.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

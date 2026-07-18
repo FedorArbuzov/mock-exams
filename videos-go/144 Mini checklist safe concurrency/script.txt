@@ -1,0 +1,11 @@
+What's the concurrency review list?
+
+Who closes channels? Is context propagated and honored? Are maps protected or single-goroutine? Did you run the race detector? Is parallelism bounded?
+
+Also check: defers in loops, select without default spinning CPU, and errgroup versus naked WaitGroup for errors.
+
+Safe concurrency is checklist-driven — not intuition.
+
+Concurrency checklist: close ownership, cancel, no racy maps, -race clean, bounded workers.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

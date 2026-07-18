@@ -1,0 +1,15 @@
+How do we stop solving the same incident from scratch?
+
+In simple terms, a runbook records diagnosis and recovery steps for repeatable situations.
+
+Concretely, treat that as a testable rule: A runbook records diagnosis and recovery steps for repeatable situations. When reality disagrees, trust cluster signals over the story in your head.
+
+Trust a few signals mapped to user pain: errors, latency, saturation, restarts, Ready replicas.
+
+Alert only on pages you will actually act on — noise trains teams to ignore everything.
+
+Beginner trap: forty dashboards and no trusted symptom.
+
+If someone asks tomorrow what this changes, answer with the rule: a runbook records diagnosis and recovery steps for repeatable situations.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

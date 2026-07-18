@@ -1,0 +1,61 @@
+# FastAPI course stack: api + postgres + redis
+services:
+  api:
+    build: ./stack/api
+    container_name: mock-fastapi-api
+    ports:
+      - "8090:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://course:course@postgres:5432/course
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: course-dev-secret-change-in-prod
+      LOG_LEVEL: info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+    networks:
+      - backend
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: mock-fastapi-postgres
+    environment:
+      POSTGRES_USER: course
+      POSTGRES_PASSWORD: course
+      POSTGRES_DB: course
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U course -d course"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    networks:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    container_name: mock-fastapi-redis
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  pgdata:

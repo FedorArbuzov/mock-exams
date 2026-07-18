@@ -1,0 +1,11 @@
+Go manages dependencies through a couple of specific commands. How do dependencies not rot?
+
+You add dependencies by importing them and running go mod tidy. Tidy adds what you use, removes what you do not, and updates your checksums.
+
+go get bumps a specific dependency to a chosen version. Blind updates across everything is how teams break builds on Friday afternoons.
+
+Read changelogs on upgrades. Run your tests after every dependency change.
+
+Healthy habit: tidy before commit, never hand-edit your checksums file unless you know why.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

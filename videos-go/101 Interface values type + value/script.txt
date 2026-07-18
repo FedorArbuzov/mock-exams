@@ -1,0 +1,11 @@
+Why is a nil pointer not a nil interface?
+
+An interface value holds two words: dynamic type and dynamic value. A typed nil pointer inside an interface is not equal to nil interface — the type slot is set.
+
+Classic bug: return (*User)(nil), nil from a function returning (User, error) typed as interface — caller sees non-nil error interface.
+
+Check errors with err != nil, not interface == nil, unless you understand the typed nil case.
+
+Gotcha: var i MyInterface = (*T)(nil) — i is not nil.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

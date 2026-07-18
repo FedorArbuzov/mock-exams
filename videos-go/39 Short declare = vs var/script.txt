@@ -1,0 +1,11 @@
+Which declaration should I use - short declaration or var?
+
+Inside a function, use short declaration - colon-equals - when you create and assign in one step. Count equals ten reads fast and keeps locals obvious. Use var when you need the zero value before any logic runs, or when you declare several variables together on one line.
+
+The scoping trap bites beginners hard. If count already exists in an outer scope, short declaration inside an if block does not update that outer count. It creates a brand new count that shadows the original. Your outer counter stays frozen while the inner one changes. Use a plain equals assignment when you mean to update an existing variable.
+
+At package level, short declaration is illegal. Every package variable must use var or const. That rule keeps package state visible and consistent across every file in the same package.
+
+Style rule - short declaration for locals, var when you need a zero value first, and never short declaration at package scope.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

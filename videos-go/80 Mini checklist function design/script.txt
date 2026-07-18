@@ -1,0 +1,11 @@
+What makes a Go function done?
+
+Clear name that says what it does. One job per function. Errors returned explicitly. Receivers consistent on the type. No hidden globals. Documented if exported.
+
+If you cannot describe the function in one sentence, split it.
+
+Done also means tested for non-trivial logic and formatted with gofmt.
+
+Function review: name, size, errors, receivers, exports — five checks.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

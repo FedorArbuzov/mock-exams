@@ -2,6 +2,10 @@
 
 Базовый курс по Kubernetes. Подразумевается локальный кластер **minikube** (профиль `mock-exams`) и установленный `kubectl`.
 
+**Предварительно:** [`containers-basic`](../containers-basic/README.md) — образ, Dockerfile, compose, сети и registry ([`deploy/containers`](../../deploy/containers/README.md)). Без этого Pod/Service и pull policy часто непонятны.
+
+> Это вводный курс. После него — [`kuber-intermediate`](../kuber-intermediate/README.md), затем [`kuber-advanced`](../kuber-advanced/README.md). Для подготовки к CKAD — [`mock-ckad`](../mock-ckad/README.md). Карта курсов: [`courses/README.md`](../README.md).
+
 ## Программа
 
 ### Введение

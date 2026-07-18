@@ -1,0 +1,13 @@
+Where do all your kubectl commands actually go?
+
+Straight to the API server. kubectl is just a client. Every get, apply, delete, and patch request hits that one central entry point before anything changes in the cluster.
+
+The API server authenticates you, checks authorization with RBAC, validates the object schema, and only then reads from or writes to etcd. Controllers and kubelets watch the API server too. There is no hidden side channel for cluster changes.
+
+What breaks: when the API server is unreachable, kubectl fails immediately. No deploys, no scaling, no debugging through the control path. Beginners SSH into nodes and edit containers manually, which creates drift the controllers will fight later.
+
+Practical check: run kubectl cluster-info. If the API endpoint fails, fix connectivity or credentials before you debug Pod logs.
+
+Rule to remember: one front door, one write path. If kubectl cannot reach the API server, the control plane is not reachable.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

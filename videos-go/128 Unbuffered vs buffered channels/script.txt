@@ -1,0 +1,11 @@
+Why does my send block forever?
+
+Unbuffered channels block until another goroutine receives. If nobody receives, you deadlock. Buffered channels block only when the buffer is full.
+
+make(chan int) syncs handoff. make(chan int, 10) allows ten sends without a receiver waiting.
+
+Pick buffer size with meaning — zero for handshake, small for backpressure, not random 1000.
+
+Channel sizing: unbuffered for sync, buffered for bounded queues.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

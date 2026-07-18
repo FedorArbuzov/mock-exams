@@ -1,0 +1,11 @@
+make vs literal?
+
+make allocates slices, maps, and channels with optional length and capacity. literals build fixed content: []int{1,2,3} or map[string]int{"a":1}.
+
+make([]int, 0, 100) pre-sizes a slice. make(map[string]int) gives a ready writable map. var m map[string]int is nil and not writable.
+
+Pick make for dynamic empty collections, literals for known seed data.
+
+Collection start: make when empty and growing, literal when you know the initial values.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

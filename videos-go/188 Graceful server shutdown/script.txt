@@ -1,0 +1,11 @@
+How do deploys avoid dropped requests?
+
+On SIGTERM, stop accepting new connections with server.Shutdown(ctx). Give in-flight requests up to your timeout to finish. Then exit.
+
+Hard kill after Kubernetes terminationGracePeriod if you hang — tune timeout accordingly.
+
+Load balancers need health checks that reflect readiness, not just process alive.
+
+Graceful deploy: Shutdown with timeout, drain requests, then exit.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

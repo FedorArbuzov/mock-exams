@@ -1,0 +1,17 @@
+External monitoring is green but traffic is already failing?
+
+In simple terms, external probe ≠ readiness: watch both layers or you get false calm.
+
+Concretely, treat that as a testable rule: External probe ≠ readiness: watch both layers or you get false calm. When reality disagrees, trust cluster signals over the story in your head.
+
+This is how you move faster under pressure: name the layer, pick one proof, then change only what that proof supports.
+
+If you skip the model, you will thrash — restarting things, editing YAML at random, and calling it debugging.
+
+Beginner trap: knowing the buzzword while having no next check.
+
+For the video, a tiny readinessProbe block — path and port only, huge font.
+
+If someone asks tomorrow what this changes, answer with the rule: external probe ≠ readiness: watch both layers or you get false calm.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

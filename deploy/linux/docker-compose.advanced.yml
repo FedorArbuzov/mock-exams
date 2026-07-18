@@ -1,0 +1,24 @@
+# Overlay for linux-advanced (keepalived VIP lab)
+# Usage: docker compose -f docker-compose.yml -f docker-compose.advanced.yml up -d
+
+services:
+  srv1:
+    networks:
+      labnet:
+        ipv4_address: 172.28.0.11
+      vrrp:
+        ipv4_address: 172.28.1.11
+
+  srv2:
+    networks:
+      labnet:
+        ipv4_address: 172.28.0.12
+      vrrp:
+        ipv4_address: 172.28.1.12
+
+networks:
+  vrrp:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.1.0/24

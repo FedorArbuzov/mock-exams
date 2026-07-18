@@ -1,0 +1,99 @@
+site_name: Mock Exams
+site_description: Учебные курсы DevOps, backend, Kubernetes, PostgreSQL и др.
+site_url: https://fedorarbuzov.github.io/mock-exams/
+repo_url: https://github.com/FedorArbuzov/mock-exams
+repo_name: FedorArbuzov/mock-exams
+edit_uri: edit/master/courses/
+
+docs_dir: courses
+
+exclude_docs: |
+  **/node_modules/**
+  **/package-lock.json
+  **/pnpm-lock.yaml
+  **/yarn.lock
+  **/dist/**
+  **/build/**
+  **/.next/**
+  **/coverage/**
+  **/.git/**
+  **/.github/**
+
+validation:
+  nav:
+    omitted_files: info
+  links:
+    not_found: ignore
+    absolute_links: ignore
+
+theme:
+  name: material
+  language: ru
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Тёмная тема
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Светлая тема
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - navigation.indexes
+    - navigation.expand
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+
+plugins:
+  - search:
+      lang: ru
+  - awesome-pages
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_javascript:
+  - javascripts/analytics.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/FedorArbuzov/mock-exams

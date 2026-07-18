@@ -1,0 +1,11 @@
+Println logging in prod?
+
+Structured logging with log/slog — levels, key-value fields, JSON output for aggregators. slog.Info("request", "method", r.Method, "path", r.URL.Path).
+
+Structured logs are queryable: filter by user_id, status, latency. Plain println is fine for learning, painful for on-call.
+
+Set default logger to JSON handler in production.
+
+Prod logging: slog with structured fields — not fmt.Println.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

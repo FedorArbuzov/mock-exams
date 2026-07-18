@@ -1,0 +1,11 @@
+Do I need assert libraries?
+
+Standard testing is enough: if got != want { t.Fatalf(...) }. testify/assert reduces boilerplate if your team likes it — not required.
+
+Assertions libraries do not replace thinking about what to test.
+
+Pick one style per repo — mixed assert and manual checks confuse readers.
+
+Testing style: std if got != want is fine; testify optional for teams that want it.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

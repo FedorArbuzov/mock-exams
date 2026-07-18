@@ -1,0 +1,11 @@
+Should I snapshot everything?
+
+Golden files store expected output on disk — great for stable encoders and templates. Update with intentional -update flag, never auto-rewrite goldens on every run.
+
+Brittle goldens break on any whitespace change — use for formats you control.
+
+Golden tests complement table tests, not replace them.
+
+Goldens: commit expected output, update deliberately, not on every failure.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

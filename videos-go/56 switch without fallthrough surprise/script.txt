@@ -1,0 +1,11 @@
+Does switch fall through like C?
+
+No — not by default. Each case breaks automatically. You need an explicit fallthrough keyword to drop into the next case, and that is rare.
+
+That prevents the classic C bug where you forget break and execute three cases accidentally.
+
+Switch works on values, types with type switch, and even no condition like a readable if-else chain.
+
+Go switch is safer by default. Use it instead of long if-else ladders when comparing one expression.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

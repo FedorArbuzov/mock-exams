@@ -1,0 +1,11 @@
+How do goroutines talk safely?
+
+Channels pass values between goroutines. ch <- v sends, v := <-ch receives. They coordinate without shared mutable maps.
+
+Use channels for ownership transfer and signals. Do not use them as a global variable substitute for everything.
+
+Unbuffered channels synchronize — sender waits for receiver. Buffered channels decouple up to capacity.
+
+Channel mindset: communicate ownership, do not broadcast mutable state blindly.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

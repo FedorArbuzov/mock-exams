@@ -1,0 +1,11 @@
+Aren't they the same?
+
+No. Array size is part of the type: [3]int and [4]int are different types. Slices are dynamic views: []int with length and capacity.
+
+In real Go code you almost always use slices. Arrays appear for fixed buffers, crypto, and low-level code.
+
+Passing a large array copies the whole thing. Slices pass a small header pointing at shared data.
+
+Daily Go: slices everywhere, arrays only when the size is a fixed part of the domain.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

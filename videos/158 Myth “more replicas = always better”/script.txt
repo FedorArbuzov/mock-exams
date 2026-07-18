@@ -1,0 +1,15 @@
+I added replicas — so performance improved?
+
+In simple terms, without ready DB/limits/queues, extra replicas can amplify the bottleneck.
+
+Concretely, treat that as a testable rule: Without ready DB/limits/queues, extra replicas can amplify the bottleneck. When reality disagrees, trust cluster signals over the story in your head.
+
+Strong answers include a tradeoff and a next check. Slogans collapse under follow-up questions.
+
+Practice teaching the idea in thirty seconds, then debug the matching failure in a sandbox until both connect.
+
+Beginner trap: fluency without diagnosis skill.
+
+If someone asks tomorrow what this changes, answer with the rule: without ready DB/limits/queues, extra replicas can amplify the bottleneck.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

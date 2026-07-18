@@ -1,0 +1,11 @@
+Who closes the file if I return early?
+
+defer does. f, err := os.Open(path); defer f.Close() schedules Close when the function exits — on return or panic in that function.
+
+Put defer immediately after a successful open or lock acquisition so you never forget cleanup on an error path.
+
+defer has a small cost. For hot loops, wrap the body in a function so defer runs per iteration, not per thousand iterations.
+
+Cleanup rule: open, defer close, handle errors — in that order.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

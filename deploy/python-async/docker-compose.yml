@@ -1,0 +1,49 @@
+# Mock HTTP backends for python-async labs
+services:
+  slow-a:
+    build: ./mock-server
+    container_name: mock-async-slow-a
+    environment:
+      SERVICE_NAME: slow-a
+      BASE_DELAY_MS: "200"
+    networks:
+      - lab
+
+  slow-b:
+    build: ./mock-server
+    container_name: mock-async-slow-b
+    environment:
+      SERVICE_NAME: slow-b
+      BASE_DELAY_MS: "350"
+    networks:
+      - lab
+
+  slow-c:
+    build: ./mock-server
+    container_name: mock-async-slow-c
+    environment:
+      SERVICE_NAME: slow-c
+      BASE_DELAY_MS: "500"
+    networks:
+      - lab
+
+  gateway:
+    build: ./mock-server
+    container_name: mock-async-gateway
+    ports:
+      - "8095:8080"
+    environment:
+      SERVICE_NAME: gateway
+      BASE_DELAY_MS: "50"
+      UPSTREAM_A: http://slow-a:8080
+      UPSTREAM_B: http://slow-b:8080
+      UPSTREAM_C: http://slow-c:8080
+    depends_on:
+      - slow-a
+      - slow-b
+      - slow-c
+    networks:
+      - lab
+
+networks:
+  lab:

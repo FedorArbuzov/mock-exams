@@ -1,0 +1,11 @@
+Which verbs matter?
+
+%v default value, %s string, %d integer, %q quoted string for debug, %T type, %+v struct with field names. These cover most logging and fmt.Printf debugging.
+
+Wrong verbs cause go vet warnings and garbage output — %s on an int prints weirdness.
+
+Learn verbs before reaching for JSON marshal for every debug print.
+
+Debug set: %v %s %d %q %T %+v — memorize this handful.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,13 @@
+How do you pull a log file or config out of a container?
+
+kubectl cp. It copies files between your machine and a Pod, similar in spirit to secure copy. kubectl cp my-pod colon slash var slash log slash app.log . slash pulls a file down. Reverse the arguments to push a file into the Pod.
+
+Use cases: grab a crash dump, extract a generated config, or drop a temporary debug script. Specify the container with dash c when the Pod has more than one. Paths are container filesystem paths, not host paths.
+
+What beginners get wrong: expecting cp to work on distroless images without a shell helper, or copying huge directories and filling the node. Also treating files you push in as permanent - a restart wipes the container filesystem unless the path is on a volume. And forgetting the namespace with dash n.
+
+Practical tip: prefer volumes and logging agents for lasting data. Use kubectl cp for short investigations, then delete sensitive copies from your laptop.
+
+Rule to remember: kubectl cp is a temporary bridge - not your backup strategy.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

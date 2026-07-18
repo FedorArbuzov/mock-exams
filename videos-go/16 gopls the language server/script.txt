@@ -1,0 +1,11 @@
+Why is my editor suddenly smart?
+
+That is gopls — the official Go language server. It parses your module, tracks types, and feeds your editor diagnostics, completions, and renames.
+
+When gopls is broken, you get red squiggles on valid code or missing imports. Fixes: open the module root folder, not a single file; run go mod tidy; update gopls with go install golang.org/x/tools/gopls@latest.
+
+Keep gopls version roughly aligned with your Go toolchain. Mismatches cause weird false errors.
+
+Debug habit: if the editor disagrees with go build, trust go build and fix gopls workspace first.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

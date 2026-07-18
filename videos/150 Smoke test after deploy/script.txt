@@ -1,0 +1,15 @@
+Why doesn't a 'green deploy' prove the service works?
+
+In simple terms, a mini post-rollout test confirms the critical user path.
+
+Concretely, treat that as a testable rule: A mini post-rollout test confirms the critical user path. When reality disagrees, trust cluster signals over the story in your head.
+
+Delivery quality is a bored repeatable path: pinned image, Git as source of truth, sync, smoke, rollback.
+
+If humans must remember secret dashboard clicks, drift is already invited.
+
+Beginner trap: kubectl edit in prod with no path back to Git.
+
+If someone asks tomorrow what this changes, answer with the rule: a mini post-rollout test confirms the critical user path.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

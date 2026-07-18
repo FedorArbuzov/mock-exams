@@ -1,0 +1,11 @@
+What should I verify in Go code reviews before merge?
+
+Zero values: does a nil slice or nil map break this code path? Every type has a default — make sure your logic handles empty and nil before you assume data exists. Off-by-one and nil panics often start here, especially in handlers that run before data is fully loaded.
+
+Conversions: are sizes explicit where it matters? Go will not silently widen or narrow — int to int32 needs an explicit cast when precision or overflow matters, especially at API boundaries and database columns. A wrong assumption here shows up as subtle data corruption, not a compile error.
+
+Shadowing: does short declaration accidentally hide err or a loop variable? Also check string handling — byte length versus rune count for Unicode — and pointer nil paths before you ship. These are silent until production traffic hits the edge case.
+
+Types are where junior Go bugs cluster. A five-minute type review saves an on-call page. Review checklist: zero value safe, explicit conversions, no shadowed err, nil pointers handled.
+
+Master Go faster. Theory, hands-on labs, and interview questions - link in bio.

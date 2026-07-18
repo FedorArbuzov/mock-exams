@@ -1,0 +1,11 @@
+How do I protect a small API?
+
+Rate limit per IP or API key at middleware — token bucket is common. Return 429 with Retry-After when exceeded.
+
+Protect auth endpoints extra aggressively — brute force is cheap for attackers.
+
+Rate limits belong at the edge when possible; middleware works for single-service apps.
+
+Rate limit: token bucket middleware, 429 on exceed, stricter on login.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

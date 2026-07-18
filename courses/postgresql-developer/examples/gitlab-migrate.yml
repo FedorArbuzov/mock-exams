@@ -1,0 +1,9 @@
+# Фрагмент .gitlab-ci.yml — миграции Flyway (postgresql-developer урок 14)
+migrate:
+  stage: deploy
+  image: flyway/flyway:10
+  variables:
+  script:
+    - flyway -url=jdbc:postgresql://postgres:5432/course -user=course -password=course -schemas=devapp -locations=filesystem:sql migrate
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

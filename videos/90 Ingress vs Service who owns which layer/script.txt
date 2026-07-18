@@ -1,0 +1,15 @@
+Do Ingress and Service do the same thing?
+
+In simple terms, service handles internal networking; Ingress manages external HTTP/HTTPS entry.
+
+Concretely, treat that as a testable rule: Service handles internal networking; Ingress manages external HTTP/HTTPS entry. When reality disagrees, trust cluster signals over the story in your head.
+
+Most traffic outages are mismatches: selector, port, namespace, readiness, or Ingress rules with no controller.
+
+Trace one request hop by hop — client, edge, Service, endpoints, Ready Pod — and stop at the first broken hop.
+
+Beginner trap: blaming app code before confirming endpoints exist.
+
+If someone asks tomorrow what this changes, answer with the rule: service handles internal networking; Ingress manages external HTTP/HTTPS entry.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

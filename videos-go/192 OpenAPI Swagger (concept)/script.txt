@@ -1,0 +1,11 @@
+How do teams document HTTP APIs?
+
+OpenAPI — Swagger — describes paths, schemas, and status codes. Generate from code annotations or write spec first and generate server stubs.
+
+Pick one process per team: spec-first for public APIs, code-first for internal fast iteration.
+
+Docs drift hurts clients — tie spec updates to the same PR as handler changes.
+
+API docs: OpenAPI spec in repo, updated with every contract change.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

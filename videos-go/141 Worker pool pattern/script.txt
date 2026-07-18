@@ -1,0 +1,11 @@
+How do I limit concurrency?
+
+Worker pool: N goroutines read jobs from a channel, process, maybe send results. Producers send jobs; close jobs when done; workers drain and exit.
+
+This caps parallel DB calls or HTTP fetches — preventing self-DOS when input is huge.
+
+Combine with context cancel so shutdown stops workers mid-queue.
+
+Pool shape: jobs channel, N workers, WaitGroup or errgroup, bounded parallelism.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

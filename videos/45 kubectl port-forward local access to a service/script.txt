@@ -1,0 +1,13 @@
+How do you test a service without setting up an Ingress?
+
+kubectl port-forward. It tunnels a port from your laptop straight to a Pod or Service inside the cluster, over the Kubernetes API - no LoadBalancer, no Ingress, no public exposure. kubectl port-forward service slash my-api 8080 colon 80 maps local 8080 to the Service port 80.
+
+It is perfect for private debugging. Hit a database admin UI, curl an internal API, or open a dashboard that should never be public. Traffic stays on your machine and dies when you stop the command.
+
+What beginners get wrong: expecting port-forward to be production access - it is a single-user tunnel tied to your terminal, not load-balanced or durable. Also forwarding to a Pod that gets rescheduled, so the tunnel breaks; forwarding to a Service is more stable. And picking a local port already in use.
+
+Practical tip: keep it in a dedicated terminal, and use it to confirm a Service works before you invest in real Ingress.
+
+Rule to remember: port-forward is a private tunnel for debugging, not a front door.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

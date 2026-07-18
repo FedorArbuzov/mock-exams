@@ -1,0 +1,11 @@
+Go ships its documentation reader inside the toolchain itself. How do I read docs offline?
+
+Use go doc. Point it at a function and it prints the signature and documentation right there. Point it at a type and you get the type's docs. Add the all flag and it dumps every doc in that package.
+
+This beats random blog posts when you want the authoritative answer for your installed toolchain version.
+
+Inside your own module, go doc summarizes your own packages too — useful before publishing.
+
+Terminal habit: check the docs with go doc before you import a mystery helper from Stack Overflow.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

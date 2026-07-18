@@ -1,0 +1,11 @@
+What are those json name tags?
+
+Struct tags are metadata on fields. `json:"user_name"` tells encoding/json which key to use. `omitempty` skips zero values. Database and validation libraries read tags too.
+
+Wrong tags cause silent field drops in APIs — the struct has Email but JSON sends nothing because the tag mismatched.
+
+Keep tags accurate when you rename fields. Tests should round-trip JSON.
+
+Tag rule: field name, wire name, and tag must agree — test marshal.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

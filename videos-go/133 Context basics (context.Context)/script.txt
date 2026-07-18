@@ -1,0 +1,11 @@
+What is ctx doing in every API?
+
+context.Context carries deadlines, cancelation signals, and optional request-scoped values across the call tree. When a client disconnects, ctx cancels downstream DB and HTTP calls.
+
+First parameter convention: func Do(ctx context.Context, ...). Never store context in structs.
+
+Pass ctx down, listen to ctx.Done() in long operations, return ctx.Err() when canceled.
+
+Context rule: first param, pass down, never in struct fields.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,13 @@
+How does a Service know which Pods should get traffic?
+
+Selectors. A selector is a query over labels. A Service says selector app equals api, and Kubernetes continuously finds every Pod with that label and adds it to the Service's Endpoints. There is no manual wiring - matching labels is the whole mechanism.
+
+The same idea links controllers to Pods. A Deployment's selector must match the labels in its Pod template, or the API rejects it. ReplicaSets, DaemonSets, and NetworkPolicies all select by label too.
+
+What breaks: the classic empty Endpoints. Your Service selector says app equals api but the Pods are labeled app equals API with different casing, or a typo. The Service exists, has a ClusterIP, and routes to nothing. Requests just hang or refuse.
+
+Practical check: kubectl get endpoints your-service. Empty means the selector matches no Pods. Compare the Service selector with kubectl get pods dash dash show-labels.
+
+Rule to remember: no matching labels, no Endpoints, no traffic.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

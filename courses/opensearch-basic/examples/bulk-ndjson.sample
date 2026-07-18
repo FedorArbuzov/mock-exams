@@ -1,0 +1,6 @@
+{"index":{"_index":"logs-app-EXAMPLE","_id":"doc-1"}}
+{"@timestamp":"2026-05-18T10:00:01Z","level":"info","service":"api","message":"GET /health 200","bytes":12,"status":200}
+{"index":{"_index":"logs-app-EXAMPLE","_id":"doc-2"}}
+{"@timestamp":"2026-05-18T10:00:02Z","level":"error","service":"api","message":"GET /orders 500","bytes":0,"status":500}
+{"index":{"_index":"logs-app-EXAMPLE","_id":"doc-3"}}
+{"@timestamp":"2026-05-18T10:00:03Z","level":"warn","service":"worker","message":"retry payment","bytes":null,"status":null}

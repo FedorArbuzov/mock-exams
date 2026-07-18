@@ -1,0 +1,19 @@
+# Соглашение по ключам — финальный проект (rate limit)
+# Префикс app — изоляция от чужих лаб на общем стенде
+
+# Скользящее окно (INCR + EXPIRE) — вариант A
+# Ключ: rl:{scope}:{identifier}:{windowStartUnix}
+# Пример: rl:api:192.168.1.1:1716033600
+# TTL: длина окна + небольшой запас (секунды)
+
+# Fixed window — вариант B (проще для basic)
+# Ключ: rl:fw:{scope}:{identifier}:{bucketId}
+# bucketId = floor(unix_ts / window_seconds)
+# Пример: rl:fw:login:user-881:28600600
+
+# Token bucket (опционально, zset + timestamp)
+# rl:tb:{scope}:{identifier}  — ZSET, score = время пополнения
+
+# Leaderboard (альтернативный финал)
+# lb:shop:daily — ZSET, member = userId, score = очки
+# lb:shop:daily:meta — HASH с updatedAt, rulesVersion

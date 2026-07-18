@@ -1,0 +1,13 @@
+Why aren't databases usually run with a Deployment?
+
+Because a Deployment treats Pods as interchangeable cattle - random names, no stable storage, any order. A database needs identity. That is what a StatefulSet gives: stable network names like db-0, db-1, db-2, and its own persistent volume that follows each Pod across restarts.
+
+StatefulSets also start and scale in order. Pod zero comes up before Pod one, which matters for clustered systems that elect a primary or join members one by one. Each Pod keeps its PersistentVolumeClaim, so db-0 always reattaches to db-0 data.
+
+What beginners get wrong: running Postgres in a plain Deployment, then losing data when the Pod reschedules onto another node with no volume. Or expecting a StatefulSet to auto-magically replicate data - it manages identity and storage, not your app's replication logic.
+
+Practical check: kubectl get statefulset and kubectl get pvc to confirm each Pod has its own claim.
+
+Rule to remember: stable identity plus sticky storage means StatefulSet, not Deployment.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+What do I verify with slices and maps?
+
+Backing array sharing after subslices and append. comma-ok on map lookups when zero is valid. No concurrent map writes. nil versus empty slice semantics in APIs.
+
+Run the race detector if goroutines touch shared maps or slices.
+
+Most collection bugs are ownership bugs — who mutates what, when.
+
+Collection checklist: sharing, ok-idiom, concurrency, nil vs empty.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

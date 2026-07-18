@@ -1,0 +1,11 @@
+Every Go module starts with one small file. What is this go.mod file?
+
+go.mod is your project's identity card. It declares the module path — how others import you — and lists dependency versions. go.sum stores checksums so builds are reproducible.
+
+Without go.mod you are outside the module system. With it, anyone can clone your repo and build it.
+
+The module path should match where the code lives, usually your Git host path — your username and repo name.
+
+First real project step after creating a folder: initialize the module with your import path, then write code and let imports drive dependencies.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

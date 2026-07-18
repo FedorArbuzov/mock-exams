@@ -1,0 +1,11 @@
+How do APIs encode JSON?
+
+json.Marshal and json.Unmarshal with struct tags. `json:"name,omitempty"` controls wire names and omission of zero values.
+
+Pointers in structs affect omitempty and null versus absent fields.
+
+For HTTP, set Content-Type application/json and decode with json.NewDecoder(r.Body).Decode.
+
+JSON habit: struct tags, decode into typed struct, DisallowUnknownFields for strict APIs.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

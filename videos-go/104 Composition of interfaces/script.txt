@@ -1,0 +1,11 @@
+Can interfaces embed interfaces?
+
+Yes. type ReadWriter interface { io.Reader; io.Writer } composes smaller interfaces. Same pattern stdlib uses everywhere.
+
+Embedding interfaces expresses capability without listing every method at call sites.
+
+Keep composed interfaces small too — ReadWriter is two methods, still fine.
+
+Composition: build ReadWriter from Reader plus Writer — not twenty methods at once.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

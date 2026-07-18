@@ -1,0 +1,11 @@
+Where do secrets and config come from?
+
+Twelve-factor style: environment variables via os.Getenv at startup. Validate required vars early — fail fast if DATABASE_URL is missing.
+
+Do not hardcode secrets. Do not commit .env with production values.
+
+For local dev, godotenv-style files are fine; prod uses secret managers injecting env.
+
+Config rule: read env at startup, validate once, fail if required vars missing.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

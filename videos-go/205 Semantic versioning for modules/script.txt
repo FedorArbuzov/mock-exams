@@ -1,0 +1,11 @@
+When do I tag v1.2.3?
+
+When you release a version consumers should pin. Tag git commits with semver. Breaking changes bump major and, for Go modules v2+, change the module path suffix.
+
+Consumers depend on tags — not branch names. Untagged main is unstable.
+
+Document changelog with tags. CI can build releases on tag push.
+
+Module release: git tag v1.2.3, push tag, respect semver promises.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

@@ -1,0 +1,15 @@
+How do I notice a problem before an outage?
+
+In simple terms, watch CPU/memory/IO load and throttling as early degradation signals.
+
+Concretely, treat that as a testable rule: Watch CPU/memory/IO load and throttling as early degradation signals. When reality disagrees, trust cluster signals over the story in your head.
+
+These fields are runtime levers for scheduling, restarts, eviction, and placement — not decorative YAML.
+
+Change one field, watch Ready state and Events, and the concept becomes cause and effect.
+
+Beginner trap: copying a full internet snippet without knowing the failure mode it prevents.
+
+If someone asks tomorrow what this changes, answer with the rule: watch CPU/memory/IO load and throttling as early degradation signals.
+
+Master Kubernetes faster. Theory, hands-on labs, and interview questions — link in bio.

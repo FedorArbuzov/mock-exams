@@ -1,0 +1,53 @@
+# Master + replica — redis-intermediate (replication, manual failover)
+# docker compose -f docker-compose.replication.yml up -d
+# Master: localhost:6379  |  Replica read: localhost:6380
+
+services:
+  redis-master:
+    image: redis:7.2-alpine
+    container_name: mock-redis-master
+    hostname: redis-master
+    ports:
+      - "6379:6379"
+    command:
+      - redis-server
+      - /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./config/redis-master.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis-master-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  redis-replica:
+    image: redis:7.2-alpine
+    container_name: mock-redis-replica
+    hostname: redis-replica
+    ports:
+      - "6380:6379"
+    command:
+      - redis-server
+      - /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./config/redis-replica.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis-replica-data:/data
+    depends_on:
+      redis-master:
+        condition: service_healthy
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: mock-redis-commander-repl
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: master:redis-master:6379,replica:redis-replica:6379
+    depends_on:
+      - redis-master
+      - redis-replica
+
+volumes:
+  redis-master-data:
+  redis-replica-data:

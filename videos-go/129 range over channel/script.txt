@@ -1,0 +1,11 @@
+How do I consume until done?
+
+for v := range ch { process(v) } loops until the channel is closed. Closing signals no more values — receivers drain and exit.
+
+Only the sender should close — never close from the receiver. Closing an already closed channel panics.
+
+Range plus close is the standard worker shutdown pattern.
+
+Consumer pattern: range until close, close from producer side only.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

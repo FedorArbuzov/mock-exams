@@ -1,0 +1,11 @@
+Go has no public or private keywords. Why does capital letter matter so much?
+
+In Go, exported names start with an uppercase letter, unexported names start lowercase — that is how visibility works across packages.
+
+The standard library's print function is exported, so you can call it from anywhere. A lowercase helper like parse config in another package stays invisible outside that package.
+
+This is not just style — it is the language itself. Capitalize that name, and suddenly it is part of your public API.
+
+API rule: export only what callers need. Keep helpers lowercase.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

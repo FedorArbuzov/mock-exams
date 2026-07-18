@@ -1,0 +1,11 @@
+Go has one official formatter for every file. Who decides tabs and braces?
+
+gofmt does. Not you, not your reviewer, not a style debate in Slack. Run go fmt and commit the result.
+
+That single decision saves thousands of hours across the ecosystem. Diffs show logic changes, not brace wars.
+
+go fmt is also gofmt under the hood. Many editors run it on save — turn that on day one.
+
+Team rule: never hand-format Go. If fmt changes your file, the file was wrong before.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

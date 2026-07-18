@@ -1,0 +1,11 @@
+Which receiver should I choose?
+
+Pointer receiver if the method mutates the receiver or the struct is large. Value receiver for small immutable types like time-like values.
+
+Be consistent: if one method on a type uses pointer receiver, usually all should — mixing breaks method sets for interfaces.
+
+Value receiver on a pointer variable still works — Go calls the method with dereferenced copy. Know the rules before interviews.
+
+Rule: mutate or big — pointer receiver; tiny value type — value receiver.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

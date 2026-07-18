@@ -1,0 +1,11 @@
+Do I need a mocking framework?
+
+Often no. Define a small interface, write a fake struct in _test.go with canned responses. Hand-written fakes are readable and compile-time checked.
+
+Mock generators help huge interfaces — but huge interfaces are already a smell.
+
+FakeDB with map storage beats code-generated mocks for most unit tests.
+
+Test double: interface plus hand fake — two methods, ten lines.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.

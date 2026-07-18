@@ -1,0 +1,11 @@
+WaitGroup but with errors?
+
+Use golang.org/x/sync/errgroup. g, ctx := errgroup.WithContext(parent). g.Go(func() error { ... }). g.Wait() returns the first error and cancels siblings via context.
+
+Perfect for parallel fetches where one failure should abort the rest.
+
+Still cap concurrency with a semaphore or worker limit if you spawn unbounded g.Go calls.
+
+Errgroup: parallel tasks, first error wins, context cancels the rest.
+
+Master Go faster. Theory, hands-on labs, and interview questions — link in bio.
