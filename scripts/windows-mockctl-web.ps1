@@ -42,11 +42,8 @@ if (-not $pullOk) {
     if ($LASTEXITCODE -ne 0) { throw "Image not found: $Image" }
 }
 
-# 5. Run (ignore "No such container" when first start)
-$prev = $ErrorActionPreference
-$ErrorActionPreference = "Continue"
-docker rm -f $Container 2>$null | Out-Null
-$ErrorActionPreference = $prev
+# 5. Run (cmd swallows "No such container" — PowerShell treats docker stderr as errors)
+cmd.exe /c "docker rm -f $Container >nul 2>&1" | Out-Null
 docker run -d `
     --name $Container `
     --restart unless-stopped `
