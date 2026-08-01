@@ -1,0 +1,11 @@
+Containers solve packaging, but orchestration adds real complexity.
+
+ECS and EKS run containerized workloads on AWS. ECS is tightly integrated with AWS primitives, while EKS manages Kubernetes control-plane and cluster concerns. Terraform can provision surrounding infrastructure, but application delivery, observability, security, and operations remain substantial work.
+
+Start with a simpler managed service when a single web service or scheduled job does not need orchestration features. If choosing ECS or EKS, define networking, identity, image supply, logs, metrics, scaling, deployment strategy, and team operating ownership before production.
+
+A cluster is not an application platform by itself. EKS especially adds Kubernetes upgrades, add-ons, networking, policy, and workload operations. Copying a full cluster template before these decisions creates expensive, hard-to-debug infrastructure and unclear responsibility.
+
+Choose ECS or EKS only when their operational complexity earns its value.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Can you catch mistakes before a plan?
+
+Terraform validate checks whether a configuration is internally consistent and syntactically valid. It catches many malformed blocks, missing required arguments, and invalid references without contacting every cloud API. Run init first because validation needs downloaded provider schemas and modules.
+
+Use terraform validate after terraform fmt and before terraform plan in local work and CI. It is fast feedback for code structure, especially after refactoring variables or modules. Follow it with a plan because validate cannot prove your credentials, permissions, or real cloud changes.
+
+A successful validate result does not mean apply will succeed. It cannot predict quota failures, unavailable regions, existing names, external drift, or policy rules enforced by your cloud account.
+
+Validate catches configuration problems; plan checks intended infrastructure changes.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Automation can apply safely only when the approval path is explicit.
+
+CI can run terraform apply after review, but it needs guardrails: protected branches, environment approvals, scoped cloud identity, serialized runs, and an auditable trigger. The safest flow applies the exact saved plan that reviewers approved, rather than recalculating a potentially different plan at execution time.
+
+Limit production apply jobs to trusted repositories and protected deployment environments. Require human approval where policy requires it, prevent concurrent applies to the same state, and retain logs. Confirm the job uses the intended backend, workspace, and plan file. Add rollback or incident handoff guidance for failures.
+
+An automatic apply on every branch or a job with broad permanent credentials turns a code mistake into an immediate cloud incident. Replanning after approval also creates a time-of-check gap. Bind authorization, plan, and apply to one controlled workflow.
+
+Apply approved saved plans from protected, serialized CI workflows.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

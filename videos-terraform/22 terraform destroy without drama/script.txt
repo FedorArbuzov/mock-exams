@@ -1,0 +1,11 @@
+How do you delete a lab without deleting the wrong thing?
+
+Terraform destroy plans to remove every managed resource in the current state, then asks for confirmation. It is useful for temporary labs and environments, but it is still a real deletion operation. Resources outside the state are not automatically protected by the command.
+
+Run terraform plan -destroy first and read the target account, region, and resource list. Use a separate sandbox workspace or state for practice environments. After destroying a lab, confirm any provider-side leftovers such as data, logs, or objects with retention settings.
+
+Never type destroy in an unfamiliar directory or against an unknown backend. A wrong profile, workspace, or cloud account can turn a cleanup command into a serious incident.
+
+Before destroy, verify the directory, state, account, and plan.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

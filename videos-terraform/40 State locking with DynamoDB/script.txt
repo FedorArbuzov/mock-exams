@@ -1,0 +1,11 @@
+What stops two applies colliding?
+
+State locking prevents concurrent Terraform operations from writing the same state at the same time. In the traditional S3 backend pattern, DynamoDB provides a lock record while Terraform plans or applies. The second operation waits or fails rather than proceeding from a stale shared state snapshot.
+
+Create and configure the lock table according to the backend documentation, then ensure every team member and CI job uses the same backend settings. If a lock remains after a crash, investigate the active operation before force-unlocking. Treat lock identifiers as evidence, not obstacles.
+
+Never force-unlock just because you are waiting. You can corrupt state coordination if another apply is still running. Confirm the original process has stopped and identify the exact lock first.
+
+A state lock protects the team from simultaneous, conflicting infrastructure changes.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

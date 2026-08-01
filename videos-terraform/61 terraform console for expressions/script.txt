@@ -1,0 +1,11 @@
+Test Terraform expressions before embedding them in a large plan.
+
+terraform console opens an interactive evaluator for Terraform expressions in the current configuration context. It is useful for testing functions, collection transformations, conditionals, and variable shapes. It evaluates expressions but does not create, change, or destroy infrastructure.
+
+Run it in the same directory and workspace you are debugging. Try small expressions, inspect values, and use it to understand types before writing complex locals. Exit when finished, and avoid pasting secrets because console output and terminal history may persist.
+
+Console results can depend on loaded variable values and available state, so a result from one workspace may not apply elsewhere. It does not validate a complete plan or provider behavior. Treat it as an expression laboratory, not an infrastructure simulator.
+
+Use console to test expressions, then confirm behavior with plan.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

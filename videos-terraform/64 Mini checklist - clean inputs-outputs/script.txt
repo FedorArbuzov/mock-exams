@@ -1,0 +1,11 @@
+A module is easiest to use when its interface is small.
+
+Clean Terraform interfaces have typed, described inputs; safe defaults; focused validation; and small, meaningful outputs. Variables represent decisions callers should make. Locals represent internal derivations. Outputs represent stable results that people or other stacks actually need.
+
+Review a module by asking whether every input changes a supported behavior and whether every output has a consumer. Validate environment-sensitive values, mark secrets sensitive, and provide examples. Test plans with representative input files, including invalid values that should fail early.
+
+Exposing every underlying provider argument couples callers to internal implementation and makes upgrades painful. Outputting entire resources creates accidental dependencies. A sensitive label does not secure state, so interface design must be paired with backend access control.
+
+Make module interfaces small, typed, documented, and intentionally stable.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

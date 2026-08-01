@@ -1,0 +1,11 @@
+The plan is the change request translated into infrastructure actions.
+
+A Terraform plan artifact shows what Terraform intends to create, change, replace, and destroy for a specific configuration and state. Review it in the pull request alongside the code. It often reveals impact that code structure alone hides, especially replacement and deletion caused by immutable fields.
+
+Verify the plan was generated with the expected workspace, variables, provider versions, and commit. Look closely at destructive actions, security-sensitive fields, IAM policy changes, public exposure, and cost-affecting resources. Keep the artifact accessible long enough for reviewers and approvers to audit the proposed change.
+
+Treating a green CI job as approval ignores the most valuable output it produced. Plans can become stale if configuration or state changes afterward. Ensure the apply uses the reviewed plan artifact or regenerates under controlled approval rules.
+
+Review planned actions, especially destroys, replacements, access, and cost.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

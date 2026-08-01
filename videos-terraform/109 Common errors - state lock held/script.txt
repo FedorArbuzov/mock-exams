@@ -1,0 +1,11 @@
+A state lock is Terraform preventing two surgeons from operating together.
+
+A remote state lock prevents concurrent Terraform operations from modifying the same state at the same time. A lock held error usually means another plan or apply is running, a prior process ended unexpectedly, or the backend has not released the lock yet. Treat it as coordination evidence, not annoyance.
+
+Identify the lock holder and check CI runs, terminal sessions, and backend metadata. Wait for a legitimate operation to finish, then retry. If the operation is confirmed dead, use the backend's documented recovery method and record why. Design CI so applies to one state are serialized.
+
+Force-unlocking immediately can allow two operations to write conflicting state and cause resource corruption. A lock might belong to a slow but valid apply. Verify the operation is truly inactive, notify the owner, and preserve an audit trail before breaking it.
+
+Verify the holder; force-unlock only confirmed abandoned operations.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

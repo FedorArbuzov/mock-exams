@@ -1,0 +1,11 @@
+How does Terraform know how to call AWS?
+
+Terraform core does not hardcode every cloud API. A provider is a plugin - hashicorp slash aws, kubernetes, random - that registers resource types and talks to the real API. Your configuration declares required_providers, then a provider block with region and other settings.
+
+terraform init downloads those plugins and records versions in the lock file. Without init, plan cannot even start. Pin versions so yesterday's green plan does not surprise you after a major provider bump.
+
+Beginners commit code without required_providers and wonder why a teammate's machine invents a different plugin version. Lock what works.
+
+Rule: core orchestrates; providers implement; init installs the contract.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

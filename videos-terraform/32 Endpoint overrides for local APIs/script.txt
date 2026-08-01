@@ -1,0 +1,11 @@
+How does Terraform talk to a local API?
+
+An endpoint override tells a provider to send API requests to a different URL instead of its normal cloud service endpoint. This is commonly used for local emulators, private test APIs, or controlled integration environments. It changes where requests go, not what Terraform state means.
+
+Use provider documentation for the exact endpoint override syntax because every provider exposes it differently. Keep local endpoint values in clearly named variables or separate development configuration. Before applying, verify the endpoint, account settings, and resource names from the generated plan.
+
+Leaving a local endpoint override enabled can make later tests target the wrong service and produce confusing results. Never point an unknown configuration at a production-like endpoint without a reviewed plan and credentials.
+
+Make endpoint targets explicit, temporary, and easy to verify.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

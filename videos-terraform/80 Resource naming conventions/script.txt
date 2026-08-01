@@ -1,0 +1,11 @@
+Good names make a console search feel like a query, not archaeology.
+
+A naming convention turns anonymous cloud objects into understandable infrastructure. Include stable dimensions such as application, environment, region, and purpose when they help operators distinguish resources. Build names from Terraform locals so every resource follows one pattern and changes are deliberate rather than scattered.
+
+Respect service limits and immutable naming rules before standardizing. Some names must be globally unique, some cannot be renamed, and some allow only certain characters. Prefer readable names over clever abbreviations. Keep a separate immutable identifier when a friendly display name may need to change later.
+
+Putting volatile details like ticket numbers or deployment timestamps into durable resource names causes replacement, noise, and confusion. Names also become dangerous when they encode secrets or personal data. Use tags for rich metadata and names for concise identification.
+
+Use stable, readable names assembled from shared locals.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

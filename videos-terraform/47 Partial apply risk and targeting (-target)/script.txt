@@ -1,0 +1,11 @@
+dash target is a scalpel, not a deployment strategy.
+
+The -target option limits planning and applying to selected addresses and their dependencies. It can help recover from exceptional failures or isolate a specific repair. It intentionally bypasses Terraform's normal view of the complete desired infrastructure graph.
+
+Use terraform plan -target only when you can explain why a full plan is unsafe or impossible. Review the warning and follow with a normal plan after the targeted change. The full plan confirms that unrelated dependencies remain consistent.
+
+Regular targeted applies create partial updates and hide changes outside the selected path. Teams may think a deployment succeeded while an output, policy, or dependent resource remains outdated. Do not put targeting into routine CI deployment commands.
+
+Use dash target for recovery, then run a full plan.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

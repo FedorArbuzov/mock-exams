@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { KubernetesDiagram } from "@/components/mockups/KubernetesDiagram";
 
 const sidebarItems = [
   { label: "Lessons", active: true },
@@ -18,6 +17,12 @@ const codeLines = [
   { text: "  name: web", tone: "value" },
   { text: "spec:", tone: "muted" },
   { text: "  replicas: 3", tone: "accent" },
+];
+
+const lessonPoints = [
+  "A Deployment manages Pod replicas",
+  "Desired state is declared in YAML",
+  "Controllers reconcile what you describe",
 ];
 
 export function HeroAppMockup() {
@@ -99,7 +104,25 @@ export function HeroAppMockup() {
             </div>
 
             <div className="grid gap-3 lg:grid-cols-2">
-              <KubernetesDiagram compact />
+              <div className="rounded-xl border border-border bg-white/[0.02] p-3 sm:p-4">
+                <p className="text-[10px] uppercase tracking-[0.14em] text-muted">
+                  Lesson notes
+                </p>
+                <ul className="mt-3 flex flex-col gap-2.5">
+                  {lessonPoints.map((point, i) => (
+                    <motion.li
+                      key={point}
+                      className="flex items-start gap-2 text-[11px] leading-snug text-foreground/90 sm:text-xs"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.55 + i * 0.08 }}
+                    >
+                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                      {point}
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
 
               <div className="overflow-hidden rounded-xl border border-border bg-[#070B16] p-3 font-mono text-[10px] leading-relaxed sm:text-[11px]">
                 <div className="mb-2 flex items-center justify-between text-muted">

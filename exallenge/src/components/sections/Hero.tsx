@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/Button";
 import { Particles } from "@/components/layout/Particles";
 import { HeroAppMockup } from "@/components/mockups/HeroAppMockup";
 import { IconCheck, IconPlay } from "@/components/icons/Icons";
+import { EmailSignup } from "@/components/ui/EmailSignup";
 import { siteConfig } from "@/lib/config";
 
-const perks = ["One-time payment", "Lifetime updates", "Founder pricing"];
+const perks = ["Free beta access", "No credit card"];
 
 export function Hero() {
   return (
@@ -44,9 +45,9 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.05 }}
           >
-            Master DevOps.
+            Learn DevOps.
             <br />
-            <span className="text-gradient">Not Just Kubernetes.</span>
+            <span className="text-gradient">Free for Early Users.</span>
           </motion.h1>
 
           <motion.p
@@ -55,24 +56,24 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.12 }}
           >
-            Interactive lessons, visual explanations, hands-on labs and interview
-            questions — everything you need to become a confident DevOps
-            engineer.
+            Join early to get full access for free while we build with real user
+            feedback. Structured lessons, hands-on labs, and interview prep in
+            one place.
           </motion.p>
 
           <motion.div
-            className="mt-8 flex flex-wrap items-center gap-3"
+            className="mt-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.18 }}
           >
-            <Button href={siteConfig.founderCtaHref} size="lg">
-              Get Founder Access
-            </Button>
-            <Button href={siteConfig.demoHref} variant="secondary" size="lg">
-              <IconPlay size={18} />
-              Watch Demo
-            </Button>
+            <EmailSignup source="hero" />
+            <div className="mt-3">
+              <Button href={siteConfig.demoHref} variant="secondary" size="md">
+                <IconPlay size={18} />
+                See Labs
+              </Button>
+            </div>
           </motion.div>
 
           <motion.ul

@@ -1,0 +1,11 @@
+Does Terraform care which file holds a resource?
+
+Terraform reads all files ending in .tf in one working directory as a single configuration. File names are for human organization, not execution order. Splitting providers, variables, outputs, and resources into clear files helps people navigate without changing Terraform's dependency graph.
+
+A simple layout often uses versions.tf, providers.tf, main.tf, variables.tf, outputs.tf, and terraform.tfvars outside version control when sensitive. Group files by purpose or domain once the project grows. Let resource references express dependencies instead of trying to control file order.
+
+Do not create dozens of tiny files before the project has complexity. Also avoid assuming main.tf runs first; Terraform builds a graph from references, not the alphabetical order of files.
+
+Organize files for humans; Terraform organizes resources by dependencies.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

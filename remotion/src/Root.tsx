@@ -5,8 +5,9 @@ import {FPS, HEIGHT, WIDTH} from "./shared/constants";
 import {getTotalFramesFromAudio} from "./shared/timings";
 import {golangEpisodes} from "./series/golang/episodes";
 import {kubernetesEpisodes} from "./series/kubernetes/episodes";
+import {terraformEpisodes} from "./series/terraform/episodes";
 
-const episodes = [...kubernetesEpisodes, ...golangEpisodes];
+const episodes = [...kubernetesEpisodes, ...golangEpisodes, ...terraformEpisodes];
 
 export const RemotionRoot: React.FC = () => {
   return (

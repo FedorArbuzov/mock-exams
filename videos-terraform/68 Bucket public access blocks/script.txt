@@ -1,0 +1,11 @@
+Public access should be a conscious exception, never a default.
+
+S3 public access block settings help prevent buckets and objects from becoming publicly accessible through ACLs or policies. Terraform can manage these settings alongside the bucket. They provide a guardrail against common accidental exposure paths, especially for data buckets.
+
+Enable all four block settings unless a documented design requires otherwise. Use bucket policies and IAM for controlled private access, then test with the intended principals. Organization-level controls can add another layer, but application teams should still declare bucket protections.
+
+A public access block may conflict with legacy static-site patterns or existing public policies. Disabling it broadly to solve one access problem exposes more than intended. Do not confuse public access settings with encryption, authentication, or network-level controls.
+
+Block public S3 access by default and document every exception.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

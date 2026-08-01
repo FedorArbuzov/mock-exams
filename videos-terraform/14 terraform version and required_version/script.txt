@@ -1,0 +1,11 @@
+Why pin the Terraform CLI version?
+
+The terraform version command reports the installed CLI and initialized providers. The required_version setting declares which Terraform CLI versions may run a configuration. It prevents a teammate or pipeline from using an unsupported release and producing surprising behavior or errors.
+
+Put required_version in a terraform block near your provider requirements. For example, choose a tested version range that matches your team policy, then run terraform init. Check terraform version in CI too, so a local success and pipeline failure do not come from different binaries.
+
+Pinning only provider versions while leaving the Terraform CLI unrestricted can still create compatibility trouble. An overly narrow exact version can also make routine updates painful when your team legitimately needs a patch release.
+
+Declare the Terraform versions your configuration is tested to support.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

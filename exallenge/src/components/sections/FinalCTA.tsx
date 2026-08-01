@@ -2,9 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 import { Particles } from "@/components/layout/Particles";
-import { siteConfig } from "@/lib/config";
+import { EmailSignup } from "@/components/ui/EmailSignup";
 
 export function FinalCTA() {
   return (
@@ -27,20 +26,14 @@ export function FinalCTA() {
             id="final-cta-heading"
             className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-5xl"
           >
-            Become Interview Ready.
+            Try The Product Free.
           </h2>
           <p className="mt-5 text-base text-muted sm:text-lg">
-            Theory.
-            <br />
-            Practice.
-            <br />
-            Interview Questions.
+            Leave your email and get access instructions.
           </p>
-          <p className="mt-4 text-sm text-secondary">Everything in one place.</p>
-          <div className="mt-8 flex justify-center">
-            <Button href={siteConfig.founderCtaHref} size="lg">
-              Get Founder Access
-            </Button>
+          <p className="mt-4 text-sm text-secondary">Free beta, built with users.</p>
+          <div className="mx-auto mt-8 max-w-xl text-left">
+            <EmailSignup source="final-cta" />
           </div>
         </motion.div>
       </Container>

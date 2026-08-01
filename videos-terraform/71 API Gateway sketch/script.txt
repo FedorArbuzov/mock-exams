@@ -1,0 +1,11 @@
+An API gateway connects requests, routes, and integrations.
+
+API Gateway exposes HTTP endpoints and routes requests to integrations such as Lambda, load balancers, or other services. Terraform can define APIs, routes, stages, integrations, permissions, logging, and custom domains. Start with the request path and authentication flow.
+
+For a basic Lambda API, model the API, route, integration, deployment or stage, and permission allowing invocation. Enable access logs and define CORS intentionally for browser clients. Use environment-specific domain and stage strategy rather than assuming one endpoint fits every audience.
+
+Creating the API and Lambda is not enough if Lambda permission does not authorize API Gateway invocation. CORS misconfiguration can look like an application outage. API deployments and stage changes have provider-specific lifecycle details, so verify real requests after apply.
+
+Model routes, integration permission, logging, and client access together.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Copy-paste is a module you forgot to name and test.
+
+A Terraform module groups related resources behind inputs and outputs. Modules reduce repeated patterns, give teams a shared interface, and let maintainers improve a standard implementation once. The root configuration calls modules for a specific environment or workload, while child modules implement reusable building blocks.
+
+A useful module captures a pattern that repeats with stable intent, such as a service bucket or network segment. Its variables expose real choices, and its outputs expose useful references. Keep the interface small enough that callers understand it without reading every resource inside.
+
+Modules do not automatically simplify a design. A thin wrapper around one changing resource can hide important behavior and slow debugging. Start with direct resources until a pattern repeats, then extract the stable parts with tests and documentation.
+
+Module repeated intent, not every individual resource.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

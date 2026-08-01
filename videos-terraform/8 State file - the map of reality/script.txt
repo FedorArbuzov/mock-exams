@@ -1,0 +1,11 @@
+How does Terraform know what it built?
+
+Terraform state is its map between resource addresses in your code and real cloud objects. It records identifiers, attributes, dependencies, and provider data needed to calculate future changes. Without state, Terraform cannot reliably tell whether an object already exists or needs updating.
+
+After apply, inspect state with terraform state list or terraform show. Treat terraform.tfstate as sensitive operational data because it can contain resource values and sometimes secret values. For shared work, store state remotely with access control, backups, versioning, and locking.
+
+Do not hand-edit state to fix ordinary configuration mistakes. Manual edits can break Terraform's mapping; prefer configuration changes, import, state move, or state remove only when you understand the consequence.
+
+State is Terraform's memory, so protect it like production data.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

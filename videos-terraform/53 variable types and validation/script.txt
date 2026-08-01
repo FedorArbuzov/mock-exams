@@ -1,0 +1,11 @@
+Reject bad inputs before they become bad infrastructure.
+
+Variable type constraints tell Terraform what shape a caller must provide, including string, number, bool, list, set, map, object, and tuple. Validation rules add domain checks, such as allowed environments, CIDR format, or a minimum retention period.
+
+Choose the narrowest type that represents the interface. Object types make required fields visible and allow module evolution with optional attributes. Write validation messages that explain how to correct the input, then test both accepted and rejected examples.
+
+Validation cannot replace provider-side policy or runtime checks. A regex may accept an invalid cloud identifier, and a valid value may still be unauthorized. Avoid complex validation that duplicates every provider rule and becomes harder to maintain than the module.
+
+Type inputs narrowly and validate the few rules callers must satisfy.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

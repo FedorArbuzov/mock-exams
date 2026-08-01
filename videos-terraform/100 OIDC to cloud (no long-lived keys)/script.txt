@@ -1,0 +1,11 @@
+Your CI job should borrow cloud access, not store it forever.
+
+OpenID Connect lets a CI workload exchange a short-lived identity token for temporary cloud credentials. Instead of storing an AWS access key in CI secrets, AWS verifies claims from the trusted identity provider and grants a narrowly scoped role. This reduces secret rotation and long-lived credential exposure.
+
+Configure a trust policy that checks issuer, audience, repository, branch, and environment claims as supported by the CI provider. Grant the assumed role only the permissions needed for planning or applying. Log role sessions and review them like other privileged access. Separate roles by environment.
+
+OIDC is not automatically safe if the trust policy accepts tokens from any repository, branch, or audience. A broad role can still cause major damage. Restrict who may assume the role, protect deployment branches, and test denial paths as well as success.
+
+Use short-lived OIDC roles with tightly scoped trust claims.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

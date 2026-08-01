@@ -1,0 +1,11 @@
+A module interface is a promise to every caller.
+
+Input variables let callers configure a child module, while outputs return values callers need, such as IDs, ARNs, or endpoints. Together they form the module contract. Design that contract around business intent instead of leaking every internal provider attribute to the root module.
+
+Give inputs types, descriptions, validations, and sensible defaults where appropriate. Mark sensitive values so Terraform redacts them in normal output. Export only outputs that callers genuinely need; each output becomes a compatibility commitment. Use explicit names that explain what the value represents and when it exists.
+
+A module with dozens of pass-through variables is usually a copied resource schema, not a useful abstraction. It burdens callers and makes upgrades difficult. Likewise, exposing every internal ID couples consumers to implementation choices that should remain private.
+
+Expose intentional inputs and only necessary outputs.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

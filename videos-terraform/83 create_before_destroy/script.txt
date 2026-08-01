@@ -1,0 +1,11 @@
+Replacement does not have to mean downtime.
+
+The create_before_destroy lifecycle setting changes replacement order: Terraform attempts to create the new object before removing the old one. It is useful for resources where continuity matters, such as launch templates, security group replacements, or load balancer components. Whether it works depends on service constraints and naming.
+
+Confirm that the provider can temporarily hold both resources and that names, quotas, and dependencies allow overlap. Downstream references must switch to the new resource before the old one disappears. Test this behavior in a non-production environment because replacement graphs can become more complex than expected.
+
+Using a fixed unique name can make create_before_destroy impossible because AWS will reject a duplicate. The plan may still show replacement, but creation fails first. Use generated suffixes or naming patterns where safe, and verify quota headroom.
+
+Use overlap only when names, quotas, and dependencies permit it.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

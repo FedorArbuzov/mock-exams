@@ -1,0 +1,11 @@
+Which infrastructure tool should you pick?
+
+Terraform uses a declarative language and supports many providers through a consistent workflow. CloudFormation is deeply integrated with AWS and its native services. Pulumi lets teams use general-purpose languages, which can be attractive when infrastructure needs rich programming abstractions.
+
+Choose based on your cloud scope, team skills, existing modules, governance needs, and operational support. A single-cloud AWS team may value CloudFormation integration, while a multi-platform team may prefer Terraform's ecosystem. Test small real workflows before standardizing across the organization.
+
+Do not choose solely because a tool is fashionable or its syntax looks familiar. Migration cost, state management, provider maturity, and team troubleshooting experience matter long after the first demo.
+
+Choose the tool your team can safely operate repeatedly.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

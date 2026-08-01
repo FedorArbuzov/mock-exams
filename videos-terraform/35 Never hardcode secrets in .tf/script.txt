@@ -1,0 +1,11 @@
+Why is a secret in a Terraform file a problem?
+
+Hardcoded passwords, tokens, and access keys can leak through Git history, pull requests, backups, logs, and copied files. Even if a secret is removed later, previous commits may preserve it. Terraform code should reference secret delivery mechanisms instead of becoming the secret store.
+
+Use environment variables, your CI secret manager, cloud secret services, or an approved external secret workflow. Keep secret variable files out of Git and restrict who can read remote state. Rotate any credential immediately if it is committed, then remove it from history using your security process.
+
+Using a variable called password does not make a value safe when its default contains the actual secret. Sensitive markings reduce console display, but the value may still enter state or be available to provider APIs.
+
+Reference secrets at runtime; never make source code their permanent home.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

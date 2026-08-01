@@ -1,0 +1,44 @@
+import type {SceneScript} from "../../../../shared/types";
+
+export const TOPIC_TITLE = "HCL Basics";
+
+export const AUDIO_SRC = "audio/terraform/004-hcl-in-plain-words.mp3";
+/** Fallback if metadata cannot be read; calculateMetadata overrides this. */
+export const AUDIO_DURATION_SECONDS = 63.34;
+
+/** Episode-specific keywords; base CTA/branding words are added automatically. */
+export const HIGHLIGHT_WORDS = [
+  "HCL",
+  "blocks",
+  "resource",
+  "provider",
+  "variable",
+  "output",
+] as const;
+
+export const SCENE_SCRIPTS: SceneScript[] = [
+  {
+    id: "question",
+    text: "Is HCL another programming language I must master?",
+  },
+  {
+    id: "explain",
+    text: "HCL - HashiCorp Configuration Language - is a config language, not a general-purpose app language. You write blocks: terraform, provider, resource, variable, output. Inside blocks you set arguments and use expressions for references and simple logic.",
+  },
+  {
+    id: "snippet",
+    text: "A resource looks like: resource type in quotes, local name in quotes, then a body of arguments. Humans can read it in a pull request. Terraform can parse it into a graph. You will learn functions and for expressions over time - day one is blocks and references.",
+  },
+  {
+    id: "pitfall",
+    text: "Beginners paste giant dynamic blocks before they understand a flat resource. Start boring. One resource, clear names, then locals when repetition hurts.",
+  },
+  {
+    id: "rule",
+    text: "Habit: if a junior cannot skim your HCL in a PR, simplify the blocks before you add cleverness.",
+  },
+  {
+    id: "cta",
+    text: "Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.",
+  },
+];

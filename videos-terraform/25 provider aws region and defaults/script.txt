@@ -1,0 +1,11 @@
+Where does Terraform create AWS resources?
+
+The AWS provider needs a region for regional resources such as VPCs and EC2 instances. You can set it directly, pass it through a variable, or use supported AWS environment and shared configuration defaults. Some AWS resources are global, but provider region still influences many operations.
+
+Make the region visible in your configuration or environment documentation, especially for teams and CI. Use a variable with a sensible validation rule when projects need multiple regions. Run plan and inspect region-sensitive resource addresses before apply, because the wrong region creates an isolated environment.
+
+Relying silently on a developer's default AWS profile can put resources in different regions across machines. Do not assume an existing resource will be found when your provider points at another region.
+
+Make the target AWS region explicit and review it in every plan.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

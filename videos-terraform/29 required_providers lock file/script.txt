@@ -1,0 +1,11 @@
+Why commit the lock file?
+
+The required_providers block says which providers your configuration needs and which versions are acceptable. Terraform init then writes selected versions and checksums into .terraform.lock.hcl. That lock file helps every developer and CI runner install the same verified provider package.
+
+Commit .terraform.lock.hcl for normal Terraform projects and review changes to it in pull requests. Run terraform init -upgrade only when you intentionally want newer permitted provider versions. Required providers are policy; the lock file records the exact dependency decision made for this project.
+
+Do not confuse the lock file with state or ignore it as generated noise. Deleting it casually can cause different machines to choose different provider versions inside the allowed version range.
+
+Declare provider ranges, then commit the exact locked provider selections.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

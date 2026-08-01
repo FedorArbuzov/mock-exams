@@ -1,0 +1,11 @@
+Terraform deploys an artifact. It should not become your build system.
+
+A Lambda function needs code packaged as a ZIP file or container image, plus runtime settings, execution role, handler, memory, timeout, and environment configuration. Terraform can reference a built artifact and deploy its versioned change to AWS.
+
+Build and test artifacts in a dedicated CI step, publish them to controlled storage or a registry, and pass an immutable reference to Terraform. Use source hashes or image digests so Terraform detects intended code changes. Keep deployment identity and execution identity separate.
+
+Building application code during Terraform apply makes plans less reproducible and mixes build failures with infrastructure changes. Do not store secrets in Lambda environment variables without appropriate encryption and access design. A successful upload does not prove runtime permissions work.
+
+Build immutable artifacts first; let Terraform deploy their references.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

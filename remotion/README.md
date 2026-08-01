@@ -1,6 +1,6 @@
 # Shared Remotion project (exallenge.tech Shorts)
 
-One Remotion v4 project for every episode, across every series (Kubernetes, Go, ...). Install `node_modules` once here — do **not** copy this project into an episode folder under `videos/` or `videos-go/`.
+One Remotion v4 project for every episode, across every series (Kubernetes, Go, Terraform, ...). Install `node_modules` once here — do **not** copy this project into an episode folder under `videos/`, `videos-go/`, or `videos-terraform/`.
 
 ## Structure
 
@@ -25,8 +25,11 @@ src/
           scenes/*.tsx
         index.ts                  kubernetesEpisodes registry — add new episodes here
     golang/
-      icons/                      empty until the first Go episode needs one
-      episodes/index.ts           golangEpisodes registry — empty until the first Go episode ships
+      icons/
+      episodes/index.ts           golangEpisodes registry
+    terraform/
+      icons/                      TfFile, …
+      episodes/index.ts           terraformEpisodes registry
 public/
   audio/<series>/<slug>.mp3
 out/                              render output (gitignored)
@@ -63,7 +66,7 @@ List available composition ids:
 npm run list
 ```
 
-Then copy the output back to the episode's root folder (`videos/<N> Title/kubernetes-reel.mp4` or `videos-go/<N> Title/golang-reel.mp4`).
+Then copy the output back to the episode's root folder (`videos/<N> Title/kubernetes-reel.mp4`, `videos-go/<N> Title/golang-reel.mp4`, or `videos-terraform/<N> Title/terraform-reel.mp4`).
 
 ## Timing model
 

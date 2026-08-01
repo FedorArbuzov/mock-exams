@@ -1,0 +1,11 @@
+Moving state is routine only when you protect the source.
+
+Changing backend configuration can move Terraform state from one storage location to another. terraform init detects the change and offers migration. This operation changes where the authoritative state lives, so perform it deliberately with access, locking, and backup verified.
+
+Pause concurrent applies, commit backend configuration, and confirm credentials for both old and new locations. Run terraform init and choose migration only after reading the prompt. Then verify state listing, workspace selection, and a no-change plan using the new backend.
+
+Do not run backend migration from an unreviewed local configuration or while another pipeline may write state. Split-brain state causes conflicting resource ownership. A successful init alone is not enough; verify the expected remote state and locking behavior.
+
+Pause writers, migrate once, then verify state and locking.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

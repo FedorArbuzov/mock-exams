@@ -119,7 +119,7 @@ export function LabsTerminal() {
         <div className="mb-4 flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">
-              Live diagram
+              Cluster status
             </p>
             <p className="mt-1 text-sm text-muted">
               Updates as you run commands

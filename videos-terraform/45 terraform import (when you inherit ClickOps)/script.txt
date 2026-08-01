@@ -1,0 +1,11 @@
+An existing resource can join Terraform without recreation.
+
+terraform import connects an existing provider object to a resource address in Terraform state. It is useful when inheriting manually created infrastructure. Import does not generate complete configuration and does not change the remote object by itself.
+
+Write a matching resource block first, discover the provider import identifier, and import into the exact address. Immediately run terraform plan. Keep adjusting configuration until the plan shows no unwanted replacement or changes before treating the resource as managed.
+
+Importing only state without matching code creates a dangerous next plan. Terraform may propose changing or replacing the resource to satisfy incomplete defaults. Import one related component at a time and record identifiers that are difficult to rediscover.
+
+Import into matching code, then require a quiet plan.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

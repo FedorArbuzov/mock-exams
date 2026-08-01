@@ -1,0 +1,648 @@
+[
+  {
+    "n": 7,
+    "title": "Plan then apply mental model",
+    "topic": "Plan then Apply",
+    "hook": "Can I just run apply and hope?",
+    "explain": "Terraform works in two useful steps. Plan compares your configuration with the real infrastructure and the saved state, then proposes changes. Apply carries out that approved change set. Thinking of plan as a review screen makes Terraform feel less like magic and more like a controlled deployment.",
+    "detail": "Run terraform plan whenever you change code or variables, and read every add, change, and destroy marker. When the output matches your intention, run terraform apply and confirm. In automated pipelines, save a reviewed plan file so the exact plan you reviewed is the plan applied.",
+    "pitfall": "Beginners often treat apply as a preview and discover a deletion too late. A plan is only a prediction, so changes made outside Terraform between plan and apply can still affect the final result.",
+    "rule": "Plan to understand change, then apply only what you intentionally reviewed.",
+    "highlights": ["plan", "apply"],
+    "visual": {
+      "mark": "apply & hope?",
+      "chips": ["plan", "review", "apply"],
+      "lines": ["$ terraform plan", "$ terraform apply"],
+      "bad": "blind apply",
+      "good": "plan first",
+      "stamp": "PLAN = REVIEW"
+    }
+  },
+  {
+    "n": 8,
+    "title": "State file - the map of reality",
+    "topic": "Terraform State",
+    "hook": "How does Terraform know what it built?",
+    "explain": "Terraform state is its map between resource addresses in your code and real cloud objects. It records identifiers, attributes, dependencies, and provider data needed to calculate future changes. Without state, Terraform cannot reliably tell whether an object already exists or needs updating.",
+    "detail": "After apply, inspect state with terraform state list or terraform show. Treat terraform.tfstate as sensitive operational data because it can contain resource values and sometimes secret values. For shared work, store state remotely with access control, backups, versioning, and locking.",
+    "pitfall": "Do not hand-edit state to fix ordinary configuration mistakes. Manual edits can break Terraform's mapping; prefer configuration changes, import, state move, or state remove only when you understand the consequence.",
+    "rule": "State is Terraform's memory, so protect it like production data.",
+    "highlights": ["state", "mapping"],
+    "visual": {
+      "mark": "the reality map",
+      "chips": ["code", "state", "cloud"],
+      "lines": ["$ terraform state list", "$ terraform show"],
+      "bad": "lost state",
+      "good": "protected state",
+      "stamp": "STATE = MEMORY"
+    }
+  },
+  {
+    "n": 9,
+    "title": "When you do not need Terraform",
+    "topic": "Skip Terraform",
+    "hook": "Is Terraform always the answer?",
+    "explain": "Terraform is excellent for repeatable infrastructure, but not every cloud action deserves a module and state file. A one-time experiment, an emergency incident action, or a managed service setting used once may be faster in the console. The goal is reliable outcomes, not maximum Terraform coverage.",
+    "detail": "Use Terraform when an environment must be recreated, reviewed, shared, or kept consistent over time. Use a console or CLI for quick investigation, then decide whether that action should become declared infrastructure. If it matters again, capture it in code and import it carefully.",
+    "pitfall": "The common mistake is creating resources manually that later become permanent without documentation. The opposite mistake is building a complicated Terraform stack for a disposable ten-minute experiment that nobody will repeat.",
+    "rule": "Automate repeated infrastructure, not every single click you make.",
+    "highlights": ["judgment", "repeatability"],
+    "visual": {
+      "mark": "always Terraform?",
+      "chips": ["repeat", "share", "manage"],
+      "lines": ["one-time test", "repeatable env"],
+      "bad": "tool worship",
+      "good": "fit the need",
+      "stamp": "AUTOMATE REPEATS"
+    }
+  },
+  {
+    "n": 10,
+    "title": "Myth: Terraform is only for AWS",
+    "topic": "Beyond AWS",
+    "hook": "Does Terraform only speak AWS?",
+    "explain": "Terraform is not an AWS-only tool. Providers let it manage Azure, Google Cloud, Kubernetes, GitHub, Cloudflare, Datadog, and many other APIs. The Terraform workflow stays familiar while each provider translates resources into calls for its own platform.",
+    "detail": "Browse the Terraform Registry to check whether a provider and resource exist before designing an automation. Pin trusted provider versions and read the provider documentation for authentication and behavior. You can combine providers in one configuration when the resources need coordinated dependencies.",
+    "pitfall": "A provider is not an official guarantee just because it appears in the registry. Check its publisher, maintenance activity, documentation quality, and whether it supports the exact API features your team needs.",
+    "rule": "Terraform is a workflow engine; providers decide which platforms it controls.",
+    "highlights": ["providers", "multi-cloud"],
+    "visual": {
+      "mark": "AWS only?",
+      "chips": ["AWS", "Azure", "GitHub"],
+      "lines": ["provider \"aws\"", "provider \"github\""],
+      "bad": "AWS-only myth",
+      "good": "many APIs",
+      "stamp": "PROVIDERS EXPAND REACH"
+    }
+  },
+  {
+    "n": 11,
+    "title": "Terraform vs CloudFormation vs Pulumi",
+    "topic": "IaC Choices",
+    "hook": "Which infrastructure tool should you pick?",
+    "explain": "Terraform uses a declarative language and supports many providers through a consistent workflow. CloudFormation is deeply integrated with AWS and its native services. Pulumi lets teams use general-purpose languages, which can be attractive when infrastructure needs rich programming abstractions.",
+    "detail": "Choose based on your cloud scope, team skills, existing modules, governance needs, and operational support. A single-cloud AWS team may value CloudFormation integration, while a multi-platform team may prefer Terraform's ecosystem. Test small real workflows before standardizing across the organization.",
+    "pitfall": "Do not choose solely because a tool is fashionable or its syntax looks familiar. Migration cost, state management, provider maturity, and team troubleshooting experience matter long after the first demo.",
+    "rule": "Choose the tool your team can safely operate repeatedly.",
+    "highlights": ["Terraform", "CloudFormation", "Pulumi"],
+    "visual": {
+      "mark": "which IaC tool?",
+      "chips": ["Terraform", "CFN", "Pulumi"],
+      "lines": ["multi-platform?", "AWS native?"],
+      "bad": "trend choice",
+      "good": "team fit",
+      "stamp": "FIT BEATS HYPE"
+    }
+  },
+  {
+    "n": 12,
+    "title": "Mini checklist: first Terraform hour",
+    "topic": "First Hour",
+    "hook": "What should you learn first?",
+    "explain": "Your first Terraform hour should build a safe loop, not a huge cloud environment. Install the CLI, create a tiny folder, initialize it, format and validate the configuration, then read a plan. That sequence teaches the feedback loop you will use every day.",
+    "detail": "Start with a harmless local resource or a low-cost sandbox account. Keep provider credentials outside source files, run plan before apply, and destroy temporary resources when finished. Save the commands and lessons in a small README so your next project begins faster.",
+    "pitfall": "Starting with a production VPC or a large copy-pasted module hides the basics under too much complexity. A small resource is enough to learn initialization, state, planning, application, and cleanup.",
+    "rule": "Learn the safe loop on something small before managing something important.",
+    "highlights": ["init", "plan", "destroy"],
+    "visual": {
+      "mark": "first hour",
+      "chips": ["small", "safe", "repeat"],
+      "lines": ["init", "plan", "apply", "destroy"],
+      "bad": "start huge",
+      "good": "start small",
+      "stamp": "BUILD THE LOOP"
+    }
+  },
+  {
+    "n": 13,
+    "title": "Install Terraform the clean way",
+    "topic": "Install Terraform",
+    "hook": "Why not just download a random binary?",
+    "explain": "Install Terraform from HashiCorp's official distribution channels or a trusted package manager. This gives you a known executable, a predictable update path, and a version you can verify. Confirm that the terraform command is available from a new terminal session after installation.",
+    "detail": "On Windows, use a trusted package manager such as winget or Chocolatey when your organization permits it, or follow HashiCorp's official package instructions. Run terraform version after installation. Keep the binary outside project folders, then declare each project's supported version separately.",
+    "pitfall": "Do not commit a downloaded Terraform executable into a repository or rely on an unverified mirror. Different developers running random versions can get inconsistent provider behavior and confusing plan differences.",
+    "rule": "Install Terraform from trusted sources, then verify the exact CLI version.",
+    "highlights": ["install", "version"],
+    "visual": {
+      "mark": "clean install",
+      "chips": ["official", "verify", "PATH"],
+      "lines": ["$ terraform version", "$ terraform -help"],
+      "bad": "random binary",
+      "good": "verified CLI",
+      "stamp": "TRUST THE SOURCE"
+    }
+  },
+  {
+    "n": 14,
+    "title": "terraform version and required_version",
+    "topic": "Version Guardrails",
+    "hook": "Why pin the Terraform CLI version?",
+    "explain": "The terraform version command reports the installed CLI and initialized providers. The required_version setting declares which Terraform CLI versions may run a configuration. It prevents a teammate or pipeline from using an unsupported release and producing surprising behavior or errors.",
+    "detail": "Put required_version in a terraform block near your provider requirements. For example, choose a tested version range that matches your team policy, then run terraform init. Check terraform version in CI too, so a local success and pipeline failure do not come from different binaries.",
+    "pitfall": "Pinning only provider versions while leaving the Terraform CLI unrestricted can still create compatibility trouble. An overly narrow exact version can also make routine updates painful when your team legitimately needs a patch release.",
+    "rule": "Declare the Terraform versions your configuration is tested to support.",
+    "highlights": ["version", "required_version"],
+    "visual": {
+      "mark": "version guard",
+      "chips": ["CLI", "config", "CI"],
+      "lines": ["$ terraform version", "required_version"],
+      "bad": "version drift",
+      "good": "tested range",
+      "stamp": "PIN THE CLI RANGE"
+    }
+  },
+  {
+    "n": 15,
+    "title": "Project layout: one folder, many .tf files",
+    "topic": "Project Layout",
+    "hook": "Does Terraform care which file holds a resource?",
+    "explain": "Terraform reads all files ending in .tf in one working directory as a single configuration. File names are for human organization, not execution order. Splitting providers, variables, outputs, and resources into clear files helps people navigate without changing Terraform's dependency graph.",
+    "detail": "A simple layout often uses versions.tf, providers.tf, main.tf, variables.tf, outputs.tf, and terraform.tfvars outside version control when sensitive. Group files by purpose or domain once the project grows. Let resource references express dependencies instead of trying to control file order.",
+    "pitfall": "Do not create dozens of tiny files before the project has complexity. Also avoid assuming main.tf runs first; Terraform builds a graph from references, not the alphabetical order of files.",
+    "rule": "Organize files for humans; Terraform organizes resources by dependencies.",
+    "highlights": ["files", "dependencies"],
+    "visual": {
+      "mark": "one folder",
+      "chips": ["main", "vars", "outputs"],
+      "lines": ["providers.tf", "variables.tf", "outputs.tf"],
+      "bad": "file order",
+      "good": "dependency graph",
+      "stamp": "FILES ARE FOR HUMANS"
+    }
+  },
+  {
+    "n": 16,
+    "title": "terraform init: what it downloads",
+    "topic": "Terraform Init",
+    "hook": "What actually happens during init?",
+    "explain": "Terraform init prepares a working directory before planning or applying. It downloads the provider plugins required by your configuration, initializes the backend for state, and fetches referenced modules. It records selected provider versions in the dependency lock file when appropriate.",
+    "detail": "Run terraform init after cloning a project, adding a provider or module, changing backend settings, or upgrading dependencies. The .terraform directory is local working data and normally stays out of Git. Review initialization output instead of ignoring warnings about backend or provider changes.",
+    "pitfall": "Init does not create cloud resources or validate every resource argument. Beginners sometimes assume it is a harmless reset, but backend reconfiguration options can change where Terraform reads and writes state.",
+    "rule": "Initialize whenever dependencies or backend settings change in a working directory.",
+    "highlights": ["init", "providers"],
+    "visual": {
+      "mark": "what init gets",
+      "chips": ["providers", "modules", "backend"],
+      "lines": ["$ terraform init", ".terraform/", ".terraform.lock.hcl"],
+      "bad": "skip init",
+      "good": "prepare folder",
+      "stamp": "INIT PREPARES WORK"
+    }
+  },
+  {
+    "n": 17,
+    "title": "terraform fmt: free style consistency",
+    "topic": "Format Code",
+    "hook": "Can Terraform fix your spacing for free?",
+    "explain": "Terraform fmt rewrites Terraform files into Terraform's standard formatting style. It aligns common syntax, normalizes spacing, and reduces review noise caused by personal formatting preferences. It does not change what your infrastructure means, but it makes configuration easier to scan and compare.",
+    "detail": "Run terraform fmt before committing, or use terraform fmt -check in CI to detect unformatted files. Use terraform fmt -recursive when formatting a module tree. Configure your editor to format on save if your team agrees, then review the diff like any other change.",
+    "pitfall": "Formatting is not validation and cannot tell whether a resource argument is valid. Do not confuse a clean format result with a safe plan; run validate and inspect the plan as separate steps.",
+    "rule": "Format early so reviews discuss infrastructure, not whitespace.",
+    "highlights": ["fmt", "consistency"],
+    "visual": {
+      "mark": "format for free",
+      "chips": ["clean", "consistent", "review"],
+      "lines": ["$ terraform fmt", "$ terraform fmt -check"],
+      "bad": "style debates",
+      "good": "standard format",
+      "stamp": "FORMAT BEFORE REVIEW"
+    }
+  },
+  {
+    "n": 18,
+    "title": "terraform validate: catch syntax early",
+    "topic": "Validate Early",
+    "hook": "Can you catch mistakes before a plan?",
+    "explain": "Terraform validate checks whether a configuration is internally consistent and syntactically valid. It catches many malformed blocks, missing required arguments, and invalid references without contacting every cloud API. Run init first because validation needs downloaded provider schemas and modules.",
+    "detail": "Use terraform validate after terraform fmt and before terraform plan in local work and CI. It is fast feedback for code structure, especially after refactoring variables or modules. Follow it with a plan because validate cannot prove your credentials, permissions, or real cloud changes.",
+    "pitfall": "A successful validate result does not mean apply will succeed. It cannot predict quota failures, unavailable regions, existing names, external drift, or policy rules enforced by your cloud account.",
+    "rule": "Validate catches configuration problems; plan checks intended infrastructure changes.",
+    "highlights": ["validate", "syntax"],
+    "visual": {
+      "mark": "catch it early",
+      "chips": ["fmt", "validate", "plan"],
+      "lines": ["$ terraform init", "$ terraform validate"],
+      "bad": "validate = deploy",
+      "good": "fast feedback",
+      "stamp": "CHECK BEFORE CLOUD"
+    }
+  },
+  {
+    "n": 19,
+    "title": "First resource: aws_s3_bucket (or local mock)",
+    "topic": "First Resource",
+    "hook": "What is the safest first thing to create?",
+    "explain": "A resource block declares one managed object, such as an AWS S3 bucket. It has a type, a local name, and provider-specific arguments. If you do not have a safe AWS sandbox, use a local mock provider or a simple local resource to learn the workflow first.",
+    "detail": "Give cloud resources unique names and use a sandbox account with spending alerts. Run init, validate, and plan before apply, then inspect the result. For an S3 exercise, remember that bucket names are globally unique and AWS settings may vary by region.",
+    "pitfall": "Copying an old S3 example can fail because provider schemas and AWS defaults evolve. Never practice in a production account just because a resource sounds harmless; ownership policies and naming collisions still matter.",
+    "rule": "Your first resource should teach the workflow without risking production.",
+    "highlights": ["resource", "S3"],
+    "visual": {
+      "mark": "first resource",
+      "chips": ["sandbox", "plan", "apply"],
+      "lines": ["resource \"aws_s3_bucket\"", "$ terraform plan"],
+      "bad": "prod practice",
+      "good": "safe sandbox",
+      "stamp": "LEARN SAFELY"
+    }
+  },
+  {
+    "n": 20,
+    "title": "terraform plan reading the diff",
+    "topic": "Read the Plan",
+    "hook": "What do those plan symbols really mean?",
+    "explain": "Terraform plan shows the proposed difference between configuration, state, and provider-read reality. A plus means create, a minus means destroy, and a tilde means update in place. Some changes force replacement, shown as destroy and create, which deserves extra attention.",
+    "detail": "Read the summary first, then inspect each resource address and changed attribute. Look for unexpected destroys, replacements, wrong regions, wrong counts, and values that came from variables. Use terraform plan -out with care in automation when a reviewed, exact plan must be applied.",
+    "pitfall": "Do not approve a plan based only on its final count. One replacement can mean downtime, data loss, or a new identifier even when the summary says only one add and one destroy.",
+    "rule": "Read every destroy and replacement as if it affects production.",
+    "highlights": ["diff", "replacement"],
+    "visual": {
+      "mark": "read the diff",
+      "chips": ["add", "change", "destroy"],
+      "lines": ["+ create", "~ update", "- destroy"],
+      "bad": "count only",
+      "good": "inspect changes",
+      "stamp": "PLAN IS THE DIFF"
+    }
+  },
+  {
+    "n": 21,
+    "title": "terraform apply and confirmation",
+    "topic": "Apply Safely",
+    "hook": "Why does apply ask for confirmation?",
+    "explain": "Terraform apply creates a plan and asks for confirmation before making changes in an interactive session. That pause gives you one final chance to notice unexpected creates, updates, or destroys. Once confirmed, Terraform calls provider APIs and writes the resulting state.",
+    "detail": "Use normal interactive apply while learning so you see the plan and confirmation prompt. In CI, apply a saved plan after a review and use non-interactive options only with deliberate safeguards. Watch the output for partial failures and never assume a failed apply changed nothing.",
+    "pitfall": "Using auto-approve from your first day removes an important safety checkpoint. It is also risky to rerun blindly after a failure; inspect the error, state, and new plan first.",
+    "rule": "Confirmation is a safety brake, not an annoying extra keystroke.",
+    "highlights": ["apply", "confirmation"],
+    "visual": {
+      "mark": "one last check",
+      "chips": ["plan", "confirm", "apply"],
+      "lines": ["$ terraform apply", "Enter a value: yes"],
+      "bad": "auto approve",
+      "good": "confirm intent",
+      "stamp": "PAUSE BEFORE CHANGE"
+    }
+  },
+  {
+    "n": 22,
+    "title": "terraform destroy without drama",
+    "topic": "Destroy Safely",
+    "hook": "How do you delete a lab without deleting the wrong thing?",
+    "explain": "Terraform destroy plans to remove every managed resource in the current state, then asks for confirmation. It is useful for temporary labs and environments, but it is still a real deletion operation. Resources outside the state are not automatically protected by the command.",
+    "detail": "Run terraform plan -destroy first and read the target account, region, and resource list. Use a separate sandbox workspace or state for practice environments. After destroying a lab, confirm any provider-side leftovers such as data, logs, or objects with retention settings.",
+    "pitfall": "Never type destroy in an unfamiliar directory or against an unknown backend. A wrong profile, workspace, or cloud account can turn a cleanup command into a serious incident.",
+    "rule": "Before destroy, verify the directory, state, account, and plan.",
+    "highlights": ["destroy", "cleanup"],
+    "visual": {
+      "mark": "destroy safely",
+      "chips": ["directory", "account", "plan"],
+      "lines": ["$ terraform plan -destroy", "$ terraform destroy"],
+      "bad": "wrong state",
+      "good": "verify first",
+      "stamp": "DELETE WITH PROOF"
+    }
+  },
+  {
+    "n": 23,
+    "title": "No changes: idempotency win",
+    "topic": "Idempotency",
+    "hook": "Why is a boring plan a huge win?",
+    "explain": "After Terraform creates the desired infrastructure, running plan again should ideally report no changes. This is idempotency: repeating the same declaration produces the same desired result rather than making duplicates. It makes automation predictable and reveals when reality drifted from configuration.",
+    "detail": "Run plan after an apply and during routine checks. If Terraform shows unexpected changes, investigate configuration defaults, provider behavior, manual edits, and changing external values. Keep non-deterministic values out of resource arguments unless you intentionally want a change on every run.",
+    "pitfall": "No changes does not mean your application is healthy or your security posture is perfect. It only means Terraform sees no difference between its configuration, state, and provider's current view.",
+    "rule": "A repeat plan with no changes proves your infrastructure code is stable.",
+    "highlights": ["idempotency", "drift"],
+    "visual": {
+      "mark": "no changes",
+      "chips": ["apply", "plan", "stable"],
+      "lines": ["$ terraform apply", "$ terraform plan", "No changes."],
+      "bad": "always changing",
+      "good": "stable repeat",
+      "stamp": "BORING IS A WIN"
+    }
+  },
+  {
+    "n": 24,
+    "title": "Mini checklist: healthy first project",
+    "topic": "Healthy Project",
+    "hook": "What makes a first project healthy?",
+    "explain": "A healthy first Terraform project is small, formatted, validated, and safe to destroy. It declares versions, keeps credentials out of code, uses a sandbox account, and produces a clear plan. It also has a README that explains how to initialize, plan, apply, and clean up.",
+    "detail": "Check that terraform fmt -check and terraform validate pass, then review a plan with no surprises. Commit configuration and the dependency lock file, but ignore local state and secret variable files. Add tags or names so you can find every practice resource later.",
+    "pitfall": "A project is not healthy just because apply succeeded once on one laptop. If another person cannot initialize it safely, understand its variables, and destroy its test resources, the project still needs work.",
+    "rule": "A good first project is reproducible, reviewable, and easy to remove.",
+    "highlights": ["checklist", "reproducible"],
+    "visual": {
+      "mark": "healthy project",
+      "chips": ["safe", "clear", "repeatable"],
+      "lines": ["fmt", "validate", "plan", "README"],
+      "bad": "works once",
+      "good": "reproducible",
+      "stamp": "SAFE TO REPEAT"
+    }
+  },
+  {
+    "n": 25,
+    "title": "provider aws region and defaults",
+    "topic": "AWS Provider",
+    "hook": "Where does Terraform create AWS resources?",
+    "explain": "The AWS provider needs a region for regional resources such as VPCs and EC2 instances. You can set it directly, pass it through a variable, or use supported AWS environment and shared configuration defaults. Some AWS resources are global, but provider region still influences many operations.",
+    "detail": "Make the region visible in your configuration or environment documentation, especially for teams and CI. Use a variable with a sensible validation rule when projects need multiple regions. Run plan and inspect region-sensitive resource addresses before apply, because the wrong region creates an isolated environment.",
+    "pitfall": "Relying silently on a developer's default AWS profile can put resources in different regions across machines. Do not assume an existing resource will be found when your provider points at another region.",
+    "rule": "Make the target AWS region explicit and review it in every plan.",
+    "highlights": ["AWS", "region"],
+    "visual": {
+      "mark": "which region?",
+      "chips": ["provider", "variable", "profile"],
+      "lines": ["region = \"us-east-1\"", "AWS_REGION=..."],
+      "bad": "hidden default",
+      "good": "explicit region",
+      "stamp": "REGION IS A DECISION"
+    }
+  },
+  {
+    "n": 26,
+    "title": "Credentials: env vars vs shared config",
+    "topic": "AWS Credentials",
+    "hook": "Where should AWS credentials live?",
+    "explain": "Terraform can obtain AWS credentials from environment variables, shared AWS configuration files, profiles, and identity roles. Environment variables are convenient for CI and temporary sessions. Shared configuration is convenient for local development because named profiles keep multiple accounts and roles organized outside the codebase.",
+    "detail": "For local work, authenticate with AWS's supported tooling and select a named profile where appropriate. For CI, prefer short-lived credentials issued through workload identity or role assumption. Let the AWS provider use its standard credential chain instead of placing access keys inside Terraform files.",
+    "pitfall": "Environment variables can leak through logs, shell history, process listings, or accidentally exported build output. Shared config files are also sensitive and should stay outside Git, with correct file permissions.",
+    "rule": "Keep credentials outside Terraform code and prefer short-lived identity.",
+    "highlights": ["credentials", "profiles"],
+    "visual": {
+      "mark": "where keys live",
+      "chips": ["env", "profile", "role"],
+      "lines": ["AWS_PROFILE=dev", "AWS_ACCESS_KEY_ID", "shared config"],
+      "bad": "keys in .tf",
+      "good": "credential chain",
+      "stamp": "KEEP KEYS OUT OF CODE"
+    }
+  },
+  {
+    "n": 27,
+    "title": "Assume role patterns (high level)",
+    "topic": "Assume Roles",
+    "hook": "How can one identity access another AWS account?",
+    "explain": "AWS role assumption lets a trusted identity receive temporary credentials for another role, often in another account. Terraform can use this pattern through the AWS provider. It supports centralized identity, separate development and production accounts, and smaller long-lived permission footprints.",
+    "detail": "A common pattern is to authenticate locally or in CI, then assume a deployment role with only the permissions needed for that environment. Configure trust policies on the target role and permissions on the source identity. Test with a least-privilege sandbox before production.",
+    "pitfall": "Assume role failures are usually authorization or trust-policy problems, not Terraform syntax problems. Avoid giving broad administrator access just to make an initial test pass; diagnose which principal and action were denied.",
+    "rule": "Authenticate once, then assume a narrowly scoped deployment role.",
+    "highlights": ["assume_role", "temporary"],
+    "visual": {
+      "mark": "temporary access",
+      "chips": ["identity", "role", "account"],
+      "lines": ["source identity", "assume_role", "target account"],
+      "bad": "permanent admin",
+      "good": "scoped role",
+      "stamp": "USE TEMPORARY ACCESS"
+    }
+  },
+  {
+    "n": 28,
+    "title": "Multiple providers / aliases",
+    "topic": "Provider Aliases",
+    "hook": "Can one Terraform project target two regions?",
+    "explain": "Provider aliases let one configuration use multiple instances of the same provider with different settings. For AWS, that can mean separate regions, accounts, or assumed roles. Resources select a non-default provider explicitly, while resources without a provider setting use the default instance.",
+    "detail": "Define one default provider and give additional instances clear aliases such as west or audit. Set provider = aws.west on the resource or pass an aliased provider into a module. Document the purpose of every alias so reviewers can spot cross-account changes.",
+    "pitfall": "An alias declaration alone does nothing unless resources or modules reference it. A missing provider assignment can quietly send a resource to the default account or region instead of the intended target.",
+    "rule": "Use clear aliases whenever a project controls more than one target.",
+    "highlights": ["aliases", "multi-region"],
+    "visual": {
+      "mark": "two targets",
+      "chips": ["default", "alias", "explicit"],
+      "lines": ["provider \"aws\"", "alias = \"west\"", "provider = aws.west"],
+      "bad": "wrong default",
+      "good": "explicit target",
+      "stamp": "ALIAS THE TARGET"
+    }
+  },
+  {
+    "n": 29,
+    "title": "required_providers lock file",
+    "topic": "Provider Locking",
+    "hook": "Why commit the lock file?",
+    "explain": "The required_providers block says which providers your configuration needs and which versions are acceptable. Terraform init then writes selected versions and checksums into .terraform.lock.hcl. That lock file helps every developer and CI runner install the same verified provider package.",
+    "detail": "Commit .terraform.lock.hcl for normal Terraform projects and review changes to it in pull requests. Run terraform init -upgrade only when you intentionally want newer permitted provider versions. Required providers are policy; the lock file records the exact dependency decision made for this project.",
+    "pitfall": "Do not confuse the lock file with state or ignore it as generated noise. Deleting it casually can cause different machines to choose different provider versions inside the allowed version range.",
+    "rule": "Declare provider ranges, then commit the exact locked provider selections.",
+    "highlights": ["required_providers", "lock file"],
+    "visual": {
+      "mark": "lock providers",
+      "chips": ["declare", "lock", "commit"],
+      "lines": ["required_providers", ".terraform.lock.hcl", "init -upgrade"],
+      "bad": "version surprise",
+      "good": "locked build",
+      "stamp": "COMMIT THE LOCK FILE"
+    }
+  },
+  {
+    "n": 30,
+    "title": "Provider version constraints (~> 5.0)",
+    "topic": "Provider Versions",
+    "hook": "How do you allow safe provider updates?",
+    "explain": "A pessimistic constraint accepts compatible updates while setting a clear upper boundary. For example, a provider version policy can allow updates within a chosen major-version family but block the next major version. This reduces surprise while still allowing bug fixes and minor improvements.",
+    "detail": "Write a version constraint in required_providers, commit the resulting lock file, and upgrade deliberately in a test branch. Read provider release notes before changing the allowed range. The exact selected version comes from the lock file until you intentionally run an upgrade.",
+    "pitfall": "A version constraint is not a promise that every permitted update is harmless. Providers can change defaults or deprecate arguments in minor releases, so review plans and test upgrades before merging.",
+    "rule": "Constrain provider upgrades, lock selections, and upgrade only with review.",
+    "highlights": ["versions", "constraints"],
+    "visual": {
+      "mark": "safe upgrades",
+      "chips": ["range", "lock", "test"],
+      "lines": ["version = \"~> 5.0\"", "terraform init -upgrade"],
+      "bad": "unbounded update",
+      "good": "tested range",
+      "stamp": "CONSTRAIN THEN TEST"
+    }
+  },
+  {
+    "n": 31,
+    "title": "LocalStack / tflocal for safe practice",
+    "topic": "Safe Local AWS",
+    "hook": "Can you practice AWS Terraform without AWS risk?",
+    "explain": "LocalStack emulates selected AWS services locally, and tflocal helps run Terraform against that local endpoint setup. It can be useful for fast learning, demos, and some development tests without creating real cloud resources. It is an emulator, not a perfect replacement for AWS.",
+    "detail": "Start LocalStack according to its documentation, use a dedicated practice configuration, then run tflocal init and tflocal plan where supported. Keep real AWS credentials out of the exercise. Test important production behavior against a real sandbox account before relying on emulator results.",
+    "pitfall": "Do not assume a LocalStack success guarantees AWS success. Service coverage, IAM behavior, timing, defaults, and edge cases can differ, so treat local emulation as a fast feedback layer.",
+    "rule": "Use local emulation for speed, then verify critical behavior in a sandbox.",
+    "highlights": ["LocalStack", "tflocal"],
+    "visual": {
+      "mark": "safe local AWS",
+      "chips": ["local", "fast", "sandbox"],
+      "lines": ["$ tflocal init", "$ tflocal plan", "LocalStack"],
+      "bad": "AWS certainty",
+      "good": "fast practice",
+      "stamp": "LOCAL IS NOT PROD"
+    }
+  },
+  {
+    "n": 32,
+    "title": "Endpoint overrides for local APIs",
+    "topic": "Local Endpoints",
+    "hook": "How does Terraform talk to a local API?",
+    "explain": "An endpoint override tells a provider to send API requests to a different URL instead of its normal cloud service endpoint. This is commonly used for local emulators, private test APIs, or controlled integration environments. It changes where requests go, not what Terraform state means.",
+    "detail": "Use provider documentation for the exact endpoint override syntax because every provider exposes it differently. Keep local endpoint values in clearly named variables or separate development configuration. Before applying, verify the endpoint, account settings, and resource names from the generated plan.",
+    "pitfall": "Leaving a local endpoint override enabled can make later tests target the wrong service and produce confusing results. Never point an unknown configuration at a production-like endpoint without a reviewed plan and credentials.",
+    "rule": "Make endpoint targets explicit, temporary, and easy to verify.",
+    "highlights": ["endpoints", "local"],
+    "visual": {
+      "mark": "where API calls go",
+      "chips": ["endpoint", "local", "verify"],
+      "lines": ["endpoints { ... }", "http://localhost", "$ terraform plan"],
+      "bad": "hidden endpoint",
+      "good": "explicit target",
+      "stamp": "VERIFY THE ENDPOINT"
+    }
+  },
+  {
+    "n": 33,
+    "title": "Default tags on the provider",
+    "topic": "Default Tags",
+    "hook": "How do you tag every AWS resource?",
+    "explain": "The AWS provider can apply default tags to supported resources, reducing repeated tag blocks across configuration. Common defaults include environment, owner, project, cost center, and managed-by. Resource-specific tags can add to or override defaults according to provider behavior.",
+    "detail": "Define stable organization-wide defaults in the provider and keep application-specific tags near each resource. Use a consistent tag vocabulary so billing, inventory, and automation can query it. Review plans after changing defaults because one provider edit can affect many resources.",
+    "pitfall": "Default tags do not guarantee every AWS resource supports tags in the same way. Do not put secrets or personal data in tags because tags are broadly visible through cloud APIs and billing tools.",
+    "rule": "Set useful defaults once, then tag exceptions intentionally per resource.",
+    "highlights": ["tags", "governance"],
+    "visual": {
+      "mark": "tag by default",
+      "chips": ["owner", "env", "cost"],
+      "lines": ["default_tags {", "Environment = \"dev\"", "ManagedBy = \"Terraform\""],
+      "bad": "untagged cloud",
+      "good": "shared defaults",
+      "stamp": "TAGS CREATE CONTEXT"
+    }
+  },
+  {
+    "n": 34,
+    "title": "Myth: Terraform stores your AWS keys in state (nuance)",
+    "topic": "Keys and State",
+    "hook": "Are AWS keys always written into state?",
+    "explain": "Terraform state stores resource data that providers return and Terraform needs to track, not a deliberate copy of your AWS provider credentials. However, state can contain sensitive values from resource arguments or API responses. Marking an output sensitive hides it in normal CLI display but does not encrypt state by itself.",
+    "detail": "Use remote state with strict access control, encryption, versioning, and audit logs. Review provider and resource documentation to learn which values can enter state. Prefer secret references or managed secret services over passing secret strings directly into Terraform resource arguments whenever possible.",
+    "pitfall": "The myth becomes dangerous when it makes teams ignore state security. State may not hold your login keys, but it can still expose passwords, tokens, connection details, and valuable infrastructure metadata.",
+    "rule": "Protect state as sensitive data, even when credentials are not directly stored.",
+    "highlights": ["state", "secrets"],
+    "visual": {
+      "mark": "keys in state?",
+      "chips": ["state", "values", "protect"],
+      "lines": ["sensitive = true", "remote backend", "access control"],
+      "bad": "state is public",
+      "good": "state protected",
+      "stamp": "STATE MAY HOLD SECRETS"
+    }
+  },
+  {
+    "n": 35,
+    "title": "Never hardcode secrets in .tf",
+    "topic": "Secret Safety",
+    "hook": "Why is a secret in a Terraform file a problem?",
+    "explain": "Hardcoded passwords, tokens, and access keys can leak through Git history, pull requests, backups, logs, and copied files. Even if a secret is removed later, previous commits may preserve it. Terraform code should reference secret delivery mechanisms instead of becoming the secret store.",
+    "detail": "Use environment variables, your CI secret manager, cloud secret services, or an approved external secret workflow. Keep secret variable files out of Git and restrict who can read remote state. Rotate any credential immediately if it is committed, then remove it from history using your security process.",
+    "pitfall": "Using a variable called password does not make a value safe when its default contains the actual secret. Sensitive markings reduce console display, but the value may still enter state or be available to provider APIs.",
+    "rule": "Reference secrets at runtime; never make source code their permanent home.",
+    "highlights": ["secrets", "Git"],
+    "visual": {
+      "mark": "no secrets in .tf",
+      "chips": ["env", "vault", "rotate"],
+      "lines": ["variable \"token\"", "TF_VAR_token", "secret manager"],
+      "bad": "secret in Git",
+      "good": "runtime secret",
+      "stamp": "CODE IS NOT A VAULT"
+    }
+  },
+  {
+    "n": 36,
+    "title": "Mini checklist: safe provider setup",
+    "topic": "Safe Providers",
+    "hook": "Is your provider setup safe enough to share?",
+    "explain": "A safe provider setup declares provider versions, uses a clear region or target, and obtains credentials through an approved external chain. It keeps keys out of code, uses least-privilege roles, and locks selected provider packages. These choices make local work and CI more predictable.",
+    "detail": "Check required_providers, required_version, region selection, credential source, aliases, and default tags. Commit the dependency lock file, but never commit secret files or local state. Run init, validate, and plan with the intended account before making a first apply.",
+    "pitfall": "A configuration can look clean while silently using a personal administrator profile. Test with the same role model CI will use, otherwise permissions and targets can differ at the worst moment.",
+    "rule": "Explicit versions, explicit targets, external credentials, least privilege.",
+    "highlights": ["checklist", "provider"],
+    "visual": {
+      "mark": "safe provider",
+      "chips": ["version", "role", "region"],
+      "lines": ["required_providers", "AWS_PROFILE=...", "$ terraform plan"],
+      "bad": "hidden defaults",
+      "good": "explicit setup",
+      "stamp": "PROVIDER SAFETY CHECK"
+    }
+  },
+  {
+    "n": 37,
+    "title": "What lives inside terraform.tfstate",
+    "topic": "Inside State",
+    "hook": "What is actually inside a state file?",
+    "explain": "A Terraform state file records managed resource instances, their addresses, provider associations, dependencies, identifiers, and many observed attributes. Terraform uses this information to compare declared configuration with existing infrastructure. State is implementation data, not a hand-written inventory document or a source file.",
+    "detail": "Use terraform show to inspect state in a readable form and terraform state list to see managed addresses. Avoid opening or editing raw state unless you are diagnosing a specific advanced problem. Back up remote state and restrict access because its contents can be operationally sensitive.",
+    "pitfall": "State does not automatically contain every resource in your cloud account. It tracks only objects Terraform manages in that state, plus data it needs for those objects and referenced data sources.",
+    "rule": "State tracks Terraform-managed reality, not your entire cloud universe.",
+    "highlights": ["state", "resources"],
+    "visual": {
+      "mark": "inside state",
+      "chips": ["IDs", "attrs", "links"],
+      "lines": ["$ terraform show", "$ terraform state list", "resource address"],
+      "bad": "edit raw JSON",
+      "good": "inspect safely",
+      "stamp": "STATE TRACKS OBJECTS"
+    }
+  },
+  {
+    "n": 38,
+    "title": "Why local state is dangerous for teams",
+    "topic": "Team State",
+    "hook": "Why does local state break teamwork?",
+    "explain": "Local state sits on one person's machine, so teammates and CI cannot reliably see the same infrastructure map. Two people can plan from different snapshots and overwrite each other's assumptions. Laptop loss, unshared changes, and inconsistent access controls make local state unsafe for team-managed environments.",
+    "detail": "Move shared environments to a remote backend with access control, encryption, version history, and locking. Give all automation the same backend configuration and use separate state per environment. Test backend access before migrating important state, and keep a verified backup.",
+    "pitfall": "Putting terraform.tfstate in Git is not a safe collaboration strategy. It causes merge conflicts, exposes sensitive contents, and cannot prevent two applies from operating against stale state at once.",
+    "rule": "Teams need one protected shared state, not copies on laptops.",
+    "highlights": ["local state", "teams"],
+    "visual": {
+      "mark": "local state risk",
+      "chips": ["laptop", "drift", "conflict"],
+      "lines": ["alice: state", "bob: state", "CI: no state"],
+      "bad": "state in Git",
+      "good": "shared backend",
+      "stamp": "ONE STATE FOR TEAM"
+    }
+  },
+  {
+    "n": 39,
+    "title": "Remote backend: S3",
+    "topic": "S3 Backend",
+    "hook": "How can S3 hold Terraform state?",
+    "explain": "The S3 backend stores Terraform state in an Amazon S3 object instead of a local file. This gives a team one shared state location and can use AWS controls such as encryption, bucket policies, versioning, and access logs. S3 stores the state; locking is a separate concern.",
+    "detail": "Configure a dedicated state bucket, a clear key path per environment, and the correct AWS region. Enable bucket versioning and encryption, then limit access to the deployment roles that need it. Run terraform init to initialize or migrate backend state, and verify the migration prompt carefully.",
+    "pitfall": "Do not use a public bucket or a broad shared bucket without strict policies. A backend configuration does not automatically make state secure; bucket permissions and encryption settings determine who can read it.",
+    "rule": "Store team state in a dedicated, versioned, access-controlled S3 bucket.",
+    "highlights": ["S3", "remote state"],
+    "visual": {
+      "mark": "state in S3",
+      "chips": ["bucket", "versioning", "access"],
+      "lines": ["backend \"s3\"", "bucket = \"tf-state\"", "key = \"prod/state\""],
+      "bad": "public bucket",
+      "good": "protected bucket",
+      "stamp": "S3 STORES TEAM STATE"
+    }
+  },
+  {
+    "n": 40,
+    "title": "State locking with DynamoDB",
+    "topic": "State Locking",
+    "hook": "What stops two applies colliding?",
+    "explain": "State locking prevents concurrent Terraform operations from writing the same state at the same time. In the traditional S3 backend pattern, DynamoDB provides a lock record while Terraform plans or applies. The second operation waits or fails rather than proceeding from a stale shared state snapshot.",
+    "detail": "Create and configure the lock table according to the backend documentation, then ensure every team member and CI job uses the same backend settings. If a lock remains after a crash, investigate the active operation before force-unlocking. Treat lock identifiers as evidence, not obstacles.",
+    "pitfall": "Never force-unlock just because you are waiting. You can corrupt state coordination if another apply is still running. Confirm the original process has stopped and identify the exact lock first.",
+    "rule": "A state lock protects the team from simultaneous, conflicting infrastructure changes.",
+    "highlights": ["locking", "DynamoDB"],
+    "visual": {
+      "mark": "one apply at once",
+      "chips": ["S3", "lock", "DynamoDB"],
+      "lines": ["apply A: lock", "apply B: waits", "terraform force-unlock"],
+      "bad": "two applies",
+      "good": "one lock",
+      "stamp": "LOCK BEFORE WRITING STATE"
+    }
+  }
+]

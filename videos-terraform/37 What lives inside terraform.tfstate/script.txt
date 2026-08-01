@@ -1,0 +1,11 @@
+What is actually inside a state file?
+
+A Terraform state file records managed resource instances, their addresses, provider associations, dependencies, identifiers, and many observed attributes. Terraform uses this information to compare declared configuration with existing infrastructure. State is implementation data, not a hand-written inventory document or a source file.
+
+Use terraform show to inspect state in a readable form and terraform state list to see managed addresses. Avoid opening or editing raw state unless you are diagnosing a specific advanced problem. Back up remote state and restrict access because its contents can be operationally sensitive.
+
+State does not automatically contain every resource in your cloud account. It tracks only objects Terraform manages in that state, plus data it needs for those objects and referenced data sources.
+
+State tracks Terraform-managed reality, not your entire cloud universe.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

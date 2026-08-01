@@ -11,7 +11,7 @@ export function InteractiveLabs() {
         <SectionHeading
           eyebrow="Interactive Labs"
           title={<span id="labs-heading">Practice like you&apos;re on the job</span>}
-          description="A VS Code–inspired lab environment. Run kubectl, watch the diagram update live."
+          description="A VS Code–inspired lab environment. Run commands and practice real DevOps scenarios."
         />
         <div className="mt-12">
           <LabsTerminal />

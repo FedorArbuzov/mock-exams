@@ -1,0 +1,11 @@
+Need the facts Terraform saved for one resource?
+
+terraform state show displays the attributes Terraform has recorded for one resource address. It is a local view of state, not a fresh provider read. It helps you inspect identifiers, dependencies, computed values, and the arguments Terraform believes were applied.
+
+Pass one exact address from terraform state list. The output is formatted like configuration, but it represents stored data and may contain sensitive values. Compare important fields with the provider console only when diagnosing drift or unexpected plans.
+
+Do not copy state show output directly into configuration. Many fields are computed, provider-specific, or obsolete. Also avoid sharing its output in tickets because state commonly includes secret values, resource IDs, and internal network details.
+
+Use state show to inspect records, never as configuration source.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

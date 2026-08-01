@@ -61,7 +61,7 @@ export function Header() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <Button href={siteConfig.founderCtaHref} size="md">
-            Get Founder Access
+            Join Free Beta
           </Button>
         </div>
 
@@ -109,7 +109,7 @@ export function Header() {
               className="mt-2 w-full"
               onClick={() => setOpen(false)}
             >
-              Get Founder Access
+              Join Free Beta
             </Button>
           </Container>
         </div>

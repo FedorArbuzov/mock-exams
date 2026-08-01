@@ -1,0 +1,11 @@
+An internal module is a product for your own engineers.
+
+Publishing an internal module means offering a supported Terraform building block through a private registry or approved Git source. It should solve a repeated organizational need with a documented interface, examples, versioned releases, and named maintainers. Treat consumers as customers who need predictable upgrades.
+
+Start with a narrow module that already has real callers. Add automated formatting, validation, tests where practical, examples, changelog entries, and security review for defaults. Define support expectations and deprecation policy before broad adoption. Publish only after the contract is stable enough to maintain.
+
+Publishing a private module too early turns an experiment into a compatibility burden. A module with no owner, examples, or release notes creates more support work than copy-paste. Internal does not mean undocumented; discoverability and trust still matter.
+
+Publish narrow, owned modules with releases and examples.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# collected beta emails
+/data/waitlist.jsonl
+
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -39,3 +42,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# go api build artifacts + local db
+/api/exallenge-api
+/api/exallenge-api.exe
+/api/data/

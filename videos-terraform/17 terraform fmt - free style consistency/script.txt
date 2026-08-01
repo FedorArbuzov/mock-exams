@@ -1,0 +1,11 @@
+Can Terraform fix your spacing for free?
+
+Terraform fmt rewrites Terraform files into Terraform's standard formatting style. It aligns common syntax, normalizes spacing, and reduces review noise caused by personal formatting preferences. It does not change what your infrastructure means, but it makes configuration easier to scan and compare.
+
+Run terraform fmt before committing, or use terraform fmt -check in CI to detect unformatted files. Use terraform fmt -recursive when formatting a module tree. Configure your editor to format on save if your team agrees, then review the diff like any other change.
+
+Formatting is not validation and cannot tell whether a resource argument is valid. Do not confuse a clean format result with a safe plan; run validate and inspect the plan as separate steps.
+
+Format early so reviews discuss infrastructure, not whitespace.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

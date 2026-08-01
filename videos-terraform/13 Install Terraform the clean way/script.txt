@@ -1,0 +1,11 @@
+Why not just download a random binary?
+
+Install Terraform from HashiCorp's official distribution channels or a trusted package manager. This gives you a known executable, a predictable update path, and a version you can verify. Confirm that the terraform command is available from a new terminal session after installation.
+
+On Windows, use a trusted package manager such as winget or Chocolatey when your organization permits it, or follow HashiCorp's official package instructions. Run terraform version after installation. Keep the binary outside project folders, then declare each project's supported version separately.
+
+Do not commit a downloaded Terraform executable into a repository or rely on an unverified mirror. Different developers running random versions can get inconsistent provider behavior and confusing plan differences.
+
+Install Terraform from trusted sources, then verify the exact CLI version.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Why not just click in the AWS Console?
+
+ClickOps is fine for a one-off experiment. The pain starts when you need the same VPC next week, or a teammate must rebuild what you clicked at midnight. Console clicks leave no reviewable history and no safe preview of blast radius.
+
+Infrastructure as Code puts the same resources in Git. A pull request shows the terraform plan: what will be created, changed, or destroyed. You can reject a bad change before apply. Rebuilds become reruns, not archaeology in the Console.
+
+Teams still ClickOps under pressure, then wonder why drift appears. If the Console is the source of truth, Terraform will fight you every plan.
+
+Rule: if you will create it twice, or share it with a teammate, put it in code first.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

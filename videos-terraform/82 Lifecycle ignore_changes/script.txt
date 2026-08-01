@@ -1,0 +1,11 @@
+Ignore drift only when you can explain who owns the ignored field.
+
+The lifecycle ignore_changes setting tells Terraform not to reconcile selected attributes after creation. It can help when another approved system manages a field, such as an autoscaler changing desired capacity. The setting transfers ownership; it does not magically make drift harmless.
+
+Name the external owner and limit ignored attributes to the smallest possible set. Review whether Terraform still needs to manage the value when the external integration changes. A comment or module input can make the reason visible. Use data and monitoring to observe the value Terraform intentionally stops correcting.
+
+Ignoring all changes hides real configuration drift, security regressions, and accidental console edits. Teams then assume Terraform represents reality when it does not. Do not use ignore_changes just to silence a confusing plan; first identify the competing controller.
+
+Ignore only attributes with a documented external owner.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

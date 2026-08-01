@@ -10,7 +10,6 @@ const stats = [
   { label: "Lessons", value: siteConfig.stats.lessons },
   { label: "Labs", value: siteConfig.stats.labs },
   { label: "Interview Questions", value: siteConfig.stats.interviewQuestions },
-  { label: "Animated Videos", value: siteConfig.stats.animatedVideos },
 ];
 
 function StatValue({ value }: { value: string }) {
@@ -47,9 +46,9 @@ export function SocialProof() {
           transition={{ duration: 0.5 }}
         >
           <p className="text-center text-sm text-muted sm:text-[15px]">
-            Trusted by developers learning Kubernetes worldwide.
+            Free for early users while we build with real feedback.
           </p>
-          <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-4">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <StatValue value={stat.value} />

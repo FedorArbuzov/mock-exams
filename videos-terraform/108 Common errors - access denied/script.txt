@@ -1,0 +1,11 @@
+Access denied is a precise signal: identity, action, resource, or condition mismatched.
+
+An access denied error means the cloud identity used by Terraform lacks permission under the effective authorization rules. The cause may be an IAM policy, resource policy, permission boundary, service control policy, session policy, or an unmet condition. Capture the denied action, resource, and assumed role first.
+
+Check the exact CI or local identity, then inspect relevant policies and conditions such as region, tags, source VPC, or OIDC claims. Grant the smallest missing permission to the correct role. Use cloud audit logs or policy simulation where available to validate the diagnosis before rerunning.
+
+Adding AdministratorAccess to unblock a deployment hides the real policy gap and creates lasting risk. Testing with a personal administrator identity also proves little about CI. Debug using the actual role and narrow the permission change to the necessary action.
+
+Diagnose the exact denied action, then grant least privilege.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

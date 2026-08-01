@@ -1,0 +1,11 @@
+Logs are useless if every service hides them somewhere different.
+
+A CloudWatch log group is a named container for related log streams, such as one application, Lambda function, or ECS service. Terraform can create it with predictable naming, retention, encryption, and tags. Treat the log group as infrastructure, not an accidental side effect created by the workload.
+
+Set retention deliberately so useful evidence survives without storing data forever. Use KMS encryption where requirements call for it, and grant writers only the permissions they need. A stable group name also makes dashboards, subscriptions, metric filters, and incident runbooks easier to automate across environments.
+
+Relying on AWS defaults often creates log groups with unlimited retention after a service first writes. That quietly increases cost and makes cleanup inconsistent. Creating the group first in Terraform lets you choose lifecycle settings before application traffic arrives.
+
+Create log groups explicitly with retention, encryption, and ownership tags.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

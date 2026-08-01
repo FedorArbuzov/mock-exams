@@ -1,0 +1,11 @@
+DynamoDB design starts with access patterns, not columns.
+
+A DynamoDB table stores items using a primary key, commonly a partition key and optional sort key. Terraform can configure billing mode, attributes used by keys and indexes, encryption, streams, backups, and tags. Model queries before choosing the key design.
+
+Use on-demand billing for variable or unknown workloads, or provisioned capacity when you can manage predictable throughput. Define only attributes required by keys and indexes. Enable point-in-time recovery where data recovery matters, and plan indexes around actual query patterns.
+
+DynamoDB is not a relational table with arbitrary query flexibility. Adding indexes later can cost time and money, while changing primary keys usually requires migration. Treat table deletion and replacement carefully because state changes can imply data loss.
+
+Choose DynamoDB keys from query patterns and protect important data.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Repeated resources need stable identities, not just positions.
+
+count creates instances addressed by numeric indexes, while for_each creates instances addressed by stable map keys or set values. Both repeat resources, but their state identity differs. Choosing the right one prevents unnecessary replacement when a collection changes.
+
+Use count for truly identical instances selected by a number or simple conditional. Use for_each when each object has a meaningful name, configuration, or lifecycle. Prefer maps with explicit keys, because a set's values become identity and must remain stable.
+
+Removing the first item from a count-based list shifts later indexes, causing Terraform to replace or rename the wrong instances. Changing a for_each key also changes identity. Neither approach fixes a poorly modeled relationship or unstable input data.
+
+Use for_each for named objects; use count for simple identical instances.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

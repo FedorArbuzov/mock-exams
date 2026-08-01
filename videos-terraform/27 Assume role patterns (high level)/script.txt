@@ -1,0 +1,11 @@
+How can one identity access another AWS account?
+
+AWS role assumption lets a trusted identity receive temporary credentials for another role, often in another account. Terraform can use this pattern through the AWS provider. It supports centralized identity, separate development and production accounts, and smaller long-lived permission footprints.
+
+A common pattern is to authenticate locally or in CI, then assume a deployment role with only the permissions needed for that environment. Configure trust policies on the target role and permissions on the source identity. Test with a least-privilege sandbox before production.
+
+Assume role failures are usually authorization or trust-policy problems, not Terraform syntax problems. Avoid giving broad administrator access just to make an initial test pass; diagnose which principal and action were denied.
+
+Authenticate once, then assume a narrowly scoped deployment role.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

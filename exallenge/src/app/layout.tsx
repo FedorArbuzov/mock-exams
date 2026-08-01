@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/config";
+import { VisitTracker } from "@/components/tracking/VisitTracker";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -23,13 +24,13 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} — Master DevOps through interactive learning`,
+    default: `${siteConfig.name} — Free DevOps beta`,
     template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,
   keywords: [
     "DevOps",
-    "Kubernetes",
+    "free beta",
     "interactive learning",
     "hands-on labs",
     "interview questions",
@@ -42,13 +43,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteConfig.url,
-    title: `${siteConfig.name} — Master DevOps. Not Just Kubernetes.`,
+    title: `${siteConfig.name} — Free DevOps beta`,
     description: siteConfig.description,
     siteName: siteConfig.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — Master DevOps. Not Just Kubernetes.`,
+    title: `${siteConfig.name} — Free DevOps beta`,
     description: siteConfig.description,
   },
   robots: {
@@ -68,6 +69,7 @@ export default function RootLayout({
       className={`${outfit.variable} ${plusJakarta.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background font-sans text-foreground">
+        <VisitTracker />
         {children}
       </body>
     </html>

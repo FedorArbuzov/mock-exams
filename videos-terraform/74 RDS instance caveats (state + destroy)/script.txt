@@ -1,0 +1,11 @@
+Databases make a destroy plan a data-retention decision.
+
+An RDS instance has lifecycle-sensitive settings including engine version, storage, backups, maintenance windows, encryption, network placement, and deletion protection. Terraform state records its identity and configuration, but state cannot restore database data after destructive provider actions.
+
+Enable backups and deletion protection for important instances, define final snapshot behavior, and test restoration procedures. Treat engine upgrades and parameter changes as operational changes with downtime or compatibility risk. Keep credentials in a secret manager and limit who can apply database plans.
+
+A terraform destroy or replacement can delete a database if protections and final snapshots are not configured correctly. Changing certain attributes forces replacement. State removal only makes Terraform forget the instance; it does not make the data safe or unmanaged safely.
+
+Plan RDS lifecycle around backup, restore, and deletion before apply.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

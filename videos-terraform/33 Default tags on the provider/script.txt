@@ -1,0 +1,11 @@
+How do you tag every AWS resource?
+
+The AWS provider can apply default tags to supported resources, reducing repeated tag blocks across configuration. Common defaults include environment, owner, project, cost center, and managed-by. Resource-specific tags can add to or override defaults according to provider behavior.
+
+Define stable organization-wide defaults in the provider and keep application-specific tags near each resource. Use a consistent tag vocabulary so billing, inventory, and automation can query it. Review plans after changing defaults because one provider edit can affect many resources.
+
+Default tags do not guarantee every AWS resource supports tags in the same way. Do not put secrets or personal data in tags because tags are broadly visible through cloud APIs and billing tools.
+
+Set useful defaults once, then tag exceptions intentionally per resource.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+CI should show infrastructure consequences before merge, not after incident.
+
+Running terraform plan in CI gives pull request reviewers a consistent preview of infrastructure changes. The job initializes the configured backend, validates the configuration, and generates a plan using controlled variables and credentials. Publish the readable plan output as a protected review artifact or PR comment.
+
+Use a read-only cloud identity where possible and isolate credentials per environment. Pin Terraform and provider versions so CI behaves consistently with developer machines. Do not expose secret values in logs. Fail the job on validation errors, policy violations, or unexpected plan generation failures.
+
+A CI plan that runs against the wrong workspace or uses default variables gives false confidence. Plans also may read sensitive values or reveal resource details. Make environment selection explicit, protect logs and artifacts, and record exactly which commit generated the plan.
+
+Generate protected, environment-specific plans for every infrastructure change.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

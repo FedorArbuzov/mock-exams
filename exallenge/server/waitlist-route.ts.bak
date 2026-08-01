@@ -1,0 +1,78 @@
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { NextResponse } from "next/server";
+
+export const runtime = "nodejs";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_FILE = path.join(DATA_DIR, "waitlist.jsonl");
+
+type WaitlistEntry = {
+  email: string;
+  source: string;
+  createdAt: string;
+};
+
+function normalizeEmail(raw: unknown): string | null {
+  if (typeof raw !== "string") return null;
+  const email = raw.trim().toLowerCase();
+  if (!EMAIL_RE.test(email) || email.length > 254) return null;
+  return email;
+}
+
+async function readEntries(): Promise<WaitlistEntry[]> {
+  try {
+    const raw = await readFile(DATA_FILE, "utf8");
+    return raw
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => JSON.parse(line) as WaitlistEntry);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
+    throw error;
+  }
+}
+
+export async function POST(request: Request) {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const payload = body as { email?: unknown; source?: unknown };
+  const email = normalizeEmail(payload.email);
+  if (!email) {
+    return NextResponse.json(
+      { error: "Enter a valid email address." },
+      { status: 400 },
+    );
+  }
+
+  const source =
+    typeof payload.source === "string" && payload.source.trim()
+      ? payload.source.trim().slice(0, 64)
+      : "unknown";
+
+  const entries = await readEntries();
+  const exists = entries.some((entry) => entry.email === email);
+
+  if (!exists) {
+    await mkdir(DATA_DIR, { recursive: true });
+    const entry: WaitlistEntry = {
+      email,
+      source,
+      createdAt: new Date().toISOString(),
+    };
+    await writeFile(DATA_FILE, `${JSON.stringify(entry)}\n`, { flag: "a" });
+  }
+
+  return NextResponse.json({
+    ok: true,
+    message:
+      "Thanks — check your inbox. We'll send access instructions soon.",
+  });
+}

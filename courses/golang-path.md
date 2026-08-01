@@ -2,7 +2,7 @@
 
 План курсов по Go (Golang) для репозитория mock-exams.
 
-**Статус:** [`go-basic`](go-basic/README.md) реализован (38 уроков); остальные курсы — в планировании.
+**Статус:** [`go-basic`](go-basic/README.md) реализован (**11 уроков**, быстрый вход ~6–8 ч); остальные курсы — в планировании.
 
 Связь с существующими треками: [fastapi](fastapi/README.md), [api-design](api-design/README.md), [python-async](python-async/README.md), [microservices-patterns](microservices-patterns/README.md), [kuber-intermediate](kuber-intermediate/README.md). Общая карта курсов: [README.md](README.md). DevOps-маршрут: [devops-path.md](devops-path.md). JavaScript-ветка: [javascript-path.md](javascript-path.md).
 
@@ -54,7 +54,7 @@ grpc-go (спец. или фаза go-advanced)  —  protobuf, streaming
 
 | Курс | Уровень | Часы | Описание |
 |------|---------|------|----------|
-| `go-basic` | Junior | ~14–18 | Установка, модули, типы, structs, interfaces, errors (`errors`, `fmt.Errorf`, `%w`), slices/maps, `defer`/`panic`, пакеты, `go test`, `go vet`, линтеры (`staticcheck`, `golangci-lint`). Без веб-фреймворка — «как linux-basic для Go». |
+| `go-basic` | Junior | ~6–8 | Быстрый вход: toolchain, типы, structs, interfaces, errors, пакеты, `go test`, JSON/файлы, мини-CLI. Без веб-фреймворка — сразу мост к `go-intermediate`. |
 | `go-intermediate` | Middle | ~20–28 | Chi или Gin, middleware, конфиг (`env`, viper), слоистая архитектура, pgx + sqlc или GORM, миграции (goose/atlas), JWT, валидация, structured logging (`slog`), graceful shutdown. Стенд `deploy/go-api`. |
 | `go-advanced` | Middle+ | ~22–30 | Redis cache-aside, asynq/river workers, rate limit, health/readiness, Prometheus metrics, OpenTelemetry, multi-stage Docker, nginx, security checklist. Capstone — production-ready API. |
 
@@ -155,7 +155,7 @@ kuber-intermediate
 3. **Capstone** + `interview-cheatsheet.md` в конце трека.
 4. **~50–70 минут** на пару «теория + лаба».
 
-Рекомендуемый объём ядра: **~36–42 урока** на `go-intermediate` + `go-advanced` (как fastapi/django), **~24–30** на `go-basic`, **~28–36** на `go-concurrency`.
+Рекомендуемый объём ядра: **~36–42 урока** на `go-intermediate` + `go-advanced` (как fastapi/django), **~10–12** на `go-basic` (быстрый ramp), **~28–36** на `go-concurrency`.
 
 ## Группа для PDF
 

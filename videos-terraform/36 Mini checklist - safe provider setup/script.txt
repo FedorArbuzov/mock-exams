@@ -1,0 +1,11 @@
+Is your provider setup safe enough to share?
+
+A safe provider setup declares provider versions, uses a clear region or target, and obtains credentials through an approved external chain. It keeps keys out of code, uses least-privilege roles, and locks selected provider packages. These choices make local work and CI more predictable.
+
+Check required_providers, required_version, region selection, credential source, aliases, and default tags. Commit the dependency lock file, but never commit secret files or local state. Run init, validate, and plan with the intended account before making a first apply.
+
+A configuration can look clean while silently using a personal administrator profile. Test with the same role model CI will use, otherwise permissions and targets can differ at the worst moment.
+
+Explicit versions, explicit targets, external credentials, least privilege.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

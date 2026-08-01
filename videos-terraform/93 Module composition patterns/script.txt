@@ -1,0 +1,11 @@
+Modules should connect like small tools, not nest like Russian dolls.
+
+Composition means a root or higher-level module combines focused child modules through their documented inputs and outputs. For example, a service module can receive a network ID and a logging destination created elsewhere. This preserves clear ownership while allowing complete deployments to be assembled.
+
+Prefer shallow, understandable dependency graphs. Pass values explicitly rather than letting modules discover unrelated infrastructure by convention. Use composition layers when a repeatable application stack needs coordination, but keep foundational modules independently usable. Outputs should make connections visible in both code and plans.
+
+Deep nesting makes it hard to know where a resource comes from and where a change should be made. A god composition module also becomes a hidden platform. Keep each module focused and let roots make environment-specific assembly decisions.
+
+Compose focused modules through explicit, documented values.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

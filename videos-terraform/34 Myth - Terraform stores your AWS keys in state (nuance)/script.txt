@@ -1,0 +1,11 @@
+Are AWS keys always written into state?
+
+Terraform state stores resource data that providers return and Terraform needs to track, not a deliberate copy of your AWS provider credentials. However, state can contain sensitive values from resource arguments or API responses. Marking an output sensitive hides it in normal CLI display but does not encrypt state by itself.
+
+Use remote state with strict access control, encryption, versioning, and audit logs. Review provider and resource documentation to learn which values can enter state. Prefer secret references or managed secret services over passing secret strings directly into Terraform resource arguments whenever possible.
+
+The myth becomes dangerous when it makes teams ignore state security. State may not hold your login keys, but it can still expose passwords, tokens, connection details, and valuable infrastructure metadata.
+
+Protect state as sensitive data, even when credentials are not directly stored.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

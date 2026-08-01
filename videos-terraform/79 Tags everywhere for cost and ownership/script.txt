@@ -1,0 +1,11 @@
+An untagged resource becomes an orphan the moment its creator leaves.
+
+Tags attach searchable business context to cloud resources. Common tags include environment, application, owner, cost center, and managed-by. Define shared tags once in Terraform and merge them with resource-specific tags. This makes cost reports, ownership questions, automation, and cleanup much more reliable.
+
+Use a small required tag set that teams can actually maintain. Apply it to resources that support tags, including log groups and networking components where practical. Provider default tags can reduce repetition, while explicit tags document exceptions. Keep values predictable so reporting tools do not split equivalent categories.
+
+Tags typed by hand drift into variants like prod, production, and Production. Cost allocation then becomes misleading. Another mistake is treating tags as decoration; they should answer who owns this, why it exists, and which budget absorbs it.
+
+Standardize required tags and apply them through Terraform defaults.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

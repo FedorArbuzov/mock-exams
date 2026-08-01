@@ -1,0 +1,11 @@
+Why is a boring plan a huge win?
+
+After Terraform creates the desired infrastructure, running plan again should ideally report no changes. This is idempotency: repeating the same declaration produces the same desired result rather than making duplicates. It makes automation predictable and reveals when reality drifted from configuration.
+
+Run plan after an apply and during routine checks. If Terraform shows unexpected changes, investigate configuration defaults, provider behavior, manual edits, and changing external values. Keep non-deterministic values out of resource arguments unless you intentionally want a change on every run.
+
+No changes does not mean your application is healthy or your security posture is perfect. It only means Terraform sees no difference between its configuration, state, and provider's current view.
+
+A repeat plan with no changes proves your infrastructure code is stable.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Do I write scripts that create a bucket step by step?
+
+No. Terraform is declarative. You describe the desired end state - this bucket exists, with these settings - not a procedural checklist of API calls. Terraform builds a graph, compares desired state to the state file and the live provider, and computes a diff.
+
+That is why a second apply with no code changes reports No changes. Idempotency is the goal. Imperative scripts often create duplicates unless you carefully code every if-exists branch yourself.
+
+Beginners mix mental models: they treat apply like a one-shot installer, then panic when a rename wants to destroy and recreate. Read the plan. The plan is the contract.
+
+Remember: you declare the destination; Terraform figures out the route.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

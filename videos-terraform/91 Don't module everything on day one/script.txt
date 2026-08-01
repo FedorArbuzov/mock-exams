@@ -1,0 +1,11 @@
+An abstraction before repetition is often just a maze.
+
+Start with direct resources when a configuration is new and the pattern is still changing. Extract a module after you can identify repeated intent, stable inputs, and a useful contract. This keeps early Terraform easy to read while allowing reuse to emerge from evidence rather than prediction.
+
+Look for two or three consumers with the same operational requirements, not merely similar resource types. Refactor the common behavior into a child module and leave meaningful differences as inputs. Document examples from actual callers so the module reflects how teams deploy it in practice.
+
+Premature modules add variables, indirection, and release process before they solve a real duplication problem. The opposite extreme is endless copy-paste. Refactor when repeated code changes together or when a standard must be enforced consistently across consumers.
+
+Extract modules from proven repeated patterns, not guesses.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+How do you allow safe provider updates?
+
+A pessimistic constraint accepts compatible updates while setting a clear upper boundary. For example, a provider version policy can allow updates within a chosen major-version family but block the next major version. This reduces surprise while still allowing bug fixes and minor improvements.
+
+Write a version constraint in required_providers, commit the resulting lock file, and upgrade deliberately in a test branch. Read provider release notes before changing the allowed range. The exact selected version comes from the lock file until you intentionally run an upgrade.
+
+A version constraint is not a promise that every permitted update is harmless. Providers can change defaults or deprecate arguments in minor releases, so review plans and test upgrades before merging.
+
+Constrain provider upgrades, lock selections, and upgrade only with review.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

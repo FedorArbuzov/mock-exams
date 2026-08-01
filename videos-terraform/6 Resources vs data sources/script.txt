@@ -1,0 +1,11 @@
+When do I use resource and when data?
+
+A resource block means Terraform manages the lifecycle - create, update, delete - and tracks it in state. A data source means read-only lookup of something that already exists: an AMI, a VPC you did not create in this stack, an IAM policy document.
+
+Use data when you need an ID or attribute from outside your ownership boundary. Use resource when this configuration is responsible for the object. Mixing them wrong causes either orphaned Console objects or accidental destroys of shared infrastructure.
+
+Beginners data-source everything to feel safer, then never own a clean stack. Others resource-copy shared VPCs into every root module and create five networks named almost the same.
+
+Rule: resource owns; data observes; never destroy what you only meant to read.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Does Terraform only speak AWS?
+
+Terraform is not an AWS-only tool. Providers let it manage Azure, Google Cloud, Kubernetes, GitHub, Cloudflare, Datadog, and many other APIs. The Terraform workflow stays familiar while each provider translates resources into calls for its own platform.
+
+Browse the Terraform Registry to check whether a provider and resource exist before designing an automation. Pin trusted provider versions and read the provider documentation for authentication and behavior. You can combine providers in one configuration when the resources need coordinated dependencies.
+
+A provider is not an official guarantee just because it appears in the registry. Check its publisher, maintenance activity, documentation quality, and whether it supports the exact API features your team needs.
+
+Terraform is a workflow engine; providers decide which platforms it controls.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

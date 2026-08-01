@@ -1,0 +1,11 @@
+One giant state makes a dev change wait behind production.
+
+Separate Terraform state per environment limits blast radius, contention, and accidental cross-environment changes. Development, staging, and production can use the same modules with different roots, variables, accounts, or backend keys. Each state becomes a focused record of one deployment boundary and its managed objects.
+
+Choose state boundaries around independent ownership, lifecycle, and apply cadence, not just naming preference. Use remote backends with locking and access control. Keep production credentials and state access more restricted than development. Share values between states only through deliberate outputs, data sources, or published interfaces.
+
+Splitting state too aggressively creates a web of hidden dependencies and difficult ordering. Keeping every environment together creates lock contention and broad access. Start with clear environment boundaries, then split further only when ownership or deployment cadence truly differs.
+
+Align state boundaries with environment, ownership, and change cadence.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

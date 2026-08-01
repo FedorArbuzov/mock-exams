@@ -1,0 +1,11 @@
+Terraform skill grows when you operate real changes, not just write HCL.
+
+After the course, build a small production-like project with remote state, modules, CI plans, short-lived credentials, policy checks, and a documented recovery path. Practice reading plans and debugging errors. Then deepen one cloud area, such as networking, IAM, containers, or data platforms, through real scenarios.
+
+Contribute improvements to an existing infrastructure repository or create a portfolio project with a clear README and architecture notes. Learn provider release management, import and migration workflows, testing approaches, and cost awareness. Keep practicing reviews: explaining why a change is safe is as valuable as writing it.
+
+Collecting more Terraform syntax without operating infrastructure leaves important gaps in state, permissions, incidents, and team workflow. Do not jump straight to complex multi-cloud abstractions. Build reliable foundations, automate one workflow at a time, and learn from actual plans.
+
+Practice safe end-to-end changes in a realistic shared workflow.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+What makes a first project healthy?
+
+A healthy first Terraform project is small, formatted, validated, and safe to destroy. It declares versions, keeps credentials out of code, uses a sandbox account, and produces a clear plan. It also has a README that explains how to initialize, plan, apply, and clean up.
+
+Check that terraform fmt -check and terraform validate pass, then review a plan with no surprises. Commit configuration and the dependency lock file, but ignore local state and secret variable files. Add tags or names so you can find every practice resource later.
+
+A project is not healthy just because apply succeeded once on one laptop. If another person cannot initialize it safely, understand its variables, and destroy its test resources, the project still needs work.
+
+A good first project is reproducible, reviewable, and easy to remove.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

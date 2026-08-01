@@ -1,0 +1,11 @@
+Trustworthy state is protected, current, and understood.
+
+Healthy Terraform state uses a remote backend, access controls, encryption, version history, and locking where supported. Teams know which workspace and account they are operating in. Plans are reviewed, state edits are rare, and no one treats local state files as shared truth.
+
+Before a risky change, confirm backend, workspace, cloud identity, and lock behavior. Use terraform state list for inventory and terraform plan for consequences. Keep state recovery procedures tested, because state is a critical record of Terraform ownership rather than disposable cache.
+
+State can contain credentials and sensitive resource data, even when output is marked sensitive. Sending it through chat, committing it, or copying it to personal storage is an exposure. Remote storage needs least privilege and audited access.
+
+Protect state like production data and verify it before changes.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

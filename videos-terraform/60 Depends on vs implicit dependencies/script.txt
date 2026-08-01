@@ -1,0 +1,11 @@
+Terraform already sees many dependencies from references.
+
+Terraform builds a dependency graph from expressions that reference another resource's attributes. This implicit dependency is usually the clearest and safest approach. depends_on adds an explicit ordering edge when a real dependency exists but no value reference expresses it.
+
+Prefer direct references, such as a subnet ID from a subnet resource, because they show why ordering exists. Use depends_on sparingly for side effects, policy attachments, or module-level relationships that Terraform cannot infer. Comment unusual explicit dependencies with the reason.
+
+Adding depends_on everywhere makes plans less parallel and hides the actual data relationship. It cannot solve provider bugs or eventual consistency on its own. An unnecessary dependency may also force replacement decisions to spread through otherwise independent resources.
+
+Let references build dependencies; add depends_on only for invisible relationships.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

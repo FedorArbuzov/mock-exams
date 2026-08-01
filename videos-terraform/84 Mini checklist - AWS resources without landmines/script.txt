@@ -1,0 +1,11 @@
+Before apply, ask what happens when this resource changes or disappears.
+
+Safe AWS resources have clear names, required tags, least-privilege access, and an intentional lifecycle. They record logs where needed and keep cost controls such as retention or sizing visible. Terraform configuration should explain operational choices, not merely satisfy the provider schema.
+
+Review immutable fields, replacement behavior, deletion impact, encryption, backup needs, network exposure, and service quotas. Ensure every production resource has an owner and an environment label. Then read the plan for unexpected creates, destroys, and replacements before approving any change.
+
+A resource can be syntactically valid yet operationally dangerous. Default retention, public network paths, missing tags, or an unprotected database often pass terraform validate. Safety comes from reviewing intent and effects, not from a successful syntax check.
+
+Review ownership, lifecycle, security, cost, and replacement impact.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

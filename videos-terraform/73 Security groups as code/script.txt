@@ -1,0 +1,11 @@
+Security groups are stateful traffic rules attached to workloads.
+
+AWS security groups control allowed inbound and outbound traffic for attached network interfaces. Terraform expresses their rules as reviewed code, making intended ports, protocols, CIDRs, and source groups visible. Security groups are stateful, so return traffic is handled differently from stateless network ACLs.
+
+Prefer narrowly scoped rules that reference another security group when traffic is between application tiers. Name rules or resources clearly and document unusual ports. Separate reusable group definitions from application-specific attachments when that improves ownership and review clarity.
+
+A broad 0.0.0.0/0 rule can be necessary for a public endpoint but is dangerous for administration or databases. Mixing inline and separate rule resources can cause management conflicts. Security group rules do not replace authentication, authorization, or host hardening.
+
+Allow the smallest required traffic path and review every broad rule.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

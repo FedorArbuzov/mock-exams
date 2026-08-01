@@ -1,0 +1,11 @@
+Outputs are your configuration's public results.
+
+Output values expose useful results after apply, such as service URLs, resource IDs, or connection endpoints. Humans can read them, and other Terraform configurations can consume remote state outputs. Treat outputs as a deliberate contract between a module and its users.
+
+Give outputs stable names and descriptions, and expose only values consumers need. Mark secret outputs sensitive so normal CLI display is redacted. For cross-stack use, prefer small, documented outputs over allowing another stack to depend on every internal resource.
+
+Sensitive outputs still exist in state, and remote-state readers may access them depending on backend permissions. Do not use outputs as a general secret-sharing system. Changing or removing a widely consumed output is an interface-breaking change.
+
+Publish stable, minimal outputs and secure access to their state.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+If you can explain these three, you can explain Terraform's core loop.
+
+Terraform configuration describes desired infrastructure. The state records Terraform's current mapping between configuration addresses and real remote objects. Plan compares desired configuration, current state, and provider observations to propose actions. Apply executes the approved plan by calling providers and then updates state with the result.
+
+A strong explanation notes that state is not merely a cache; it tracks identity and dependencies, so protect and back it up. Plan is a preview, not a guarantee if the world changes before apply. Apply changes real infrastructure, which is why review, locking, and credentials matter.
+
+Saying Terraform always knows reality is inaccurate because remote changes and provider reads can differ over time. Saying plan changes nothing is mostly true but ignores reads and backend interactions. Explain the distinction clearly and mention controlled execution in shared environments.
+
+Configuration declares, plan previews, apply changes, and state records identity.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

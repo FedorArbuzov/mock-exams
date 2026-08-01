@@ -1,0 +1,47 @@
+# Go API course stack: api + postgres
+services:
+  api:
+    build: ./stack/api
+    container_name: mock-go-api
+    ports:
+      - "8099:8080"
+    environment:
+      DATABASE_URL: postgres://course:course@postgres:5432/course?sslmode=disable
+      HTTP_ADDR: ":8080"
+      JWT_SECRET: course-dev-secret-change-in-prod
+      LOG_LEVEL: info
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+    networks:
+      - backend
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: mock-go-api-postgres
+    environment:
+      POSTGRES_USER: course
+      POSTGRES_PASSWORD: course
+      POSTGRES_DB: course
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U course -d course"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  pgdata:

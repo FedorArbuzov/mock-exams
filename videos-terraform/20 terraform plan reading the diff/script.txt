@@ -1,0 +1,11 @@
+What do those plan symbols really mean?
+
+Terraform plan shows the proposed difference between configuration, state, and provider-read reality. A plus means create, a minus means destroy, and a tilde means update in place. Some changes force replacement, shown as destroy and create, which deserves extra attention.
+
+Read the summary first, then inspect each resource address and changed attribute. Look for unexpected destroys, replacements, wrong regions, wrong counts, and values that came from variables. Use terraform plan -out with care in automation when a reviewed, exact plan must be applied.
+
+Do not approve a plan based only on its final count. One replacement can mean downtime, data loss, or a new identifier even when the summary says only one add and one destroy.
+
+Read every destroy and replacement as if it affects production.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Why does apply ask for confirmation?
+
+Terraform apply creates a plan and asks for confirmation before making changes in an interactive session. That pause gives you one final chance to notice unexpected creates, updates, or destroys. Once confirmed, Terraform calls provider APIs and writes the resulting state.
+
+Use normal interactive apply while learning so you see the plan and confirmation prompt. In CI, apply a saved plan after a review and use non-interactive options only with deliberate safeguards. Watch the output for partial failures and never assume a failed apply changed nothing.
+
+Using auto-approve from your first day removes an important safety checkpoint. It is also risky to rerun blindly after a failure; inspect the error, state, and new plan first.
+
+Confirmation is a safety brake, not an annoying extra keystroke.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+A failed apply needs a playbook before it needs a hero.
+
+A failed apply runbook gives responders a safe sequence for stopping, assessing, recovering, and communicating. It should identify the state backend, affected environment, owners, common failure classes, and escalation paths. The goal is to prevent rushed retries or state edits from making a partial deployment worse.
+
+Include steps to capture the error, check cloud audit events, inspect the current state and remote resources, verify locks, and generate a fresh plan. State when to retry, roll forward, roll back, or escalate. Link backup, import, and state recovery procedures with required approvals.
+
+A runbook that says retry apply is dangerous when the failure left partial resources or changed remote configuration. Generic runbooks also fail under pressure. Write concrete commands and decision points, then test them during controlled incidents or game days.
+
+Document safe recovery decisions before the first failed apply.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

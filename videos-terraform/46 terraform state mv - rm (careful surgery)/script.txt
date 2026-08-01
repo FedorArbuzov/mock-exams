@@ -1,0 +1,11 @@
+State commands can repair ownership without touching the cloud.
+
+terraform state mv changes a resource address in state, while terraform state rm removes Terraform's record of an object. Neither command directly modifies provider infrastructure. They are precise tools for refactors, imports, and emergency state repair.
+
+Back up state through your backend process, run terraform state list, and use exact source and destination addresses. After every state operation, run terraform plan. A move preserves ownership under a new address; removal deliberately makes Terraform forget an object.
+
+Removing a resource from state does not delete it. If matching configuration remains, a later plan may try to create a duplicate. A mistaken move can make Terraform believe a different resource owns saved attributes, creating destructive proposals.
+
+Back up, operate once, and validate every state surgery with plan.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

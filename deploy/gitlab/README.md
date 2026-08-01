@@ -1,6 +1,21 @@
 # Локальный GitLab для курсов
 
-## Запуск
+## Быстрый старт (рекомендуется)
+
+Из корня репозитория mock-exams — одна команда поднимает **minikube (1 нода) + GitLab + runner**:
+
+```bash
+mockctl up --gitlab
+```
+
+- UI: [http://localhost:8929](http://localhost:8929)
+- Runner регистрируется автоматически с тегами `docker`, `local`
+- kubeconfig: `output/kubeconfig.yaml`
+- Остановка: `mockctl down` (volumes GitLab сохраняются)
+
+Первый старт GitLab — **5–15 минут**, нужно **8+ GB RAM** вместе с minikube.
+
+## Запуск только GitLab (без mockctl)
 
 ```bash
 docker compose -f deploy/gitlab/docker-compose.yml up -d

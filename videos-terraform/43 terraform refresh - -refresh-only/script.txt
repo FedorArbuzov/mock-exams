@@ -1,0 +1,11 @@
+Refresh state without changing the real infrastructure.
+
+Terraform refresh behavior reads provider data and updates state before planning by default. A refresh-only plan focuses on reconciling state with remote objects without proposing configuration changes. It is useful when the cloud changed outside Terraform and you need visibility.
+
+Run terraform plan -refresh-only first to see proposed state updates. If the changes are expected, apply that refresh-only plan to persist them. This can reveal deleted resources, changed tags, or provider-computed values that no longer match state.
+
+A refresh-only apply accepts remote reality into state. It does not restore your intended configuration. If someone changed a critical setting manually, refreshing first may hide the evidence you needed to understand why normal configuration now differs.
+
+Plan refresh-only first, then apply only understood state updates.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

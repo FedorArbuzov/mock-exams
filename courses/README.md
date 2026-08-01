@@ -183,7 +183,7 @@ aws-intermediate  →  aws-advanced  →  finops  (budgets, tags, rightsizing, K
 | [react-intermediate](react-intermediate/README.md) | Middle+ | ~18–22 ч | Auth (JWT refresh), error boundaries, performance, MSW, Django admin. 40 уроков + capstone. |
 | [nextjs-basic](nextjs-basic/README.md) | Middle+ | ~20–24 ч | Next.js App Router: SSR, RSC, Route Handlers, Server Actions, metadata, Docker `:8098`. 40 уроков + capstone. |
 | [nodejs-basic](nodejs-basic/README.md) | Middle | ~16–20 ч | Node.js BFF: event loop, libuv, streams, Express, pino, прокси к FastAPI `:8090`. 40 уроков + capstone. Node на хосте. |
-| [go-basic](go-basic/README.md) | Junior | ~14–18 ч | Базовый Go: типы, structs, interfaces, errors, slices/maps, пакеты, `go test`, линтеры. 38 уроков + capstone. Go на хосте. |
+| [go-basic](go-basic/README.md) | Junior | ~6–8 ч | Быстрый вход в Go: синтаксис, structs, errors, пакеты, тесты, мини-CLI. 11 уроков. Мост к `go-intermediate`. |
 
 JS-маршрут: [javascript-path.md](javascript-path.md). Go-маршрут: [golang-path.md](golang-path.md).
 

@@ -4,9 +4,7 @@ import { Hero } from "@/components/sections/Hero";
 import { SocialProof } from "@/components/sections/SocialProof";
 import { WhyExallenge } from "@/components/sections/WhyExallenge";
 import { Features } from "@/components/sections/Features";
-import { LearnVisually } from "@/components/sections/LearnVisually";
 import { InteractiveLabs } from "@/components/sections/InteractiveLabs";
-import { Roadmap } from "@/components/sections/Roadmap";
 import { InterviewQuestions } from "@/components/sections/InterviewQuestions";
 import { FounderAccess } from "@/components/sections/FounderAccess";
 import { FAQ } from "@/components/sections/FAQ";
@@ -27,9 +25,7 @@ export default function Home() {
         <SocialProof />
         <WhyExallenge />
         <Features />
-        <LearnVisually />
         <InteractiveLabs />
-        <Roadmap />
         <InterviewQuestions />
         <FounderAccess />
         <FAQ />

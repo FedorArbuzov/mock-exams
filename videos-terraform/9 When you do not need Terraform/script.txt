@@ -1,0 +1,11 @@
+Is Terraform always the answer?
+
+Terraform is excellent for repeatable infrastructure, but not every cloud action deserves a module and state file. A one-time experiment, an emergency incident action, or a managed service setting used once may be faster in the console. The goal is reliable outcomes, not maximum Terraform coverage.
+
+Use Terraform when an environment must be recreated, reviewed, shared, or kept consistent over time. Use a console or CLI for quick investigation, then decide whether that action should become declared infrastructure. If it matters again, capture it in code and import it carefully.
+
+The common mistake is creating resources manually that later become permanent without documentation. The opposite mistake is building a complicated Terraform stack for a disposable ten-minute experiment that nobody will repeat.
+
+Automate repeated infrastructure, not every single click you make.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

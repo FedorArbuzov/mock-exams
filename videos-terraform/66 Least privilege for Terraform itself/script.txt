@@ -1,0 +1,11 @@
+Terraform's credentials need limits too.
+
+Terraform runs with cloud credentials, usually from a user, role, workload identity, or CI federation. Those credentials can create, update, and delete whatever their policies allow. Least privilege for Terraform limits blast radius while still permitting the managed configuration to operate.
+
+Use short-lived role sessions and separate identities per environment. Scope actions and resources to what each root module manages, including state backend access. Review provider APIs needed for reads as well as writes, because planning commonly requires discovery permissions.
+
+Starting with broad administrator access may hide missing permissions until a later hardening effort. Overly narrow policies can also break plans in confusing ways. Build permissions from reviewed operations, test in lower environments, and audit actual usage.
+
+Give each Terraform runner only the scoped access it needs.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

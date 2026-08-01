@@ -1,0 +1,11 @@
+An upgrade is a change project when the compatibility contract moves.
+
+Terraform, providers, and modules evolve through releases that can change defaults, remove fields, alter state behavior, or require replacement. Treat upgrades as planned work: read release notes, identify breaking changes, update constraints, and inspect plans in a safe environment before changing production.
+
+Upgrade one major dependency class at a time where possible. Test representative roots, run validation and plans, and capture migration instructions in the pull request. Keep rollback options, backups, and a known prior version. Schedule larger upgrades when owners can respond to unexpected behavior.
+
+Running a broad upgrade command during an unrelated feature change mixes risk and makes failures hard to diagnose. Skipping many versions can also compound migrations. Pin dependencies, upgrade deliberately, and make the resulting plan the central review artifact.
+
+Upgrade deliberately, read changelogs, and test plans before production.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Where should AWS credentials live?
+
+Terraform can obtain AWS credentials from environment variables, shared AWS configuration files, profiles, and identity roles. Environment variables are convenient for CI and temporary sessions. Shared configuration is convenient for local development because named profiles keep multiple accounts and roles organized outside the codebase.
+
+For local work, authenticate with AWS's supported tooling and select a named profile where appropriate. For CI, prefer short-lived credentials issued through workload identity or role assumption. Let the AWS provider use its standard credential chain instead of placing access keys inside Terraform files.
+
+Environment variables can leak through logs, shell history, process listings, or accidentally exported build output. Shared config files are also sensitive and should stay outside Git, with correct file permissions.
+
+Keep credentials outside Terraform code and prefer short-lived identity.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

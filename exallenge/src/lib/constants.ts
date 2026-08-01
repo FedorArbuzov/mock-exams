@@ -16,10 +16,8 @@ export const COLORS = {
 
 export const NAV_LINKS = [
   { label: "Features", href: "#features" },
-  { label: "Learn", href: "#learn-visually" },
   { label: "Labs", href: "#labs" },
-  { label: "Roadmap", href: "#roadmap" },
-  { label: "Founder Access", href: "#founder" },
+  { label: "Free Beta", href: "#founder" },
 ] as const;
 
 export const ROADMAP_ITEMS = [
@@ -48,18 +46,12 @@ export const FEATURES = [
   {
     title: "Structured Theory",
     description:
-      "Beautiful diagrams and easy-to-understand explanations.",
+      "Clear explanations that build from fundamentals to production topics.",
     icon: "book" as const,
   },
   {
-    title: "Visual Learning",
-    description:
-      "Complex DevOps concepts explained with animations instead of boring slides.",
-    icon: "visual" as const,
-  },
-  {
     title: "Hands-on Labs",
-    description: "Practice Kubernetes using real scenarios.",
+    description: "Practice DevOps using real scenarios.",
     icon: "terminal" as const,
   },
   {
@@ -81,20 +73,16 @@ export const FEATURES = [
 
 export const FAQ_ITEMS = [
   {
-    question: "Is this a subscription?",
+    question: "How much does it cost now?",
     answer:
-      "No. Founder Access is a one-time payment with lifetime updates.",
+      "The current launch is free for early users. Leave your email and we'll send access instructions.",
   },
   {
     question: "Who is this for?",
     answer: "Developers, students and DevOps engineers.",
   },
   {
-    question: "Do I need Kubernetes experience?",
+    question: "Do I need DevOps experience?",
     answer: "No. You can start from the fundamentals and build up.",
-  },
-  {
-    question: "Can I practice?",
-    answer: "Yes. Interactive labs let you practice real DevOps scenarios.",
   },
 ];

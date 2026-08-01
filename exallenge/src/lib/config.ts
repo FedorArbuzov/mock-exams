@@ -1,18 +1,17 @@
 export const siteConfig = {
   name: "EXALLENGE",
-  tagline: "Master DevOps through interactive learning.",
+  tagline: "Free beta for early DevOps learners.",
   description:
-    "Interactive DevOps learning platform with visual lessons, hands-on labs, and interview questions.",
-  url: "https://exallenge.com",
-  founderPrice: process.env.NEXT_PUBLIC_FOUNDER_PRICE ?? "$149",
+    "A free DevOps beta with structured lessons, hands-on labs, and interview prep built with early users.",
+  url: "https://exallenge.tech",
+  founderPrice: process.env.NEXT_PUBLIC_FOUNDER_PRICE ?? "Free",
   founderCtaHref: "#founder",
-  demoHref: "#learn-visually",
+  demoHref: "#labs",
   stats: {
-    students: "2,400+",
+    students: "Beta",
     lessons: "180+",
     labs: "90+",
     interviewQuestions: "250+",
-    animatedVideos: "60+",
   },
   social: {
     github: "https://github.com",

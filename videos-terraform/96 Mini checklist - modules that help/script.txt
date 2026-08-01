@@ -1,0 +1,11 @@
+A helpful module makes callers simpler, safer, and easier to review.
+
+Before adopting or publishing a module, check that it represents a repeated pattern, has a small typed interface, exposes useful outputs, and documents examples. Confirm it has a version strategy, clear owner, and sensible secure defaults. Its plan should be understandable without reading every internal file.
+
+Also review whether callers can upgrade safely, whether resource names and tags remain customizable, and whether the module hides important lifecycle choices. Test at least one realistic example. A module should reduce duplication while preserving enough visibility for platform and application teams to operate it.
+
+A module can be popular and still harmful if it forces every caller into the same unsuitable assumptions. Do not measure success by adoption alone. Measure whether it reduces repeated mistakes, review time, and maintenance while keeping changes understandable.
+
+Keep module contracts small, owned, tested, and upgradeable.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

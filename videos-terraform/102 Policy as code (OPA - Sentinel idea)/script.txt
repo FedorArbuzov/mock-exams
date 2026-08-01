@@ -1,0 +1,11 @@
+A policy can reject a risky plan before cloud access makes it real.
+
+Policy as code evaluates Terraform plans against organization rules before apply. Tools such as OPA or Sentinel can require encryption, approved regions, mandatory tags, or forbid public exposure. Policies make guardrails repeatable and reviewable instead of relying only on tribal knowledge and manual checks.
+
+Start with a few high-value rules tied to real risk and provide clear failure messages with remediation steps. Test policies against allowed and denied plans. Version policy changes, assign owners, and allow documented exceptions where business needs legitimately differ. Run policy checks alongside plan generation in CI.
+
+An enormous policy library with vague messages becomes a delivery bottleneck and encourages bypasses. Policies cannot replace good module defaults or human review. Keep rules measurable, explain why they exist, and monitor false positives before enforcing broadly.
+
+Enforce clear, testable plan rules with useful remediation messages.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -1,0 +1,11 @@
+Why does local state break teamwork?
+
+Local state sits on one person's machine, so teammates and CI cannot reliably see the same infrastructure map. Two people can plan from different snapshots and overwrite each other's assumptions. Laptop loss, unshared changes, and inconsistent access controls make local state unsafe for team-managed environments.
+
+Move shared environments to a remote backend with access control, encryption, version history, and locking. Give all automation the same backend configuration and use separate state per environment. Test backend access before migrating important state, and keep a verified backup.
+
+Putting terraform.tfstate in Git is not a safe collaboration strategy. It causes merge conflicts, exposes sensitive contents, and cannot prevent two applies from operating against stale state at once.
+
+Teams need one protected shared state, not copies on laptops.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

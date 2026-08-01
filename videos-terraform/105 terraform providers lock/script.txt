@@ -1,0 +1,11 @@
+A lock file makes provider selection reproducible across machines.
+
+Terraform records selected provider versions and package checksums in .terraform.lock.hcl. Committing that file helps developers and CI use the same verified provider build for a configuration. It complements version constraints: constraints express what is allowed, while the lock records what was actually selected.
+
+Review lock-file changes when providers are initialized or upgraded. Generate platform checksums when teams run Terraform on multiple operating systems and architectures. Keep the lock file with the root configuration that uses those providers. Use intentional upgrade commands instead of deleting it to chase a problem.
+
+Ignoring the lock file can let different machines select different provider versions within a broad constraint. Deleting it may appear to fix initialization but removes reproducibility and checksum protection. Diagnose the constraint or registry issue, then update lock data intentionally.
+
+Commit provider lock files and review every selection change.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -17,7 +17,7 @@ const randomLearning = [
 
 const exallenge = [
   "Structured learning",
-  "Visual explanations",
+  "Clear explanations",
   "Interactive labs",
   "Learning roadmap",
   "Interview questions",

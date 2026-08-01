@@ -1,0 +1,11 @@
+What should you learn first?
+
+Your first Terraform hour should build a safe loop, not a huge cloud environment. Install the CLI, create a tiny folder, initialize it, format and validate the configuration, then read a plan. That sequence teaches the feedback loop you will use every day.
+
+Start with a harmless local resource or a low-cost sandbox account. Keep provider credentials outside source files, run plan before apply, and destroy temporary resources when finished. Save the commands and lessons in a small README so your next project begins faster.
+
+Starting with a production VPC or a large copy-pasted module hides the basics under too much complexity. A small resource is enough to learn initialization, state, planning, application, and cleanup.
+
+Learn the safe loop on something small before managing something important.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

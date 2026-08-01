@@ -1,0 +1,11 @@
+A queue is not connected until its policy says it is.
+
+SNS publishes messages to many subscribers, while SQS stores messages for consumers to process later. Terraform can wire an SNS topic to an SQS queue and create the queue policy that permits that exact topic to send. The policy is the often missed part of the connection.
+
+Use the topic ARN in the subscription and scope the SQS policy condition to that same ARN. Consider dead-letter queues, encryption, delivery retries, and visibility timeout as part of the design. Name each resource by its business event so people can trace a message path during incidents.
+
+Creating a subscription without an SQS queue policy produces confusing delivery failures. A broad policy that permits any topic is worse, because it weakens isolation. Grant only the intended topic permission to send messages to the intended queue.
+
+Wire subscriptions and least-privilege queue policies together.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

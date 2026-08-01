@@ -1,0 +1,11 @@
+Some resources should refuse deletion even when your plan asks nicely.
+
+The lifecycle prevent_destroy setting makes Terraform fail a plan that would destroy the protected resource. Use it for critical databases, production buckets, or other assets where accidental deletion is unacceptable. It is a safety rail inside configuration, not a backup or recovery strategy.
+
+Apply it selectively to resources with high deletion impact and document why it exists. A future intentional replacement requires changing configuration or moving state with care, so teams must understand the tradeoff. Pair protection with backups, recovery testing, and access controls because prevention cannot cover every failure path.
+
+Adding prevent_destroy everywhere makes routine refactoring painful and encourages people to remove safety settings blindly. It also does not stop deletion performed outside Terraform. Protect the few resources where an accidental destroy would be materially costly.
+
+Protect high-impact resources, then maintain tested recovery paths.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

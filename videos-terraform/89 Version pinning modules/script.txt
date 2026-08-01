@@ -1,0 +1,11 @@
+Reusable code without a version is a moving target.
+
+Pinning a module version makes deployments reproducible by selecting a known release instead of whatever is newest. For registry modules, declare a version constraint that matches your upgrade policy. Review module release notes and plans before widening that constraint or accepting a new version.
+
+Exact versions maximize repeatability, while carefully chosen compatible ranges can reduce routine maintenance. Match the choice to the module's release discipline and your change controls. Commit dependency lock data where Terraform creates it, and record module upgrades as intentional changes with their own review.
+
+Using no version constraint for a remote module lets a later initialization change the code under a stable configuration. Pinning too broadly can have the same result. Do not confuse module version constraints with provider version constraints; they solve related but separate risks.
+
+Select known module releases and upgrade them deliberately.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

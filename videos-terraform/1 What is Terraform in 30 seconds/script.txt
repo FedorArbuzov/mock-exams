@@ -1,0 +1,11 @@
+Everyone says use Terraform - what does it actually do?
+
+Terraform is Infrastructure as Code. You write configuration files, usually with a .tf extension, that describe the cloud resources you want. A provider plugin - AWS, Kubernetes, GitHub - turns that description into API calls.
+
+You do not invent a long bash script of creates. You declare the desired end state. Then you run terraform plan to preview creates, updates, and deletes, and terraform apply to execute that plan. The state file remembers which real IDs map to which blocks in your code.
+
+Beginners skip plan and treat apply like a deploy button. That is how surprises land in production. Make plan the review, apply the commit.
+
+Mental model: files describe intent, plan shows the diff, apply changes the world, state keeps the map.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.

@@ -118,6 +118,7 @@ COURSE_GROUPS: dict[str, tuple[str, ...]] = {
     ),
     "golang": (
         "go-basic",
+        "go-intermediate",
     ),
     "theory": (
         "sre",

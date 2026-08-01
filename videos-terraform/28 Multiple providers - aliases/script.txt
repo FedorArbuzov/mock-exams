@@ -1,0 +1,11 @@
+Can one Terraform project target two regions?
+
+Provider aliases let one configuration use multiple instances of the same provider with different settings. For AWS, that can mean separate regions, accounts, or assumed roles. Resources select a non-default provider explicitly, while resources without a provider setting use the default instance.
+
+Define one default provider and give additional instances clear aliases such as west or audit. Set provider = aws.west on the resource or pass an aliased provider into a module. Document the purpose of every alias so reviewers can spot cross-account changes.
+
+An alias declaration alone does nothing unless resources or modules reference it. A missing provider assignment can quietly send a resource to the default account or region instead of the intended target.
+
+Use clear aliases whenever a project controls more than one target.
+
+Master Terraform faster. Theory, hands-on labs, and interview questions - link in bio.
