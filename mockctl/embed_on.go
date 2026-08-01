@@ -8,8 +8,8 @@ import (
 )
 
 // coursesFS holds a copy of the courses tree baked into the binary at build
-// time. go:embed can't reach outside the module (../courses), so the build
-// scripts copy the repo's courses/ into mockctl/courses/ before compiling
+// time. go:embed can't reach outside the module (../courses-en), so the build
+// scripts copy the repo's courses-en/ into mockctl/courses/ before compiling
 // with `-tags embed`; that directory is gitignored.
 //
 // The all: prefix keeps files that start with "." or "_" (e.g. .pages).

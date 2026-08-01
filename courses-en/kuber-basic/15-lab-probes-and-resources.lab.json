@@ -1,0 +1,21 @@
+{
+  "id": "kuber-basic/15-lab-probes-and-resources",
+  "title": "Lab: Probes and Resources",
+  "setup": [
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "ready-demo" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "pod", "namespace": "default", "name": "ready-demo", "desc": "Pod 'ready-demo' exists (Task 1)" },
+    { "type": "image", "kind": "pod", "namespace": "default", "name": "ready-demo", "value": "nginx:1.27", "desc": "Container uses nginx:1.27" },
+    { "type": "running", "kind": "pod", "namespace": "default", "name": "ready-demo", "desc": "Pod is Running (readiness is toggled manually in the lab)" }
+  ],
+  "cleanup": [
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "ready-demo" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "live-demo" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "big" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "hungry" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "best-effort" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "burstable" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "guaranteed" }
+  ]
+}

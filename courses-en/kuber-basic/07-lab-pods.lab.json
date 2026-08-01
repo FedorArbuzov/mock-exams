@@ -1,0 +1,19 @@
+{
+  "id": "kuber-basic/07-lab-pods",
+  "title": "Lab: Pods",
+  "setup": [
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "web-bad" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "pod", "namespace": "default", "name": "web", "desc": "Pod 'web' exists in namespace default" },
+    { "type": "image", "kind": "pod", "namespace": "default", "name": "web", "value": "nginx:1.27.1", "desc": "Container uses image nginx:1.27.1" },
+    { "type": "label", "kind": "pod", "namespace": "default", "name": "web", "key": "app", "value": "web", "desc": "Pod has label app=web" },
+    { "type": "env", "kind": "pod", "namespace": "default", "name": "web", "key": "GREETING", "value": "hi-from-lab", "desc": "Container env GREETING=hi-from-lab" },
+    { "type": "running", "kind": "pod", "namespace": "default", "name": "web", "desc": "Pod 'web' is Running" }
+  ],
+  "cleanup": [
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "web-bad" }
+  ]
+}

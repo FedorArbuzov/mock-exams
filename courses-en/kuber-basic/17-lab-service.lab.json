@@ -1,0 +1,18 @@
+{
+  "id": "kuber-basic/17-lab-service",
+  "title": "Lab: Service",
+  "setup": [
+    { "op": "delete", "kind": "service", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "web" }
+  ],
+  "checks": [
+    { "type": "ready", "kind": "deployment", "namespace": "default", "name": "web", "value": "1", "desc": "Deployment 'web' has Ready Pods (Setup)" },
+    { "type": "exists", "kind": "service", "namespace": "default", "name": "web", "desc": "Service 'web' exists (Task 1)" },
+    { "type": "selector", "kind": "service", "namespace": "default", "name": "web", "key": "app", "value": "web", "desc": "Service selector app=web (Task 1, restored after Task 5)" },
+    { "type": "endpoints", "kind": "endpoints", "namespace": "default", "name": "web", "value": "1", "desc": "Service has at least one Endpoint address" }
+  ],
+  "cleanup": [
+    { "op": "delete", "kind": "service", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "web" }
+  ]
+}

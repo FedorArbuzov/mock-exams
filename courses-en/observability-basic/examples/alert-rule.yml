@@ -1,0 +1,25 @@
+# Snippet — alerting rule for observability-basic labs
+# Mount or merge into deploy/observability/config/rules/
+groups:
+  - name: lab-basic
+    rules:
+      - alert: LabHigh404Rate
+        expr: |
+          sum(rate(demo_http_requests_total{status="404"}[5m]))
+          /
+          sum(rate(demo_http_requests_total[5m])) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "More than 10% of demo-app requests are 404"
+          description: "Run traffic.sh or check wrong paths in load tests."
+
+      - alert: LabDemoAppDown
+        expr: up{job="demo-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "demo-app target is down"
+          description: "docker compose logs demo-app; rebuild with --build"

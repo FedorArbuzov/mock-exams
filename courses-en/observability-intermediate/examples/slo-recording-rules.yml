@@ -1,0 +1,36 @@
+# Example recording rules for demo-app availability SLI
+# Copy to deploy/observability/config/rules/slo-demo.yml and reload Prometheus
+# (or restart the prometheus container)
+
+groups:
+  - name: slo_demo
+    interval: 30s
+    rules:
+      # All requests (rate)
+      - record: slo:demo_http_requests:rate5m
+        expr: sum(rate(demo_http_requests_total[5m]))
+
+      # Successful (2xx) — for availability SLI
+      - record: slo:demo_http_requests_success:rate5m
+        expr: sum(rate(demo_http_requests_total{status=~"2.."}[5m]))
+
+      # Success ratio (0..1), SLI over 5m
+      - record: slo:demo_availability:ratio5m
+        expr: |
+          slo:demo_http_requests_success:rate5m
+          /
+          slo:demo_http_requests:rate5m
+
+      # Error budget burn: 5xx ratio (for a “fast burn” alert)
+      - record: slo:demo_errors:ratio5m
+        expr: |
+          sum(rate(demo_http_requests_total{status=~"5.."}[5m]))
+          /
+          slo:demo_http_requests:rate5m
+
+      # 30-day window in recording (lab simplification — 1h rolling)
+      - record: slo:demo_availability:ratio1h
+        expr: |
+          sum(rate(demo_http_requests_total{status=~"2.."}[1h]))
+          /
+          sum(rate(demo_http_requests_total[1h]))

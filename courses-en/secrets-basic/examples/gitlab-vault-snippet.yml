@@ -1,0 +1,30 @@
+# Fragment for courses/secrets-basic — tabletop CI + Vault KV
+# Secrets in GitLab: VAULT_ADDR, VAULT_TOKEN (masked, protected) — NOT root in prod
+
+stages:
+  - fetch-secrets
+  - deploy
+
+variables:
+  VAULT_ADDR: "http://localhost:8200"
+  # VAULT_TOKEN — only in CI/CD Variables (masked)
+
+fetch-deploy-secret:
+  stage: fetch-secrets
+  image: hashicorp/vault:1.16
+  script:
+    - vault status
+    - vault kv get -format=json secret/course/checkout/deploy > deploy-secret.json
+    - test -s deploy-secret.json
+  artifacts:
+    paths:
+      - deploy-secret.json
+    expire_in: 1 hour
+
+deploy-staging:
+  stage: deploy
+  needs: [fetch-deploy-secret]
+  script:
+    - echo "Using deploy key from Vault artifact (tabletop)"
+    - jq -r '.data.data.api_key' deploy-secret.json | wc -c
+  # In a real pipeline: kubectl/helm with the key from JSON, do not echo to the log

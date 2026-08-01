@@ -1,0 +1,18 @@
+{
+  "id": "kuber-basic/09-lab-replicaset",
+  "title": "Lab: ReplicaSet",
+  "setup": [
+    { "op": "delete", "kind": "replicaset", "namespace": "default", "name": "web-rs" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "stranger" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "replicaset", "namespace": "default", "name": "web-rs", "desc": "ReplicaSet 'web-rs' exists (Task 1)" },
+    { "type": "replicas", "kind": "replicaset", "namespace": "default", "name": "web-rs", "value": "4", "desc": "spec.replicas = 4 (Task 1)" },
+    { "type": "ready", "kind": "replicaset", "namespace": "default", "name": "web-rs", "value": "4", "desc": "4 replicas Ready" },
+    { "type": "image", "kind": "replicaset", "namespace": "default", "name": "web-rs", "value": "nginx:1.27.1", "desc": "Pod template uses nginx:1.27.1" }
+  ],
+  "cleanup": [
+    { "op": "delete", "kind": "replicaset", "namespace": "default", "name": "web-rs" },
+    { "op": "delete", "kind": "pod", "namespace": "default", "name": "stranger" }
+  ]
+}

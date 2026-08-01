@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-blue
+  namespace: lab-bluegreen
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: web
+        version: blue
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: lab-bluegreen
+spec:
+  selector:
+    app: web
+    version: blue
+  ports:
+    - port: 80
+      targetPort: 80

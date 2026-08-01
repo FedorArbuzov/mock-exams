@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# Build self-contained mockctl binaries with the courses/ tree baked in
+# Build self-contained mockctl binaries with the courses-en/ tree baked in
 # (requires local Go). Output: dist/mockctl-<os>-<arch>-embed[.exe].
 #
-# go:embed can't reach ../courses, so we stage a copy at mockctl/courses/
+# go:embed can't reach ../courses-en, so we stage a copy at mockctl/courses/
 # (gitignored) for the duration of the build and remove it afterwards.
 set -euo pipefail
 
 cd "$(dirname "$0")"
 here="$(pwd)"
-src_courses="$here/../courses"
+src_courses="$here/../courses-en"
 staged="$here/courses"
 
 if [ ! -d "$src_courses" ]; then
-  echo "courses/ not found at $src_courses" >&2
+  echo "courses-en/ not found at $src_courses" >&2
   exit 1
 fi
 
@@ -23,8 +23,8 @@ trap cleanup EXIT
 
 rm -rf "$staged"
 cp -R "$src_courses" "$staged"
-# Drop heavy, non-teaching junk so it doesn't bloat the binary (courses/ is
-# ~270 MB on disk, mostly node_modules and virtualenvs in example projects).
+# Drop heavy, non-teaching junk so it doesn't bloat the binary (courses-en/ is
+# large on disk, mostly node_modules and virtualenvs in example projects).
 find "$staged" \( \
   -type d \( -name node_modules -o -name .venv -o -name venv -o -name env \
     -o -name __pycache__ -o -name .pytest_cache -o -name .mypy_cache \
@@ -33,7 +33,7 @@ find "$staged" \( \
     -o -name .nyc_output \) \
   \) -prune -exec rm -rf {} +
 find "$staged" \( -name '*.pyc' -o -name '.DS_Store' \) -type f -delete
-echo "Staged courses -> $staged"
+echo "Staged courses-en -> $staged"
 
 echo "Building (embed)..."
 GOOS=windows GOARCH=amd64 go build -tags embed -trimpath -ldflags "-s -w" -o dist/mockctl-windows-amd64-embed.exe .

@@ -1,5 +1,6 @@
 // Package cluster manages the mockctl minikube profile: starting/stopping
-// it, enabling addons, exporting kubeconfig, and tearing it down.
+// it, enabling addons, exporting kubeconfig, an optional edge load-balancer
+// container, and tearing it down.
 package cluster
 
 import (
@@ -7,8 +8,11 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
+	"time"
 
 	"mockctl/internal/dockerutil"
+	"mockctl/internal/localstack"
 	"mockctl/internal/procutil"
 	"mockctl/internal/toolpath"
 )
@@ -16,6 +20,25 @@ import (
 // DefaultProfile is the minikube profile name used when MOCKCTL_PROFILE
 // isn't set.
 const DefaultProfile = "mock-exams"
+
+// UpOptions configures a cluster start.
+type UpOptions struct {
+	// Nodes is the number of minikube nodes (1 = single-node default).
+	Nodes int
+	// NoAddons skips metrics-server and ingress.
+	NoAddons bool
+	// LB starts a docker nginx container that publishes localhost:LBPort and
+	// load-balances to an ingress-nginx controller NodePort on every node.
+	// Does not install the controller — that must already exist (or be
+	// installed by the user). Compatible with --no-addons.
+	LB bool
+	// LBPort is the host port for the edge LB (default 8080).
+	LBPort string
+	// GitLab starts GitLab CE + runner (deploy/gitlab compose) on
+	// localhost:8929 and bootstraps a docker executor runner (tags docker,
+	// local). Forces a single-node cluster.
+	GitLab bool
+}
 
 // ProfileName returns the minikube profile to operate on, honoring
 // $MOCKCTL_PROFILE.
@@ -37,37 +60,103 @@ func OutputDir() (string, error) {
 }
 
 // Up starts the minikube profile on the docker driver, optionally enables
-// the metrics-server/ingress addons, and writes out/kubeconfig.yaml.
-func Up(noAddons bool) error {
-	mk, err := toolpath.EnsureMinikube()
-	if err != nil {
-		return err
+// addons, optionally starts the edge LB, and writes output/kubeconfig.yaml.
+func Up(opts UpOptions) error {
+	if opts.Nodes < 1 {
+		opts.Nodes = 1
+	}
+	if opts.GitLab && opts.Nodes > 1 {
+		fmt.Fprintf(os.Stderr, "note: --gitlab uses a single-node cluster; ignoring --nodes %d\n", opts.Nodes)
+		opts.Nodes = 1
 	}
 
 	if err := dockerutil.RequireDocker(); err != nil {
 		return err
 	}
 
-	p := ProfileName()
-	fmt.Printf("Starting minikube profile %q (driver=docker)...\n", p)
-	if err := procutil.RunStream(mk, "start", "-p", p, "--driver=docker"); err != nil {
-		return fmt.Errorf("minikube start: %w", err)
+	if opts.LB {
+		lbPort := resolveLBPort(opts.LBPort)
+		opts.LBPort = lbPort
+		fmt.Printf("Checking edge LB port localhost:%s...\n", lbPort)
+		if err := PreflightLBPort(lbPort); err != nil {
+			return err
+		}
 	}
 
-	if !noAddons {
+	if opts.GitLab {
+		fmt.Println("Starting GitLab CE + runner (localhost:8929)...")
+		if err := StartGitLab(); err != nil {
+			return fmt.Errorf("start GitLab: %w", err)
+		}
+	}
+
+	mk, err := toolpath.EnsureMinikube()
+	if err != nil {
+		return err
+	}
+
+	p := ProfileName()
+	fmt.Printf("Starting minikube profile %q (driver=docker, nodes=%d)...\n", p, opts.Nodes)
+
+	args := []string{"start", "-p", p, "--driver=docker"}
+	if opts.Nodes > 1 {
+		args = append(args, "--nodes", strconv.Itoa(opts.Nodes))
+	}
+	if err := procutil.RunStream(mk, args...); err != nil {
+		return fmt.Errorf("minikube start: %w\nHint: changing node count usually needs a fresh profile — try: mockctl down && mockctl up --nodes %d%s",
+			err, opts.Nodes, lbHint(opts.LB))
+	}
+
+	if !opts.NoAddons {
 		for _, addon := range []string{"metrics-server", "ingress"} {
 			fmt.Printf("\nEnabling addon: %s\n", addon)
 			if err := procutil.RunStream(mk, "addons", "enable", addon, "-p", p); err != nil {
 				fmt.Fprintf(os.Stderr, "warning: failed to enable %s: %v\n", addon, err)
 			}
 		}
+	} else if opts.LB {
+		fmt.Println("note: --no-addons set; not enabling metrics-server/ingress. Edge LB starts anyway (502 until you install an Ingress Controller).")
 	}
 
-	return writeKubeconfig(mk, p)
+	if err := writeKubeconfig(mk, p); err != nil {
+		return err
+	}
+
+	if opts.LB {
+		fmt.Printf("\nStarting edge load balancer (localhost:%s → ingress NodePort)...\n", opts.LBPort)
+		if err := StartLB(opts.LBPort); err != nil {
+			return fmt.Errorf("start LB: %w", err)
+		}
+	}
+
+	if opts.GitLab {
+		fmt.Println("\nWaiting for GitLab to become ready (first boot may take 5–15 min)...")
+		if err := WaitGitLabReady(15 * time.Minute); err != nil {
+			return err
+		}
+		if err := BootstrapRunner(); err != nil {
+			fmt.Fprintf(os.Stderr, "warning: runner bootstrap failed: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Register manually — see deploy/gitlab/README.md\n")
+		}
+		PrintGitLabSummary()
+	}
+
+	return nil
 }
 
-// Down stops (soft=true) or deletes the minikube profile.
+func lbHint(lb bool) string {
+	if lb {
+		return " --lb"
+	}
+	return ""
+}
+
+// Down stops (soft=true) or deletes the minikube profile, and always
+// removes the edge LB container if it exists.
 func Down(soft bool) error {
+	StopLB()
+	StopGitLab()
+
 	mk, err := toolpath.EnsureMinikube()
 	if err != nil {
 		return err
@@ -90,6 +179,9 @@ func Down(soft bool) error {
 // Clean deletes every minikube profile and clears ./output. With full=true
 // it also wipes the ~/.minikube cache.
 func Clean(full bool) error {
+	StopLB()
+	StopGitLab()
+
 	if mk, err := toolpath.Find("minikube"); err == nil {
 		fmt.Println("Deleting minikube cluster(s)...")
 		_ = procutil.RunStream(mk, "delete", "--all")
@@ -129,6 +221,9 @@ func Clean(full bool) error {
 // `mockctl uninstall` — the tool-removal half lives in the installer
 // package (see installer.Uninstall).
 func TeardownForUninstall() {
+	StopLB()
+	StopGitLab()
+
 	if mk, err := toolpath.Find("minikube"); err == nil {
 		fmt.Println("\nDeleting minikube cluster(s)...")
 		_ = procutil.RunStream(mk, "delete", "--all")
@@ -174,6 +269,9 @@ func Status() error {
 	statusErr := procutil.RunStream(mk, "status", "-p", p)
 	if statusErr != nil {
 		fmt.Fprintln(os.Stderr, "(minikube status reported issues; skipping kubectl)")
+		PrintLBStatus()
+		PrintGitLabStatus()
+		localstack.PrintStatus()
 		return nil
 	}
 
@@ -188,13 +286,20 @@ func Status() error {
 	}
 
 	kc, err := toolpath.Find("kubectl")
-	if err != nil {
-		return nil
+	if err == nil {
+		if _, err := os.Stat(kcPath); err == nil {
+			fmt.Println()
+			if err := procutil.RunStream(kc, "--kubeconfig", kcPath, "get", "nodes"); err != nil {
+				PrintLBStatus()
+				PrintGitLabStatus()
+				localstack.PrintStatus()
+				return err
+			}
+		}
 	}
-	if _, err := os.Stat(kcPath); err == nil {
-		fmt.Println()
-		return procutil.RunStream(kc, "--kubeconfig", kcPath, "get", "nodes")
-	}
+	PrintLBStatus()
+	PrintGitLabStatus()
+	localstack.PrintStatus()
 	return nil
 }
 

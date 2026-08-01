@@ -1,0 +1,19 @@
+{
+  "id": "kuber-intermediate/22-lab-blue-green",
+  "title": "Lab: Blue-Green Deployment",
+  "setup": [
+    { "op": "ensureNamespace", "name": "lab-bluegreen" },
+    { "op": "delete", "kind": "deployment", "namespace": "lab-bluegreen", "name": "web-green" },
+    { "op": "apply", "manifest": "kuber-intermediate/manifests/22-bluegreen-blue.yaml" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "deployment", "namespace": "lab-bluegreen", "name": "web-blue", "desc": "Blue Deployment still present (rollback path)" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-bluegreen", "name": "web-green", "value": "2", "desc": "Green Deployment Ready (2 replicas)" },
+    { "type": "image", "kind": "deployment", "namespace": "lab-bluegreen", "name": "web-green", "value": "nginx:1.28", "desc": "Green runs nginx:1.28" },
+    { "type": "selector", "kind": "service", "namespace": "lab-bluegreen", "name": "web", "key": "version", "value": "green", "desc": "Service now routes to version=green" },
+    { "type": "endpoints", "kind": "endpoints", "namespace": "lab-bluegreen", "name": "web", "value": "1", "desc": "Service has live Endpoints after the switch" }
+  ],
+  "cleanup": [
+    { "op": "deleteNamespace", "name": "lab-bluegreen" }
+  ]
+}

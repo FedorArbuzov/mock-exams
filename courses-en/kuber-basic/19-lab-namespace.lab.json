@@ -1,0 +1,18 @@
+{
+  "id": "kuber-basic/19-lab-namespace",
+  "title": "Lab: Namespace",
+  "setup": [
+    { "op": "deleteNamespace", "name": "team-a" },
+    { "op": "deleteNamespace", "name": "team-b" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "team-a", "desc": "Namespace 'team-a' exists (Task 1)" },
+    { "type": "exists", "kind": "namespace", "name": "team-b", "desc": "Namespace 'team-b' exists (Task 1)" },
+    { "type": "ready", "kind": "deployment", "namespace": "team-a", "name": "web", "value": "2", "desc": "Deployment 'web' Ready in team-a (Task 2)" },
+    { "type": "ready", "kind": "deployment", "namespace": "team-b", "name": "web", "value": "2", "desc": "Deployment 'web' Ready in team-b (Task 2)" }
+  ],
+  "cleanup": [
+    { "op": "deleteNamespace", "name": "team-a" },
+    { "op": "deleteNamespace", "name": "team-b" }
+  ]
+}

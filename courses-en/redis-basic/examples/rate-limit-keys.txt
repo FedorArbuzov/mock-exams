@@ -1,0 +1,19 @@
+# Key convention — final project (rate limit)
+# The app prefix isolates from others' labs on a shared stand
+
+# Sliding window (INCR + EXPIRE) — variant A
+# Key: rl:{scope}:{identifier}:{windowStartUnix}
+# Example: rl:api:192.168.1.1:1716033600
+# TTL: window length + a small buffer (seconds)
+
+# Fixed window — variant B (simpler for basic)
+# Key: rl:fw:{scope}:{identifier}:{bucketId}
+# bucketId = floor(unix_ts / window_seconds)
+# Example: rl:fw:login:user-881:28600600
+
+# Token bucket (optional, zset + timestamp)
+# rl:tb:{scope}:{identifier}  — ZSET, score = refill time
+
+# Leaderboard (alternative finale)
+# lb:shop:daily — ZSET, member = userId, score = points
+# lb:shop:daily:meta — HASH with updatedAt, rulesVersion

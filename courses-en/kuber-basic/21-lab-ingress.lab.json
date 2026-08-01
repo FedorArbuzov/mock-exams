@@ -1,0 +1,25 @@
+{
+  "id": "kuber-basic/21-lab-ingress",
+  "title": "Lab: Ingress",
+  "setup": [
+    { "op": "delete", "kind": "ingress", "namespace": "default", "name": "app" },
+    { "op": "delete", "kind": "service", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "service", "namespace": "default", "name": "api" },
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "api" }
+  ],
+  "checks": [
+    { "type": "ready", "kind": "deployment", "namespace": "default", "name": "web", "value": "1", "desc": "Deployment 'web' Ready (Task 1)" },
+    { "type": "ready", "kind": "deployment", "namespace": "default", "name": "api", "value": "1", "desc": "Deployment 'api' Ready (Task 1)" },
+    { "type": "exists", "kind": "service", "namespace": "default", "name": "web", "desc": "Service 'web' exists (Task 1)" },
+    { "type": "exists", "kind": "service", "namespace": "default", "name": "api", "desc": "Service 'api' exists (Task 1)" },
+    { "type": "exists", "kind": "ingress", "namespace": "default", "name": "app", "desc": "Ingress 'app' exists (Task 2)" }
+  ],
+  "cleanup": [
+    { "op": "delete", "kind": "ingress", "namespace": "default", "name": "app" },
+    { "op": "delete", "kind": "service", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "service", "namespace": "default", "name": "api" },
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "api" }
+  ]
+}

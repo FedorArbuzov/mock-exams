@@ -1,0 +1,13 @@
+{
+  "sessionId": "sess-7f3a2b1c-9d4e-4a1f-b2c3-d4e5f6a7b8c9",
+  "userId": "user-881",
+  "email": "learner@example.com",
+  "roles": ["student"],
+  "locale": "ru-RU",
+  "createdAt": "2026-05-18T10:00:00Z",
+  "lastSeenAt": "2026-05-18T14:32:01Z",
+  "metadata": {
+    "source": "login-form",
+    "ipHash": "a1b2c3d4"
+  }
+}

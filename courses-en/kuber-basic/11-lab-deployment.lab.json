@@ -1,0 +1,18 @@
+{
+  "id": "kuber-basic/11-lab-deployment",
+  "title": "Lab: Deployment",
+  "setup": [
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "web-recreate" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "deployment", "namespace": "default", "name": "web", "desc": "Deployment 'web' exists (Task 1)" },
+    { "type": "replicas", "kind": "deployment", "namespace": "default", "name": "web", "value": "2", "desc": "spec.replicas = 2 (Task 1, before scaling)" },
+    { "type": "ready", "kind": "deployment", "namespace": "default", "name": "web", "value": "2", "desc": "2 replicas Ready" },
+    { "type": "image", "kind": "deployment", "namespace": "default", "name": "web", "value": "nginx:1.27.1", "desc": "Container uses nginx:1.27.1 (after rollback in Task 3)" }
+  ],
+  "cleanup": [
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "web" },
+    { "op": "delete", "kind": "deployment", "namespace": "default", "name": "web-recreate" }
+  ]
+}

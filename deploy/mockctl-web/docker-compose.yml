@@ -1,0 +1,17 @@
+# Course browser + interactive labs. Requires a running minikube profile on the host.
+# Start: scripts/windows-bootstrap.ps1  (or minikube-up.ps1 + docker compose up -d)
+services:
+  mockctl-web:
+    image: ${MOCKCTL_WEB_IMAGE:-mock-exams/mockctl-web:local}
+    build:
+      context: ../..
+      dockerfile: deploy/mockctl-web/Dockerfile
+    container_name: mockctl-web
+    ports:
+      - "${MOCKCTL_WEB_PORT:-8091}:8091"
+    volumes:
+      # Host kubeconfig (127.0.0.1) — entrypoint rewrites for container networking.
+      - ../../output/kubeconfig.yaml:/kube/host-kubeconfig.yaml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

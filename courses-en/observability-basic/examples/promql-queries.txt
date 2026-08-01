@@ -1,0 +1,28 @@
+# PromQL — observability-basic (deploy/observability stack)
+# Paste into Prometheus → Graph or Grafana → Explore
+
+# --- Availability ---
+up
+up{job="demo-app"}
+up{job=~"demo-app|node-exporter"}
+
+# --- HTTP RPS (demo-app) ---
+sum(rate(demo_http_requests_total[5m]))
+sum by (status) (rate(demo_http_requests_total[5m]))
+sum(rate(demo_http_requests_total{status="404"}[5m]))
+
+# --- Latency p95 (histogram) ---
+histogram_quantile(0.95, sum by (le) (rate(demo_http_request_duration_seconds_bucket[5m])))
+histogram_quantile(0.99, sum by (le, path) (rate(demo_http_request_duration_seconds_bucket[5m])))
+
+# --- In-flight ---
+demo_http_in_progress
+
+# --- Node (node-exporter) ---
+100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes
+
+# --- Error share (for alerts) ---
+sum(rate(demo_http_requests_total{status=~"5.."}[5m]))
+/
+sum(rate(demo_http_requests_total[5m]))

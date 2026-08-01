@@ -1,0 +1,27 @@
+# Include fragment for course projects
+# usage:
+#   include:
+#     - local: path/to/security-pipeline.yml
+
+.stages_security:
+  stages:
+    - test
+    - security
+    - build
+
+.sast_jobs:
+  include:
+    - template: Security/SAST.gitlab-ci.yml
+    - template: Security/Secret-Detection.gitlab-ci.yml
+
+.trivy_scan:
+  container-scan:
+    stage: security
+    image:
+      name: aquasec/trivy:latest
+      entrypoint: [""]
+    script:
+      - trivy image --exit-code 1 --severity HIGH,CRITICAL "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}"
+    needs:
+      - job: docker-build
+        optional: true

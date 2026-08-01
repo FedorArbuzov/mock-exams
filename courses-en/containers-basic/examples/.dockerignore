@@ -1,0 +1,20 @@
+# Don't send to the build context — fewer layers and leaks
+.git
+.gitignore
+*.md
+.env
+.env.*
+*.pem
+*.key
+__pycache__
+*.pyc
+.pytest_cache
+.venv
+node_modules
+dist
+build
+*.log
+.DS_Store
+Thumbs.db
+docker-compose*.yml
+scripts/

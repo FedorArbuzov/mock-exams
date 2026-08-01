@@ -1,0 +1,16 @@
+{
+  "id": "kuber-basic/23-lab-troubleshooting",
+  "title": "Lab: Troubleshooting",
+  "setup": [
+    { "op": "ensureNamespace", "name": "lab-tshoot" },
+    { "op": "apply", "manifest": "kuber-basic/manifests/23-case1-broken.yaml" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "deployment", "namespace": "lab-tshoot", "name": "web", "desc": "Deployment 'web' exists in lab-tshoot (Scenario 1)" },
+    { "type": "image", "kind": "deployment", "namespace": "lab-tshoot", "name": "web", "value": "nginx:1.27", "desc": "Image fixed to nginx:1.27 (was the typo nginxx:1.27)" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-tshoot", "name": "web", "value": "1", "desc": "Deployment is Ready after the fix" }
+  ],
+  "cleanup": [
+    { "op": "deleteNamespace", "name": "lab-tshoot" }
+  ]
+}

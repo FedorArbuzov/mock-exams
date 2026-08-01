@@ -1,0 +1,9 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+terraform.tfvars
+lambda.zip
+lambda-api.zip
+lambda/build/
+localstack_providers_override.tf

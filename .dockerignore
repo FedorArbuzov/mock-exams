@@ -1,0 +1,12 @@
+.git
+.cursor
+**/node_modules
+remotion/out
+videos
+videos-go
+videos-terraform
+**/*.mp4
+**/*.exe
+mockctl/dist
+output
+**/.minikube

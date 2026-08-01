@@ -1,0 +1,23 @@
+{
+  "eventType": "order.created",
+  "eventId": "evt-7f3a2b1c-9d4e-4a1f-b2c3-d4e5f6a7b8c9",
+  "occurredAt": "2026-05-18T14:32:01.123Z",
+  "schemaVersion": 1,
+  "order": {
+    "orderId": "ord-10042",
+    "customerId": "cust-881",
+    "currency": "EUR",
+    "totalCents": 4599,
+    "lines": [
+      {
+        "sku": "BOOK-KAFKA-101",
+        "qty": 1,
+        "unitCents": 4599
+      }
+    ]
+  },
+  "metadata": {
+    "source": "checkout-service",
+    "traceId": "trace-abc123"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "kuber-basic/24-final-project",
+  "title": "Final project: Nimbus Cart VM → Kubernetes",
+  "setup": [
+    { "op": "ensureNamespace", "name": "lab-final" },
+    { "op": "delete", "kind": "ingress", "namespace": "lab-final", "name": "shop" },
+    { "op": "delete", "kind": "service", "namespace": "lab-final", "name": "web" },
+    { "op": "delete", "kind": "service", "namespace": "lab-final", "name": "api" },
+    { "op": "delete", "kind": "service", "namespace": "lab-final", "name": "admin" },
+    { "op": "delete", "kind": "service", "namespace": "lab-final", "name": "edge" },
+    { "op": "delete", "kind": "deployment", "namespace": "lab-final", "name": "web" },
+    { "op": "delete", "kind": "deployment", "namespace": "lab-final", "name": "api" },
+    { "op": "delete", "kind": "deployment", "namespace": "lab-final", "name": "admin" },
+    { "op": "delete", "kind": "configmap", "namespace": "lab-final", "name": "app-config" },
+    { "op": "delete", "kind": "secret", "namespace": "lab-final", "name": "app-secret" },
+    { "op": "delete", "kind": "secret", "namespace": "lab-final", "name": "admin-auth" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "configmap", "namespace": "lab-final", "name": "app-config", "desc": "ConfigMap 'app-config' exists" },
+    { "type": "hasKey", "kind": "configmap", "namespace": "lab-final", "name": "app-config", "key": "index.html", "desc": "ConfigMap has key index.html" },
+    { "type": "exists", "kind": "secret", "namespace": "lab-final", "name": "app-secret", "desc": "Secret 'app-secret' exists" },
+    { "type": "hasKey", "kind": "secret", "namespace": "lab-final", "name": "app-secret", "key": "password", "desc": "Secret has key password" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-final", "name": "web", "value": "1", "desc": "Deployment 'web' Ready" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-final", "name": "api", "value": "1", "desc": "Deployment 'api' Ready" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-final", "name": "admin", "value": "1", "desc": "Deployment 'admin' Ready" },
+    { "type": "exists", "kind": "service", "namespace": "lab-final", "name": "web", "desc": "Service 'web' exists" },
+    { "type": "exists", "kind": "service", "namespace": "lab-final", "name": "api", "desc": "Service 'api' exists" },
+    { "type": "exists", "kind": "service", "namespace": "lab-final", "name": "admin", "desc": "Service 'admin' exists" },
+    { "type": "exists", "kind": "service", "namespace": "lab-final", "name": "edge", "desc": "NodePort Service 'edge' exists" },
+    { "type": "exists", "kind": "ingress", "namespace": "lab-final", "name": "shop", "desc": "Ingress 'shop' exists" }
+  ],
+  "cleanup": [
+    { "op": "deleteNamespace", "name": "lab-final" }
+  ]
+}

@@ -1,0 +1,4 @@
+bucket_name         = "course-platform-yourname-001"
+use_localstack      = true
+localstack_endpoint = "http://localhost:4566"
+# alert_email       = "you@example.com"   # real AWS only

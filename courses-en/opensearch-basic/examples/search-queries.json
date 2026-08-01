@@ -1,0 +1,65 @@
+{
+  "_comment": "Example bodies for curl -d @file. Substitute INDEX (e.g. logs-app-20260518).",
+  "match_message_error": {
+    "query": {
+      "match": {
+        "message": "error"
+      }
+    },
+    "size": 10
+  },
+  "bool_filter_level_error": {
+    "query": {
+      "bool": {
+        "filter": [
+          { "term": { "level.keyword": "error" } }
+        ]
+      }
+    },
+    "size": 20
+  },
+  "bool_must_service_and_status": {
+    "query": {
+      "bool": {
+        "must": [
+          { "term": { "service.keyword": "api" } }
+        ],
+        "filter": [
+          { "range": { "status": { "gte": 500 } } }
+        ]
+      }
+    }
+  },
+  "agg_terms_by_level": {
+    "size": 0,
+    "aggs": {
+      "by_level": {
+        "terms": { "field": "level.keyword", "size": 10 }
+      }
+    }
+  },
+  "agg_date_histogram_hourly": {
+    "size": 0,
+    "aggs": {
+      "logs_over_time": {
+        "date_histogram": {
+          "field": "@timestamp",
+          "fixed_interval": "1h"
+        }
+      }
+    }
+  },
+  "agg_terms_with_sub_metric": {
+    "size": 0,
+    "aggs": {
+      "by_service": {
+        "terms": { "field": "service.keyword", "size": 10 },
+        "aggs": {
+          "error_count": {
+            "filter": { "term": { "level.keyword": "error" } }
+          }
+        }
+      }
+    }
+  }
+}

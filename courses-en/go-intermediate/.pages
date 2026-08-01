@@ -1,0 +1,29 @@
+title: Go — Intermediate
+nav:
+  - README.md
+  - 00-environment.md
+  - 01-landscape.md
+  - 02-handlers-routing.md
+  - 03-lab-health.md
+  - 04-middleware.md
+  - 05-lab-middleware.md
+  - 06-dto-validation.md
+  - 07-api-errors.md
+  - 08-layered-architecture.md
+  - 09-lab-inmemory-crud.md
+  - 10-config-env.md
+  - 11-lab-config.md
+  - 12-pgx-pool.md
+  - 13-sqlc.md
+  - 14-goose-migrations.md
+  - 15-lab-postgres-crud.md
+  - 16-pagination-filters.md
+  - 17-lab-pagination.md
+  - 18-jwt-auth.md
+  - 19-lab-auth.md
+  - 20-slog.md
+  - 21-graceful-shutdown.md
+  - 22-lab-shutdown.md
+  - 23-openapi-smoke.md
+  - 24-capstone.md
+  - interview-cheatsheet.md

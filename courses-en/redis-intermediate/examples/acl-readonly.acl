@@ -1,0 +1,8 @@
+# Example ACL for the redis-intermediate course (lab 10)
+# How to apply: aclfile in redis.conf or ACL LOAD
+#
+# User readonly: read-only access to app:* keys
+
+user default on nopass ~* &* +@all
+
+user readonly on >readonly-secret ~app:* -@all +@read +ping +info +client|list

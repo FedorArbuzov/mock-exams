@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "sku": "KB-001",
+    "title": "Keyboard",
+    "price": 79.99,
+    "status": "active",
+    "discount": null,
+    "category": "electronics"
+  },
+  {
+    "id": 2,
+    "sku": "MS-002",
+    "title": "Mouse",
+    "price": 29.99,
+    "status": "active",
+    "discount": 5,
+    "category": "electronics"
+  },
+  {
+    "id": 3,
+    "sku": "DS-010",
+    "title": "Desk",
+    "price": 199.0,
+    "status": "archived",
+    "discount": null,
+    "category": "furniture"
+  }
+]

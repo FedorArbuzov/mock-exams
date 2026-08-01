@@ -1,0 +1,15 @@
+title: Go — Basic
+nav:
+  - README.md
+  - 00-environment.md
+  - 01-types-variables.md
+  - 02-structs-slices-maps.md
+  - 03-functions-pointers-methods.md
+  - 04-control-flow.md
+  - 05-interfaces-errors.md
+  - 06-packages-modules.md
+  - 07-testing-tooling.md
+  - 08-json-files-time.md
+  - 09-lab-mini-cli.md
+  - 10-next-steps.md
+  - interview-cheatsheet.md

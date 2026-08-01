@@ -10,7 +10,25 @@
   - WSL — Docker Desktop с WSL Integration **или** docker внутри Ubuntu.
 - ~5 ГБ свободного места и доступ в интернет (первый запуск качает образы Kubernetes).
 
-## Windows (PowerShell)
+## Windows (PowerShell) — рекомендуется
+
+**Нужно:** Docker Desktop с включённым Kubernetes (Settings → Kubernetes → Create cluster).
+
+Одна команда (после включения Kubernetes в Docker Desktop):
+
+```powershell
+irm https://raw.githubusercontent.com/FedorArbuzov/mock-exams/master/scripts/windows-mockctl-web.ps1 | iex
+```
+
+Скрипт: экспортирует kubeconfig → `docker pull` → `docker run` → проверка.
+
+Образ по умолчанию: `ghcr.io/fedorarbuzov/mock-exams/mockctl-web:latest` (переопределить: `$env:MOCKCTL_WEB_IMAGE`).
+
+Курсы: http://127.0.0.1:8091/
+
+### Windows — legacy (`mockctl.exe`)
+
+На Windows 11 с **Smart App Control** скачанный `.exe` может не запуститься. Предпочтительнее bootstrap выше.
 
 ```powershell
 $mc="$env:USERPROFILE\mockctl.exe"
@@ -18,12 +36,6 @@ iwr https://raw.githubusercontent.com/FedorArbuzov/mock-exams/master/mockctl/dis
 & $mc install
 & $mc up
 & $mc status
-```
-
-Или одной строкой:
-
-```powershell
-$mc="$env:USERPROFILE\mockctl.exe"; iwr https://raw.githubusercontent.com/FedorArbuzov/mock-exams/master/mockctl/dist/mockctl-windows-amd64.exe -OutFile $mc -UseBasicParsing; & $mc install; if ($LASTEXITCODE -eq 0) { & $mc up; & $mc status }
 ```
 
 ## Linux / WSL (bash)

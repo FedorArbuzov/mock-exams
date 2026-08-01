@@ -1,7 +1,7 @@
-# Build self-contained mockctl binaries with the courses/ tree baked in,
+# Build self-contained mockctl binaries with the courses-en/ tree baked in,
 # using Docker (no local Go required). Output: dist\mockctl-<os>-<arch>-embed[.exe].
 #
-# go:embed can't reach ..\courses, so we stage a copy at mockctl\courses\
+# go:embed can't reach ..\courses-en, so we stage a copy at mockctl\courses\
 # (gitignored) for the duration of the build and remove it afterwards.
 #
 # Artifacts are built inside the container and pulled out with `docker cp`
@@ -16,10 +16,10 @@ $here = (Resolve-Path $PSScriptRoot).Path
 $repo = (Resolve-Path (Join-Path $here "..")).Path
 $dist = Join-Path $here "dist"
 $staged = Join-Path $here "courses"
-$srcCourses = Join-Path $repo "courses"
+$srcCourses = Join-Path $repo "courses-en"
 
 if (-not (Test-Path $srcCourses)) {
-    throw "courses/ not found at $srcCourses"
+    throw "courses-en/ not found at $srcCourses"
 }
 
 New-Item -ItemType Directory -Force -Path $dist | Out-Null
@@ -27,13 +27,13 @@ New-Item -ItemType Directory -Force -Path $dist | Out-Null
 $image = if ($env:GOLANG_IMAGE) { $env:GOLANG_IMAGE } else { "golang:1.23-bookworm" }
 $container = "mockctl-embed-build"
 Write-Host "Using image:  $image"
-Write-Host "Staging courses: $srcCourses -> $staged"
+Write-Host "Staging courses-en: $srcCourses -> $staged"
 
 if (Test-Path $staged) { Remove-Item -Recurse -Force $staged }
 
-# robocopy (built into Windows) mirrors courses/ but skips heavy, non-teaching
-# junk that would otherwise bloat the binary (courses/ is ~270 MB on disk,
-# mostly node_modules and virtualenvs in the example projects).
+# robocopy (built into Windows) mirrors courses-en/ but skips heavy, non-teaching
+# junk that would otherwise bloat the binary (mostly node_modules and
+# virtualenvs in the example projects).
 $excludeDirs = @(
     "node_modules", ".venv", "venv", "env", "__pycache__", ".pytest_cache",
     ".mypy_cache", ".ruff_cache", "dist", "build", "out", ".next", "target",
