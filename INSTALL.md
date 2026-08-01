@@ -17,7 +17,7 @@
 Одна команда (после включения Kubernetes в Docker Desktop):
 
 ```powershell
-irm https://raw.githubusercontent.com/FedorArbuzov/mock-exams/master/scripts/windows-mockctl-web.ps1 | iex
+irm https://gist.githubusercontent.com/FedorArbuzov/6f35928d38bb98d30913c1ea57516b77/raw/windows-mockctl-web.ps1 | iex
 ```
 
 Скрипт: экспортирует kubeconfig → `docker pull` → `docker run` → проверка.
