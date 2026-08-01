@@ -17,7 +17,6 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE: ghcr.io/${{ github.repository }}/mockctl-web
 
 jobs:
   build-push:
@@ -25,6 +24,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set image name (GHCR requires lowercase)
+        run: echo "IMAGE=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')/mockctl-web" >> $GITHUB_ENV
 
       - uses: docker/login-action@v3
         with:

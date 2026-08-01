@@ -23,6 +23,8 @@ remotion/out/
 # Local build artifacts, logs, and editor state (not for the repo)
 .cursor/
 mockctl/mockctl.exe
+mockctl/mockctl.exe~
+mockctl/dist/
 mockctl.exe
 mockctl_build_log.txt
 mockctl_web_stdout.log
