@@ -42,8 +42,11 @@ if (-not $pullOk) {
     if ($LASTEXITCODE -ne 0) { throw "Image not found: $Image" }
 }
 
-# 5. Run
+# 5. Run (ignore "No such container" when first start)
+$prev = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
 docker rm -f $Container 2>$null | Out-Null
+$ErrorActionPreference = $prev
 docker run -d `
     --name $Container `
     --restart unless-stopped `
