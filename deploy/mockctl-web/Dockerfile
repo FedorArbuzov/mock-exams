@@ -29,4 +29,4 @@ WORKDIR /work
 EXPOSE 8091
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["web", "--no-open", "--port", "8091"]
+CMD ["web", "--no-open", "--bind", "0.0.0.0", "--port", "8091"]

@@ -32,9 +32,11 @@ import (
 
 // Options configures Serve.
 type Options struct {
-	// Port to listen on. The server always binds to 127.0.0.1, never to a
-	// public interface, since it just mirrors the local repo's courses-en/.
+	// Port to listen on.
 	Port int
+	// Bind is the listen address. Empty or omitted means 127.0.0.1 (local
+	// mockctl.exe). Use 0.0.0.0 inside Docker so published ports work.
+	Bind string
 	// CoursesDir overrides the directory to serve from disk. Empty means
 	// "./courses-en" relative to the current working directory. Ignored when
 	// FS is set.
@@ -60,8 +62,13 @@ func Serve(opts Options) error {
 		return err
 	}
 
-	addr := fmt.Sprintf("127.0.0.1:%d", opts.Port)
-	url := fmt.Sprintf("http://%s/", addr)
+	bind := opts.Bind
+	if bind == "" {
+		bind = "127.0.0.1"
+	}
+	addr := fmt.Sprintf("%s:%d", bind, opts.Port)
+	// Always advertise localhost in logs/browser — even when bind is 0.0.0.0.
+	url := fmt.Sprintf("http://127.0.0.1:%d/", opts.Port)
 
 	engine := lab.NewEngine(fsys)
 

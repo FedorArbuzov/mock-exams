@@ -212,7 +212,8 @@ func runUninstall(args []string) error {
 
 func runWeb(args []string) error {
 	fs := flag.NewFlagSet("web", flag.ExitOnError)
-	port := fs.Int("port", 8091, "port to listen on (bound to 127.0.0.1)")
+	port := fs.Int("port", 8091, "port to listen on")
+	bind := fs.String("bind", "127.0.0.1", "listen address (use 0.0.0.0 in Docker so -p works)")
 	coursesDir := fs.String("courses-dir", "", "path to the courses directory (default: ./courses-en)")
 	noOpen := fs.Bool("no-open", false, "do not open a browser automatically")
 	if err := fs.Parse(args); err != nil {
@@ -221,6 +222,7 @@ func runWeb(args []string) error {
 
 	opts := webui.Options{
 		Port:        *port,
+		Bind:        *bind,
 		CoursesDir:  *coursesDir,
 		OpenBrowser: !*noOpen,
 	}
