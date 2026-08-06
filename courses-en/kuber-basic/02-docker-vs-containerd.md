@@ -37,7 +37,7 @@ Most clusters today run **containerd** or **CRI-O** as the runtime — not Docke
 | Used as a Kubernetes runtime? | No longer (only via a shim) | Yes, by default |
 | Where you'll run into it | Developer machines, CI | Inside cluster nodes |
 
-## On your minikube
+## On your cluster
 
 Check the runtime your cluster uses:
 
@@ -45,7 +45,7 @@ Check the runtime your cluster uses:
 kubectl get nodes -o wide
 ```
 
-The `CONTAINER-RUNTIME` column will typically show `containerd://...` or `docker://...`, depending on the minikube version and flags.
+The `CONTAINER-RUNTIME` column will typically show `containerd://...` (common on Docker Desktop Kubernetes).
 
 ## What to actually use day to day
 

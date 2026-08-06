@@ -2,9 +2,9 @@
 
 The goal: create, watch, and delete a Pod, and get comfortable reading its state.
 
-> Before starting: your cluster is running (`mockctl up`), and `kubectl get nodes` shows `Ready`.
+> **Before starting:** Docker Desktop Kubernetes is enabled and bootstrap finished (`kubectl config use-context docker-desktop`, nodes Ready). See [ENVIRONMENT.md](ENVIRONMENT.md).
 
-> **Interactive check.** When you open this lab in `mockctl web`, an **Interactive lab** panel appears at the bottom of the page. Press **Start lab** to clear any leftover Pods, do the tasks below (the auto-check targets **Task 3**: Pod `web` in namespace `default`), then press **Check** for a verdict. **Cleanup** removes this lab's Pods and leaves the cluster running.
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel: **Start lab** clears leftover Pods; do the tasks (auto-check targets **Task 3**: Pod `web` in `default`); press **Check**. **Cleanup** removes this lab's Pods and leaves the cluster running.
 
 ## Task 1. Run a bare Pod
 

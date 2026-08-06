@@ -2,7 +2,9 @@
 
 The goal: split objects across namespaces, reach across them, and switch your "current" namespace.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. **Start lab** removes `team-a`/`team-b` if they exist. Auto-check target: **Tasks 1–2** — namespaces `team-a` and `team-b` exist, each with a Ready `web` Deployment. Press **Check** before Task 6 (which deletes the namespaces). **Cleanup** deletes both namespaces.
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md).
+
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel: **Start lab** removes `team-a`/`team-b` if they exist. Auto-check target: **Tasks 1–2** — namespaces `team-a` and `team-b` exist, each with a Ready `web` Deployment. Press **Check** before Task 6 (which deletes the namespaces). **Cleanup** deletes both namespaces.
 
 ## Task 1. Create two namespaces
 

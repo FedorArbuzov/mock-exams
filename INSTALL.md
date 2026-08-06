@@ -2,6 +2,8 @@
 
 Локальный Kubernetes-кластер за одну команду через утилиту [`mockctl`](mockctl/README.md).
 
+> **Quick start:** Docker Desktop -> Kubernetes -> one-liner instructions are in [QUICKSTART.md](QUICKSTART.md).
+
 ## Требования
 
 - **Docker** запущен:

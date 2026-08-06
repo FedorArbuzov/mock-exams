@@ -2,7 +2,9 @@
 
 The goal: watch the self-healing "magic" happen, and get a feel for how selector and labels connect.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. **Start lab** clears leftovers; finish the tasks, then press **Check**. Auto-check target: **Task 1** — ReplicaSet `web-rs` with 4 replicas of `nginx:1.27.1`, all Ready. **Cleanup** removes this lab's resources (the cluster keeps running).
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md).
+
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel: **Start lab** clears leftovers; finish the tasks, then press **Check**. Auto-check target: **Task 1** — ReplicaSet `web-rs` with 4 replicas of `nginx:1.27.1`, all Ready. **Cleanup** removes this lab's resources (the cluster keeps running).
 
 ## Task 1. Create a ReplicaSet
 

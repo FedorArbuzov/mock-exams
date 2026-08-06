@@ -34,13 +34,15 @@ Until that second piece exists, Ingress objects do nothing useful for browsers.
 
 The Ingress *object* only describes routes. The controller Pod still needs an entry point. Common options:
 
-### 1. NodePort (bare metal, labs, minikube)
+### 1. NodePort (bare metal, labs, Docker Desktop)
 
 A Service of type **NodePort** opens the same high port (30000–32767) on **every node**. Traffic:
 
 ```
 client → <any-node-IP>:<nodePort> → kube-proxy → controller Pod → your Ingress rules → app Service
 ```
+
+On Docker Desktop, node ports are also reachable as `http://127.0.0.1:<nodePort>/`.
 
 Example shape of the controller Service:
 
@@ -67,9 +69,9 @@ spec:
 ```
 
 Pros: works everywhere without a cloud LB.  
-Cons: ugly ports; you must know a node IP (or put another proxy in front).
+Cons: ugly ports; you must know a node IP (or use localhost on Docker Desktop).
 
-In the [final project](24-final-project.md), `mockctl --lb` is an edge nginx on your PC that always forwards to **nodeIP:32080**. You install the controller so its HTTP NodePort is exactly **32080**.
+In the [final project](24-final-project.md) you install the controller with a **fixed** NodePort `32080` and curl `http://127.0.0.1:32080/`.
 
 ### 2. LoadBalancer (cloud / MetalLB)
 
@@ -80,7 +82,7 @@ client → EXTERNAL-IP:80 → controller Service (type LoadBalancer) → control
 ```
 
 Pros: looks like a normal website (`http://a.b.c.d/` or a DNS name).  
-Cons: needs a provider that can create LBs; on plain minikube/docker-driver you usually do **not** get a real EXTERNAL-IP without extra tooling.
+Cons: needs a provider that can create LBs; on plain Docker Desktop you usually do **not** get a real EXTERNAL-IP without extra tooling.
 
 Cloud controllers (AWS ALB Ingress, GCE Ingress) often skip “nginx in a Pod” and program the cloud LB from Ingress objects directly — same *idea* (one entry, many routes), different implementation.
 
@@ -91,27 +93,29 @@ The controller Pod shares the **node’s network namespace** and binds ports **8
 Pros: classic ports without a cloud LB.  
 Cons: only one such Pod per node; harder networking/security story; awkward with many nodes.
 
-### 4. Edge proxy / LB outside the cluster (what `mockctl --lb` models)
+### 4. Edge proxy / LB outside the cluster
 
-In production you often have a cloud LB or a reverse proxy **outside** Kubernetes that forwards to the controller’s NodePort (or to node IPs). Locally:
+In production you often have a cloud LB or a reverse proxy **outside** Kubernetes that forwards to the controller’s NodePort (or to node IPs). Conceptually:
 
 ```
-browser → localhost:8080 (mockctl-lb nginx container)
+browser → localhost:8080 (edge nginx / cloud LB)
        → nodeIP:32080 (Ingress Controller NodePort)
        → Ingress Controller Pod
        → Ingress rules → ClusterIP Services → app Pods
 ```
 
-The edge piece is **not** an Ingress object. It only solves “how do I reach the controller from my laptop?” Path routing (`/`, `/api`, `/admin`) still belongs to Ingress.
+The edge piece is **not** an Ingress object. It only solves “how do I reach the controller from outside?” Path routing (`/`, `/api`, `/admin`) still belongs to Ingress.
+
+On Docker Desktop for this course we skip a separate edge proxy and hit the NodePort on **localhost** directly.
 
 ### Quick comparison
 
 | Exposure | Who listens for clients | Typical use |
 |---|---|---|
-| **NodePort** | every node on e.g. `:32080` | labs, bare metal, + optional edge proxy |
+| **NodePort** | every node on e.g. `:32080` (or `localhost` on DD) | labs, bare metal |
 | **LoadBalancer** | cloud/MetalLB EXTERNAL-IP `:80` | AWS/GCP/Azure, MetalLB on-prem |
 | **hostNetwork** | node `:80` / `:443` | small clusters, special setups |
-| **Edge LB + NodePort** | `localhost:8080` → nodes `:32080` | local stand / “LB in front of k8s” |
+| **Edge LB + NodePort** | `localhost:8080` → nodes `:32080` | production-shaped local stand |
 
 ### What to look at in the cluster
 
@@ -211,36 +215,52 @@ rules:
           backend: { service: { name: web, port: { number: 80 } } }
 ```
 
-## Ingress on minikube (lab path)
+## Ingress on Docker Desktop (lab path)
 
-For lessons **20–21**, the quick path is the minikube addon (it installs ingress-nginx for you):
+For lessons **20–21** and the [final project](24-final-project.md), install **ingress-nginx** with Helm (same idea as a managed addon, but you control NodePort):
 
 ```bash
-minikube -p mock-exams addons enable ingress
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --set controller.service.type=NodePort \
+  --set controller.service.nodePorts.http=32080
+
 kubectl get pods -n ingress-nginx
 kubectl -n ingress-nginx get svc ingress-nginx-controller
+# expect 80:32080/TCP
 ```
 
-Look at that Service: it is usually **NodePort**. The addon picks a random high port unless you change it.
+Need Helm? https://helm.sh/docs/intro/install/ — also see [ENVIRONMENT.md](ENVIRONMENT.md).
 
 Once the controller is running, `ingressClassName: nginx` works for Ingress objects.
 
-For the hostname `app.local` to resolve to minikube's IP, add a line to your hosts file:
+On Docker Desktop, hit the controller on localhost:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:32080/
+# 404 (no Ingress rules yet) means the controller is up
+```
+
+For hostname routing (`app.local`), add a line to your hosts file pointing at **127.0.0.1**:
 
 - Windows: `C:\Windows\System32\drivers\etc\hosts`
 - macOS / Linux: `/etc/hosts`
 
 ```
-<minikube ip>   app.local
+127.0.0.1   app.local
 ```
 
-Get that IP with:
+Then curl with an explicit port (or use `--resolve`):
 
 ```bash
-minikube -p mock-exams ip
+curl http://app.local:32080/
+curl --resolve app.local:32080:127.0.0.1 http://app.local:32080/
 ```
 
-> **Final project** uses a different install: bare nodes + **Helm** with a **fixed** NodePort `32080`, plus `mockctl --lb`. That is the same controller idea — only exposure and install method change. See [24-final-project.md](24-final-project.md).
+> **Final project** uses the same Helm install with fixed NodePort `32080`. See [24-final-project.md](24-final-project.md).
 
 ## Commands worth knowing
 

@@ -2,7 +2,9 @@
 
 In this lab you'll deliberately break the cluster and practice diagnosing it through events and logs.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. Here **Start lab** does the breaking for you: it creates namespace `lab-tshoot` and deploys **Scenario 1** with the image typo (`nginxx:1.27`). Diagnose it, fix the image to `nginx:1.27`, then press **Check** — it passes once Deployment `web` is Ready on the correct image. Scenarios 2–7 stay manual. **Cleanup** deletes the `lab-tshoot` namespace.
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md).
+
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel. Here **Start lab** does the breaking for you: it creates namespace `lab-tshoot` and deploys **Scenario 1** with the image typo (`nginxx:1.27`). Diagnose it, fix the image to `nginx:1.27`, then press **Check** — it passes once Deployment `web` is Ready on the correct image. Scenarios 2–7 stay manual. **Cleanup** deletes the `lab-tshoot` namespace.
 
 ## Setup
 

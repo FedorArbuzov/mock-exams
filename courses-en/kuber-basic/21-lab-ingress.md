@@ -2,30 +2,36 @@
 
 The goal: stand up an Ingress controller and route two apps behind one host, split by path.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. **Start lab** clears the `web`/`api` Deployments+Services and the `app` Ingress. Auto-check target: **Tasks 1–2** — Deployments `web`/`api` Ready, Services `web`/`api` exist, Ingress `app` exists (routing/TLS behaviour stays a manual `curl` check). **Cleanup** removes all of them.
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md). Install Helm if needed.
+
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel: **Start lab** clears the `web`/`api` Deployments+Services and the `app` Ingress. Auto-check target: **Tasks 1–2** — Deployments `web`/`api` Ready, Services `web`/`api` exist, Ingress `app` exists (routing/TLS behaviour stays a manual `curl` check). **Cleanup** removes all of them.
 
 ## Setup
 
-Enable the ingress addon on minikube:
+Install ingress-nginx with Helm (fixed HTTP NodePort **32080**):
 
 ```bash
-minikube -p mock-exams addons enable ingress
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --set controller.service.type=NodePort \
+  --set controller.service.nodePorts.http=32080
+
 kubectl get pods -n ingress-nginx
+kubectl -n ingress-nginx get svc ingress-nginx-controller
 ```
 
-Get the cluster's IP:
-
-```bash
-minikube -p mock-exams ip
-```
-
-Add a line to your hosts file:
+Add hostnames to your hosts file (point at localhost):
 
 ```
-<that IP>   app.local
+127.0.0.1   app.local web.local api.local
 ```
 
 (Windows: `C:\Windows\System32\drivers\etc\hosts`, macOS/Linux: `/etc/hosts`).
+
+On Docker Desktop, Ingress traffic goes to **http://127.0.0.1:32080/** (or `http://app.local:32080/`).
 
 ## Task 1. Two applications
 
@@ -150,19 +156,22 @@ kubectl get ingress
 Check it:
 
 ```bash
-curl http://app.local/
-curl http://app.local/api
+curl http://app.local:32080/
+curl http://app.local:32080/api
+# if DNS hosts feel awkward:
+curl --resolve app.local:32080:127.0.0.1 http://app.local:32080/
+curl --resolve app.local:32080:127.0.0.1 http://app.local:32080/api
 ```
 
 **Check:** `/` returns `hello from WEB`, `/api` returns `hello from API`.
 
 ## Task 3. Routing by host
 
-Add `web.local` and `api.local` to your hosts file (same IP as before). Rewrite `ingress.yaml` so **each host** has its own rule — `web.local` → Service `web`, `api.local` → Service `api`, both path `/`.
+Keep `web.local` and `api.local` in your hosts file (same `127.0.0.1`). Rewrite `ingress.yaml` so **each host** has its own rule — `web.local` → Service `web`, `api.local` → Service `api`, both path `/`.
 
 ```bash
-curl http://web.local
-curl http://api.local
+curl http://web.local:32080/
+curl http://api.local:32080/
 ```
 
 ## Task 4. A broken Ingress
@@ -215,10 +224,13 @@ spec:
 
 ```bash
 kubectl apply -f ingress.yaml
-curl -k https://app.local/
+curl -k https://app.local:32080/
+# HTTPS NodePort may differ — check:
+kubectl -n ingress-nginx get svc ingress-nginx-controller
+# then use that https nodePort, e.g. curl -k https://app.local:<httpsNodePort>/
 ```
 
-**Check:** `curl -k` (skip cert verification, since it's self-signed) gets back `hello from WEB` over HTTPS. Plain `curl https://app.local/` without `-k` fails with a certificate error — that's expected for a self-signed cert.
+**Check:** `curl -k` (skip cert verification, since it's self-signed) gets back `hello from WEB` over HTTPS. Plain `curl https://…` without `-k` fails with a certificate error — that's expected for a self-signed cert.
 
 ## Cleanup
 

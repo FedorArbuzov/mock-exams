@@ -1,10 +1,24 @@
 # Kubernetes Basic
 
-A beginner Kubernetes course. Assumes a local **minikube** cluster (profile `mock-exams`) with `kubectl` installed.
+A beginner Kubernetes course. Assumes **Docker Desktop Kubernetes** with `kubectl` installed, plus the courses UI from [QUICKSTART.md](../../QUICKSTART.md).
 
 **Prerequisites:** [`containers-basic`](../containers-basic/README.md) — images, Dockerfile, compose, networking and registries ([`deploy/containers`](../../deploy/containers/README.md)). Without it, Pods, Services and pull policy tend to feel arbitrary.
 
 > This is the entry-level course. Next up: [`kuber-intermediate`](../kuber-intermediate/README.md), then [`kuber-advanced`](../kuber-advanced/README.md). Prepping for CKAD? See [`mock-ckad`](../mock-ckad/README.md). Full course map: [`courses/README.md`](../README.md).
+
+## Environment
+
+See **[ENVIRONMENT.md](ENVIRONMENT.md)** for the full setup. Short version:
+
+1. Docker Desktop with Kubernetes enabled.
+2. One-liner from [QUICKSTART.md](../../QUICKSTART.md) → courses UI at http://127.0.0.1:8091/
+3. Context: `kubectl config use-context docker-desktop`
+4. Check: `kubectl get nodes` shows nodes **Ready**
+
+Optional:
+
+- Lessons 14–15: install **metrics-server** (commands in ENVIRONMENT.md).
+- Lessons 20–21 and the final project: install **ingress-nginx** with Helm (commands in ENVIRONMENT.md / lesson 20).
 
 ## Syllabus
 
@@ -55,11 +69,11 @@ A beginner Kubernetes course. Assumes a local **minikube** cluster (profile `moc
 
 ## What the labs need
 
-- A running cluster: `mockctl up` (most labs). The final project: `mockctl up --nodes 2 --no-addons --lb` (bare nodes + edge LB; see lesson 24).
-- `kubectl` on your `PATH`, or invoked with `--kubeconfig .\output\kubeconfig.yaml`.
-- Sanity check: `kubectl get nodes` shows the node as `Ready`.
-- For lessons 14–15 (Probes and Resources): `minikube -p mock-exams addons enable metrics-server`.
-- For lessons 20–21 (Ingress): ingress addon (`mockctl up` enables it by default). Lesson 24 starts **without** addons on purpose.
+- A running Docker Desktop Kubernetes cluster (see [ENVIRONMENT.md](ENVIRONMENT.md)).
+- `kubectl` on your `PATH`, context `docker-desktop`.
+- Sanity check: `kubectl get nodes` shows nodes as `Ready`.
+- Lessons 14–15: metrics-server.
+- Lessons 20–21 and 24: ingress-nginx via Helm.
 
 ## A note on shell examples
 

@@ -2,7 +2,9 @@
 
 The goal: expose a group of Pods under one stable name, and confirm traffic actually gets load-balanced across them.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. **Start lab** clears any leftover `web` Deployment/Service; create the Deployment and Service, then press **Check**. Auto-check target: **Task 1** — Deployment `web` Ready, Service `web` with selector `app=web` and at least one Endpoint. Run Check with the selector set to `app=web` (restore it after Task 5). **Cleanup** removes the `web` Deployment and Service.
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md).
+
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel: **Start lab** clears any leftover `web` Deployment/Service; create the Deployment and Service, then press **Check**. Auto-check target: **Task 1** — Deployment `web` Ready, Service `web` with selector `app=web` and at least one Endpoint. Run Check with the selector set to `app=web` (restore it after Task 5). **Cleanup** removes the `web` Deployment and Service.
 
 ## Setup
 
@@ -86,13 +88,13 @@ To actually see the balancing in action, let's make each Pod serve its own name.
 
 1. Edit `svc.yaml`: change `type` to `NodePort` and add `nodePort: 30080` under the port entry (keep port 80 / targetPort 80).
 2. `kubectl apply -f svc.yaml`.
-3. Open the Service through minikube:
+3. On Docker Desktop, NodePorts are on localhost:
    ```bash
-   minikube -p mock-exams service web --url
+   curl http://127.0.0.1:30080/
+   # or open http://127.0.0.1:30080/ in a browser
    ```
-4. Open the resulting URL in a browser.
 
-**Check:** you see the nginx page in your browser.
+**Check:** you see the nginx page.
 
 ## Task 5. A selector pointed at nothing
 

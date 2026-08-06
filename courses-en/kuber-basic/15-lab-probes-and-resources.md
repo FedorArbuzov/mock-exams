@@ -2,14 +2,17 @@
 
 The goal: see liveness and readiness actually do something, and watch how Pods behave under resource limits.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. This lab is mostly observational (probes, OOM, QoS), so the auto-check is light: **Task 1** — Pod `ready-demo` exists, uses `nginx:1.27`, and is Running (its readiness you toggle by hand in the lab). **Cleanup** removes all the demo Pods.
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md). Install metrics-server if you have not already.
+
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel. This lab is mostly observational (probes, OOM, QoS), so the auto-check is light: **Task 1** — Pod `ready-demo` exists, uses `nginx:1.27`, and is Running (its readiness you toggle by hand in the lab). **Cleanup** removes all the demo Pods.
 
 ## Setup
 
-Enable metrics-server on minikube so `kubectl top` works:
+Install metrics-server so `kubectl top` works (see [ENVIRONMENT.md](ENVIRONMENT.md)):
 
 ```bash
-minikube -p mock-exams addons enable metrics-server
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+# If kubectl top stays empty on Docker Desktop, also apply the kubelet-insecure-tls patch from ENVIRONMENT.md
 ```
 
 ## Task 1. readinessProbe

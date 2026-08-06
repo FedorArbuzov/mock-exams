@@ -67,17 +67,20 @@ kubectl run tmp --rm -it --image=busybox:1.36 --restart=Never -- sh
 # wget -qO- http://web
 ```
 
-## Reaching a minikube Service from your host
+## Reaching a Service from your host
 
-minikube has a handy shortcut:
+On Docker Desktop Kubernetes, the simplest options are:
 
-```bash
-minikube -p mock-exams service web
-```
-
-It opens a tunnel and, most of the time, launches a browser for you. Or just forward the port yourself:
+**port-forward** (works for ClusterIP and NodePort):
 
 ```bash
 kubectl port-forward svc/web 8080:80
-# then open http://localhost:8080
+# then open http://127.0.0.1:8080
+```
+
+**NodePort** — on Docker Desktop, node ports are reachable on localhost:
+
+```bash
+# if the Service uses nodePort: 30080
+curl http://127.0.0.1:30080/
 ```

@@ -153,8 +153,10 @@ kubectl top pod                        # actual usage (needs metrics-server)
 kubectl top node
 ```
 
-Enabling `metrics-server` on minikube:
+Installing `metrics-server` (needed for `kubectl top`) — see also [ENVIRONMENT.md](ENVIRONMENT.md):
 
 ```bash
-minikube -p mock-exams addons enable metrics-server
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ```
+
+On Docker Desktop, if `kubectl top` stays empty, patch metrics-server with `--kubelet-insecure-tls` (command in ENVIRONMENT.md).

@@ -2,7 +2,9 @@
 
 The goal: pull config and secrets out of the image, feeding them in through both environment variables and files.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. **Start lab** creates namespace `lab-cs` and clears leftovers; finish the tasks, then press **Check**. Auto-check target: ConfigMap `app-config` (keys `GREETING`, `LOG_LEVEL`) and Secret `db-secret` (keys `DB_USER`, `DB_PASSWORD`) in `lab-cs`. **Cleanup** deletes the `lab-cs` namespace.
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md).
+
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel: **Start lab** creates namespace `lab-cs` and clears leftovers; finish the tasks, then press **Check**. Auto-check target: ConfigMap `app-config` (keys `GREETING`, `LOG_LEVEL`) and Secret `db-secret` (keys `DB_USER`, `DB_PASSWORD`) in `lab-cs`. **Cleanup** deletes the `lab-cs` namespace.
 
 ## Setup
 

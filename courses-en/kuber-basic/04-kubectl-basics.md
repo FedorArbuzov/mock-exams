@@ -4,20 +4,20 @@
 
 ## How kubectl finds your cluster
 
-Through a **kubeconfig** file. By default it looks in `~/.kube/config`, but you can point it elsewhere explicitly:
+Through a **kubeconfig** file. By default it looks in `~/.kube/config` (Docker Desktop writes the `docker-desktop` context there). You can also point elsewhere:
 
 ```bash
-kubectl --kubeconfig ./output/kubeconfig.yaml get nodes
+kubectl --kubeconfig ~/.mock-exams/kubeconfig.yaml get nodes
 ```
 
 or via an environment variable:
 
 ```bash
 # bash / zsh
-export KUBECONFIG=./output/kubeconfig.yaml
+export KUBECONFIG=~/.mock-exams/kubeconfig.yaml
 
 # PowerShell
-$env:KUBECONFIG = ".\output\kubeconfig.yaml"
+$env:KUBECONFIG = "$env:USERPROFILE\.mock-exams\kubeconfig.yaml"
 ```
 
 A kubeconfig holds three kinds of entries:
@@ -29,7 +29,7 @@ A kubeconfig holds three kinds of entries:
 ```bash
 kubectl config view
 kubectl config get-contexts
-kubectl config use-context mock-exams
+kubectl config use-context docker-desktop
 kubectl config set-context --current --namespace=dev
 ```
 

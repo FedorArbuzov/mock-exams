@@ -2,7 +2,9 @@
 
 The goal: walk through the full lifecycle — create, update, roll back, scale.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. **Start lab** clears leftovers; then press **Check**. Auto-check target: **Task 1 state** — Deployment `web`, 2 replicas of `nginx:1.27.1`, all Ready (image after the Task 3 rollback). Later tasks scale/break the Deployment, so run Check while it's on 2× `nginx:1.27.1`. **Cleanup** removes this lab's resources.
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md).
+
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel: **Start lab** clears leftovers; then press **Check**. Auto-check target: **Task 1 state** — Deployment `web`, 2 replicas of `nginx:1.27.1`, all Ready (image after the Task 3 rollback). Later tasks scale/break the Deployment, so run Check while it's on 2× `nginx:1.27.1`. **Cleanup** removes this lab's resources.
 
 ## Task 1. Create a Deployment
 

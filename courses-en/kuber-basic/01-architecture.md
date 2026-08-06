@@ -9,7 +9,7 @@ The machines split into two roles:
 - **Control plane** — the "brain" of the cluster; makes the decisions.
 - **Worker nodes** — the "hands"; this is where your applications actually run.
 
-In minikube, the control plane and the worker are usually the same node.
+On Docker Desktop Kubernetes, the control plane and (if enabled) a worker are separate nodes — for example `desktop-control-plane` and `desktop-worker`. On many small local clusters they can also share one machine.
 
 ## Control plane components
 
@@ -19,7 +19,7 @@ In minikube, the control plane and the worker are usually the same node.
 | **etcd** | A distributed key-value store. Holds **all** cluster state: objects, configs, secrets. |
 | **kube-scheduler** | Decides **which node** a new Pod should run on (based on resources, constraints, affinity). |
 | **kube-controller-manager** | A bundle of controllers that keep nudging the cluster toward its desired state — e.g. the ReplicaSet controller makes sure the right number of Pods exist. |
-| **cloud-controller-manager** | Integration with a cloud provider (load balancers, volumes, nodes). Usually not needed on minikube or bare metal. |
+| **cloud-controller-manager** | Integration with a cloud provider (load balancers, volumes, nodes). Usually not needed on local Docker Desktop clusters or bare metal. |
 
 ## Worker node components
 
