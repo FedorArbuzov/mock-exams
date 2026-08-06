@@ -1,4 +1,4 @@
-# mockctl web + kubectl — courses embedded, talks to host minikube via mounted kubeconfig.
+# mockctl web + kubectl — courses embedded; talks to host K8s via mounted kubeconfig.
 FROM golang:1.23-bookworm AS build
 
 WORKDIR /src/mockctl
