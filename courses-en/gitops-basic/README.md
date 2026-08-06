@@ -2,7 +2,7 @@
 
 Course for **DevOps / Platform**: **GitOps** principles, the **Argo CD** controller, the **Application** CR, **sync policy**, **drift**, and **self-heal** on a local **mockctl** cluster.
 
-**Prerequisites:** [`kuber-basic`](../kuber-basic/README.md) (Pod, Deployment, Service); preferably [`kuber-intermediate/07-helm`](../kuber-intermediate/07-helm.md). Cluster: [`mockctl up`](../../mockctl/README.md) → `output/kubeconfig.yaml`.
+**Prerequisites:** [`kuber-basic`](../kuber-basic/README.md) (Pod, Deployment, Service); preferably [`helm-charts`](../helm-charts/README.md) or [`kuber-intermediate/07-helm`](../kuber-intermediate/07-helm.md). Cluster: Docker Desktop Kubernetes — see [`kuber-basic/ENVIRONMENT.md`](../kuber-basic/ENVIRONMENT.md) and [QUICKSTART.md](../../QUICKSTART.md).
 
 **Lab environment:** [`deploy/gitops`](../../deploy/gitops/README.md):
 

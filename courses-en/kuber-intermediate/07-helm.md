@@ -159,3 +159,5 @@ helm get manifest my-app           # what YAML was deployed
 - Where Helm stores the release history?
 
 In the lab [08-lab-helm.md](08-lab-helm.md) we'll build our own chart and install Postgres from Bitnami.
+
+For a full authoring path (helpers, overlays, dependencies, hooks, OCI, CI/GitOps) see [`helm-charts`](../helm-charts/README.md).

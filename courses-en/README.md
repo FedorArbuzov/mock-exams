@@ -13,8 +13,11 @@ linux-basic  →  linux-intermediate  →  linux-advanced
        └── linux-security (spec., after intermediate)
 
 linux-basic  →  containers-basic  →  kuber-basic  →  kuber-intermediate  →  kuber-advanced
-                    (deploy/containers)     ↑              │
-              gitlab-intermediate (registry) ─┘              ├── mock-ckad
+                    (deploy/containers)     ↑              │                      │
+              gitlab-intermediate (registry) ─┘              ├── mock-ckad         │
+                                                             ├── helm-charts  ←────┘ (after basic; deep chart authoring)
+                                                             ├── mock-cka
+                                                             └── mock-cks   [planned]
 
 containers-basic + postgresql-basic  →  fastapi  (deploy/fastapi)  —  backend API, 42 lessons
        ↑                    ↑
@@ -36,8 +39,6 @@ containers-basic + postgresql-basic  →  fastapi  (deploy/fastapi)  —  backen
               ├── behavioral-interviews  (theory: STAR, story bank, mock)  —  before interviews
               ├── python-deep-dive  (GIL, memory, descriptors, interview Q&A)  —  in parallel with backend
               └── ood-python  (theory: SOLID, patterns, parking/LRU/rate limiter)  —  before interviews
-                                                             ├── mock-cka
-                                                             └── mock-cks   [planned]
 
 aws-basic  →  aws-terraform  →  aws-intermediate  →  aws-advanced   (Docker + LocalStack / EKS)
 
@@ -114,7 +115,8 @@ Full DevOps path: [devops-path.md](devops-path.md).
 | Course | Level | Duration | Description |
 |---|---|---|---|
 | [kuber-basic](kuber-basic/README.md) | Junior | ~10–14 h | Architecture, kubectl, Pod, Deployment, Service, Ingress, Troubleshooting. A "from scratch" start. |
-| [kuber-intermediate](kuber-intermediate/README.md) | Middle | ~14–20 h | StatefulSet, RBAC, Helm, HPA, NetworkPolicy, Probes/Resources deeper, mini-project. |
+| [kuber-intermediate](kuber-intermediate/README.md) | Middle | ~14–20 h | StatefulSet, RBAC, Helm intro, HPA, NetworkPolicy, Probes/Resources deeper, mini-project. |
+| [helm-charts](helm-charts/README.md) | Middle | ~12–16 h | Chart authoring: templates, helpers, values overlays, dependencies, hooks, OCI, CI/GitOps. |
 | [kuber-advanced](kuber-advanced/README.md) | Senior | ~16–24 h | CKA-core, CKS-lite, GitOps, optional observability/operators. 27 lessons by phase. |
 | [mock-ckad](mock-ckad/README.md) | CKAD-prep | 3 × 2 h | CKAD exam simulation: 3 runs of 7 tasks, auto-graded. |
 | [mock-cka](mock-cka/README.md) | CKA-prep | 3 × 2 h | CKA simulation: RBAC, scheduling, etcd snapshot, PVC, troubleshooting. `mockctl`. |

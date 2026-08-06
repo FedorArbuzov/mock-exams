@@ -32,6 +32,8 @@ See **[ENVIRONMENT.md](ENVIRONMENT.md)** (same Docker Desktop + courses UI path 
 7. [Helm: install, upgrade, values, templates](07-helm.md)
 8. [Lab: package a demo application into a Helm chart](08-lab-helm.md)
 
+> Deep chart authoring (helpers, dependencies, hooks, OCI, CI/GitOps): [`helm-charts`](../helm-charts/README.md).
+
 ### Access and networking
 
 9. [RBAC: ServiceAccount, Role, RoleBinding](09-rbac.md)
@@ -66,7 +68,7 @@ See **[ENVIRONMENT.md](ENVIRONMENT.md)** (same Docker Desktop + courses UI path 
 ## What you should end up with
 
 - You can confidently answer "how do I deploy this application to k8s": state, configs, secrets, HPA, ingress, RBAC.
-- You can read and write Helm charts.
+- You can read and write basic Helm charts (see [`helm-charts`](../helm-charts/README.md) for the full authoring track).
 - You can explain QoS classes, the causes of OOMKilled and Evicted, what graceful shutdown and lifecycle hooks are.
 - You understand NetworkPolicy (and when your CNI actually enforces it).
 - You can cut traffic between blue and green Deployments with a Service selector switch (and explain when canary / RollingUpdate fit better).
