@@ -26,6 +26,20 @@ irm https://raw.githubusercontent.com/FedorArbuzov/mock-exams-win/main/windows-m
 
 Курсы: http://127.0.0.1:8091/
 
+## macOS / Linux (bash) — рекомендуется
+
+**Нужно:** Docker Desktop с включённым Kubernetes (Settings → Kubernetes → Enable Kubernetes).
+
+Одна команда:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mock-exams-win/main/unix-mockctl-web.sh | bash
+```
+
+Образ по умолчанию: `ghcr.io/fedorarbuzov/mock-exams/mockctl-web:latest` (переопределить: `export MOCKCTL_WEB_IMAGE=...`).
+
+Курсы: http://127.0.0.1:8091/
+
 ### Windows — legacy (`mockctl.exe`)
 
 На Windows 11 с **Smart App Control** скачанный `.exe` может не запуститься. Предпочтительнее bootstrap выше.
