@@ -18,14 +18,15 @@ Pod  →  PVC  →  StorageClass  →  (provisioner creates)  →  PV
 
 **Static.** An admin creates PVs in advance, users "claim" the size they need via a PVC, and k8s binds a suitable PV to the PVC. Manual labor, rarely used.
 
-**Dynamic.** The PVC specifies a StorageClass; the provisioner (the plugin for that StorageClass) creates a PV of the required size **itself**. This is the default behavior in all modern clusters, including minikube.
+**Dynamic.** The PVC specifies a StorageClass; the provisioner (the plugin for that StorageClass) creates a PV of the required size **itself**. This is the default behavior in all modern clusters, including Docker Desktop Kubernetes.
 
-In minikube there's a default StorageClass named `standard`:
+Check what you have locally:
 
 ```bash
 kubectl get sc
-# NAME                 PROVISIONER                RECLAIMPOLICY   ...
-# standard (default)   k8s.io/minikube-hostpath   Delete          ...
+# NAME                 PROVISIONER              RECLAIMPOLICY   ...
+# hostpath (default)   docker.io/hostpath       Delete          ...
+# (names vary — use whatever is marked default)
 ```
 
 If a PVC doesn't specify `storageClassName`, the default is used.
@@ -46,8 +47,8 @@ spec:
 
 After `kubectl apply`:
 
-1. K8s sees a PVC without an explicit `storageClassName` → uses the default (`standard`).
-2. The `minikube-hostpath` provisioner creates a PV.
+1. K8s sees a PVC without an explicit `storageClassName` → uses the default StorageClass.
+2. That class’s provisioner creates a PV.
 3. The PV and PVC are bound (`Bound`).
 4. Any pod with `volumes[].persistentVolumeClaim.claimName: data` will get this disk.
 
@@ -60,13 +61,13 @@ After `kubectl apply`:
 - `ReadWriteMany` (RWX) — many nodes read/write. Only NFS/CephFS/EFS and the like.
 - `ReadWriteOncePod` (RWOP, k8s 1.27+) — RW for **a single pod**, not a node.
 
-In minikube hostpath, only RWO is actually supported. That's fine for learning.
+On a typical local hostpath / local-path provisioner, only RWO is actually supported. That's fine for learning.
 
 ## Reclaim policy
 
 A PV's `reclaimPolicy` determines what happens after the PVC is deleted:
 
-- `Delete` — the provisioner deletes the actual disk. This is the default for most classes and for `standard` in minikube.
+- `Delete` — the provisioner deletes the actual disk. This is the default for most classes (including Docker Desktop’s default).
 - `Retain` — the PV remains, the disk is left untouched. It can later be "reused" if you know how (manually mark it `Available`).
 - `Recycle` — deprecated, don't use it.
 
@@ -119,14 +120,14 @@ if reclaim=Retain: PV remains in Released status
 
 ## StorageClass in more detail
 
-A minimal example:
+A minimal example (set `provisioner` to the same value as your default SC — see [ENVIRONMENT.md](ENVIRONMENT.md)):
 
 ```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: fast-ssd
-provisioner: k8s.io/minikube-hostpath
+provisioner: docker.io/hostpath   # REPLACE with: kubectl get sc … default provisioner
 reclaimPolicy: Retain
 volumeBindingMode: WaitForFirstConsumer
 ```
@@ -162,10 +163,11 @@ kubectl get pvc data -o yaml          # see the bound PV
 kubectl get pv pvc-... -o yaml        # path on the node, size
 ```
 
-It's handy to peek at where exactly the data lives in minikube:
+It's handy to peek at the bound volume details (path on the node varies by provisioner):
 
 ```bash
-minikube -p mock-exams ssh -- ls /tmp/hostpath-provisioner/
+kubectl get pv
+kubectl get pv "$(kubectl get pvc data -o jsonpath='{.spec.volumeName}')" -o yaml
 ```
 
 ## Checklist

@@ -151,3 +151,4 @@ Then open `http://127.0.0.1:9091/`.
 
 - Full installation guide: [INSTALL.md](INSTALL.md)
 - Bootstrap scripts repo: [mock-exams-win](https://github.com/FedorArbuzov/mock-exams-win)
+- Local build / rebuild: [deploy/mockctl-web/README.md](deploy/mockctl-web/README.md) (`scripts/dev-mockctl-web.ps1`)

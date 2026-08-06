@@ -7,7 +7,7 @@ The goal is to see the PVC/PV lifecycle by hand.
 ```bash
 kubectl create namespace lab-pv
 kubectl config set-context --current --namespace=lab-pv
-kubectl get sc                # the default should be 'standard'
+kubectl get sc                # note the (default) class — do not assume the name 'standard'
 ```
 
 ## Task 1. Create a PVC
@@ -101,14 +101,22 @@ kubectl logs reader
 
 ## Task 4. StorageClass with reclaim=Retain
 
-`sc-retain.yaml`:
+First discover your default provisioner:
+
+```bash
+kubectl get sc
+PROVISIONER=$(kubectl get sc -o jsonpath='{.items[?(@.metadata.annotations.storageclass\.kubernetes\.io/is-default-class=="true")].provisioner}')
+echo "use provisioner: $PROVISIONER"
+```
+
+`sc-retain.yaml` (replace the `provisioner` line with `$PROVISIONER`):
 
 ```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: keep
-provisioner: k8s.io/minikube-hostpath
+provisioner: docker.io/hostpath   # REPLACE with your default provisioner
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 ```
@@ -153,10 +161,11 @@ kubectl delete pv "$PV"
 
 ## Task 5 (optional). PVC expansion
 
-The minikube default StorageClass **supports** `allowVolumeExpansion`. Check:
+The default StorageClass may support `allowVolumeExpansion`. Check:
 
 ```bash
-kubectl get sc standard -o jsonpath='{.allowVolumeExpansion}'
+DEFAULT_SC=$(kubectl get sc -o jsonpath='{.items[?(@.metadata.annotations.storageclass\.kubernetes\.io/is-default-class=="true")].metadata.name}')
+kubectl get sc "$DEFAULT_SC" -o jsonpath='{.allowVolumeExpansion}{"\n"}'
 ```
 
 If `true`, try:
@@ -167,13 +176,13 @@ kubectl get pvc data
 kubectl describe pvc data | head -30
 ```
 
-**What should change:** capacity grows to 500Mi (on minikube hostpath this is a formality — the disk is really shared with the node; but you'll see an event about the change).
+**What should change:** capacity grows to 500Mi (on local hostpath this is often a formality — the disk is really shared with the node; but you'll see an event about the change).
 
-If `false`, skip the task; on real cloud classes this works transparently for the pod.
+If `false` or empty, skip the task; on real cloud classes this works transparently for the pod.
 
 ## Task 6. WaitForFirstConsumer
 
-Create a StorageClass with `volumeBindingMode: WaitForFirstConsumer` and a PVC for it:
+Create a StorageClass with `volumeBindingMode: WaitForFirstConsumer` and a PVC for it (same provisioner as Task 4):
 
 `sc-wait.yaml`:
 
@@ -182,7 +191,7 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: wait-sc
-provisioner: k8s.io/minikube-hostpath
+provisioner: docker.io/hostpath   # REPLACE with your default provisioner
 volumeBindingMode: WaitForFirstConsumer
 ```
 

@@ -2,7 +2,7 @@
 
 The goal is to bring up Postgres as a StatefulSet, see stable names and volumes, and verify that data **survives** pod deletion.
 
-You'll need: a running `mock-exams` cluster (`mockctl up`), with `kubectl` available.
+You'll need: Docker Desktop Kubernetes ready (`kubectl config use-context docker-desktop`, nodes Ready). See [ENVIRONMENT.md](ENVIRONMENT.md).
 
 ## Setup
 

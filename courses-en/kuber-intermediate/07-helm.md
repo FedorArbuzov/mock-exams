@@ -13,7 +13,7 @@ When you have a single application, `kubectl apply -f` is enough. When you have 
 
 ## Installing `helm`
 
-It's not included in `mockctl install`. Install it separately:
+It's not included with Docker Desktop. Install it separately:
 
 - macOS: `brew install helm`
 - Linux: `curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash`

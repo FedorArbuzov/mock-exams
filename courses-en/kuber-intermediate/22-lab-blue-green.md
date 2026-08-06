@@ -2,9 +2,9 @@
 
 The goal: stand up a green version next to a live blue one, flip the Service, and keep blue around for rollback.
 
-> Before starting: your cluster is running (`mockctl up`), and `kubectl get nodes` shows `Ready`.
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md). Docker Desktop Kubernetes ready, nodes Ready.
 
-> **Interactive check.** In `mockctl web`, use the **Interactive lab** panel under the title. **Start lab** creates namespace `lab-bluegreen` and deploys **blue** (`web-blue` + Service `web` → `version=blue`). You build and switch to **green**, then press **Check**. Auto-check target: green Deployment Ready on `nginx:1.28` (2 replicas), Service selector `version=green`, live Endpoints, and blue still present. **Cleanup** deletes the `lab-bluegreen` namespace.
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). Use the **Interactive lab** panel: **Start lab** creates namespace `lab-bluegreen` and deploys **blue** (`web-blue` + Service `web` → `version=blue`). You build and switch to **green**, then press **Check**. Auto-check target: green Deployment Ready on `nginx:1.28` (2 replicas), Service selector `version=green`, live Endpoints, and blue still present. **Cleanup** deletes the `lab-bluegreen` namespace.
 
 ## Setup
 

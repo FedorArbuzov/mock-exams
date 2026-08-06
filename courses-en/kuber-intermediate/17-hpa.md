@@ -19,7 +19,7 @@ Example: 4 pods, average CPU = 80%, target = 50%. `desired = ceil(4 × 80 / 50) 
 
 ## What it needs to work
 
-1. **Metrics API** in the cluster. For CPU/memory this is `metrics-server`. On minikube it is enabled by `mockctl up` (or `minikube addons enable metrics-server`).
+1. **Metrics API** in the cluster. For CPU/memory this is `metrics-server`. Install it as in [ENVIRONMENT.md](ENVIRONMENT.md) (Docker Desktop often needs the `--kubelet-insecure-tls` patch).
 2. **`requests`** for CPU/memory on the target Deployment. Without them HPA cannot compute the "utilization percentage".
 
 ```bash

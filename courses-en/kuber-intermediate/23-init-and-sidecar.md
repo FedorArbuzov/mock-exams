@@ -117,7 +117,7 @@ Advantages:
 - The sidecar shuts down **after** the main ones. Convenient for logs: "manage to flush the remaining logs before the pod dies".
 - Jobs finish correctly: the sidecar doesn't "prevent the Job from completing".
 
-In recent minikube versions (k8s 1.29+) this works.
+In recent Kubernetes versions (1.29+) this works.
 
 ## Restart policy and the kubelet
 

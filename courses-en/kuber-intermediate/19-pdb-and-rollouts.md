@@ -43,7 +43,8 @@ spec:
 ## `kubectl drain` behavior
 
 ```bash
-kubectl drain minikube --ignore-daemonsets --delete-emptydir-data
+kubectl drain desktop-worker --ignore-daemonsets --delete-emptydir-data
+# if you only have one node, drain that node name from: kubectl get nodes
 ```
 
 `drain` =:
@@ -52,7 +53,7 @@ kubectl drain minikube --ignore-daemonsets --delete-emptydir-data
 2. Evicts all pods (via the eviction API, which **respects** PDB).
 3. If the PDB doesn't allow it — drain "hangs", waiting for the deployment to recreate the other replicas on other nodes.
 
-In minikube there is a single node, so drain is mostly for demonstration.
+On Docker Desktop with a **worker** node, drain is meaningful: pods can move to the other node. On a **single-node** cluster, drain is mostly for demonstration (nowhere to reschedule).
 
 ## RollingUpdate in a Deployment — a built-in PDB analog
 

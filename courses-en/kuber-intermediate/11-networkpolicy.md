@@ -12,17 +12,17 @@ In Kubernetes, **by default** any pod can reach any other pod in any namespace. 
 
 ## What's needed for it to work
 
-A NetworkPolicy is a **specification**. It must be enforced by a **CNI plugin**. In minikube the default CNI (`bridge`/`auto`) **does not implement** NetworkPolicy — the rules are created but don't take effect.
+A NetworkPolicy is a **specification**. It must be enforced by a **CNI plugin**. Docker Desktop’s default CNI (and many simple local CNIs) **do not implement** NetworkPolicy — the rules are created but don't take effect.
 
-For the lab to work, bring up the cluster with calico:
+> **Optional on Docker Desktop.** Lessons 11–12 need a policy-capable CNI (e.g. Calico). If you stay on the default Docker Desktop cluster, read the theory, skip the enforcement checks, and skip final-project step 8. See [ENVIRONMENT.md](ENVIRONMENT.md).
+
+If you have a separate Calico (or similar) cluster for this lab:
 
 ```bash
-mockctl down
-minikube start -p mock-exams --driver=docker --cni=calico
-mockctl kubeconfig
+# example only — not the main Docker Desktop path
+# minikube start -p calico-lab --driver=docker --cni=calico
+kubectl get pods -n kube-system | grep -i calico
 ```
-
-(You could make a convenient `mockctl up --cni=calico` command — that's not in the utility yet.)
 
 ## Minimal example: "isolate a namespace"
 
@@ -193,6 +193,6 @@ nslookup backend.secure
 - What happens after applying a "default-deny" Ingress in a namespace?
 - Which two `from` filters, `namespaceSelector`+`podSelector`, form an AND, and which form an OR?
 - Why do you almost always need to explicitly allow egress to kube-dns?
-- Under which CNI on minikube does NetworkPolicy actually work?
+- Under which CNIs does NetworkPolicy actually work (and why Docker Desktop default usually does not)?
 
 In the lab [12-lab-networkpolicy.md](12-lab-networkpolicy.md) we'll build the "zero trust" pattern inside a namespace.

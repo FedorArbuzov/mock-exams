@@ -2,14 +2,14 @@
 
 ## Setup
 
-You need `metrics-server` enabled (it's brought up by `mockctl up`). Let's check:
+You need `metrics-server` (see [ENVIRONMENT.md](ENVIRONMENT.md)). Let's check:
 
 ```bash
 kubectl top nodes
 kubectl top pods -A | head
 ```
 
-If there's an error — `minikube -p mock-exams addons enable metrics-server` and wait a minute.
+If there's an error — apply metrics-server (and the Docker Desktop TLS patch if needed) from ENVIRONMENT.md, then wait a minute.
 
 ```bash
 kubectl create namespace lab-qos

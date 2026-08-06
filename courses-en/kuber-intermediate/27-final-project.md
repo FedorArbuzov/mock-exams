@@ -32,8 +32,10 @@ In parallel:
 
 ## Setup
 
+> **Before starting:** see [ENVIRONMENT.md](ENVIRONMENT.md). Install metrics-server and ingress-nginx (NodePort 32080) if missing.
+
 ```bash
-mockctl up
+kubectl config use-context docker-desktop
 kubectl create namespace app-prod
 kubectl label namespace app-prod name=app-prod
 kubectl config set-context --current --namespace=app-prod
@@ -215,6 +217,15 @@ kubectl rollout status deploy/web
 
 ## Step 4. Ingress
 
+Install the controller once if needed (NodePort **32080** — see [ENVIRONMENT.md](ENVIRONMENT.md)):
+
+```bash
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --set controller.service.type=NodePort \
+  --set controller.service.nodePorts.http=32080
+```
+
 `ingress.yaml`:
 
 ```yaml
@@ -223,6 +234,7 @@ kind: Ingress
 metadata:
   name: app
 spec:
+  ingressClassName: nginx
   rules:
     - host: app.local
       http:
@@ -242,12 +254,15 @@ kubectl apply -f ingress.yaml
 kubectl get ingress
 ```
 
-Local check:
+Local check (Ingress Controller NodePort **32080** on Docker Desktop):
 
 ```bash
-IP=$(minikube ip -p mock-exams)
-curl --resolve app.local:80:$IP http://app.local/
-curl --resolve app.local:80:$IP http://app.local/api
+# hosts file: 127.0.0.1 app.local   (optional)
+curl --resolve app.local:32080:127.0.0.1 http://app.local:32080/
+curl --resolve app.local:32080:127.0.0.1 http://app.local:32080/api
+# or without hosts:
+curl http://127.0.0.1:32080/
+curl http://127.0.0.1:32080/api
 ```
 
 ## Step 5. HPA for web and api
@@ -324,9 +339,11 @@ kubectl get jobs
 kubectl logs job/$(kubectl get jobs -o name | head -1 | sed 's@job.batch/@@')
 ```
 
-## Step 8. NetworkPolicy (requires calico — skip if on the default CNI)
+## Step 8. NetworkPolicy (optional — skip on Docker Desktop default CNI)
 
-If you have calico: deny all ingress into the namespace, except from the ingress-controller.
+Requires a policy-capable CNI (Calico, etc.). On default Docker Desktop, **skip this step** — policies won't enforce. See [ENVIRONMENT.md](ENVIRONMENT.md).
+
+If you have Calico: deny all ingress into the namespace, except from the ingress-controller.
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -357,7 +374,7 @@ spec:
 ```bash
 kubectl get all,pdb,hpa,ingress,sa,role,rolebinding,cronjob -n app-prod
 kubectl top pods -n app-prod
-curl --resolve app.local:80:$(minikube ip -p mock-exams) http://app.local/api
+curl --resolve app.local:32080:127.0.0.1 http://app.local:32080/api
 ```
 
 ## Cleanup
@@ -378,6 +395,6 @@ In a single project you used:
 - PDB for two Deployments.
 - ServiceAccount + Role + RoleBinding with **fine-grained** access.
 - CronJob connecting to a Secret via env.
-- NetworkPolicy "default-deny + allow-from-ingress" (with calico).
+- NetworkPolicy "default-deny + allow-from-ingress" (optional — only with a policy CNI).
 
 This is the production-ready minimum for a web application. Everything beyond it — observability, GitOps, security hardening — is the next course, [`kuber-advanced`](../kuber-advanced/README.md).

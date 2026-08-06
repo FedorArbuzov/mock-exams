@@ -2,12 +2,12 @@
 
 ## Setup
 
-This lab requires **calico** in minikube. If you don't have it yet:
+> **Optional.** This lab needs a CNI that **enforces** NetworkPolicy (e.g. Calico). On default Docker Desktop Kubernetes the policies will apply as objects but traffic will **not** be blocked — skip enforcement checks, or use a separate Calico cluster. See [ENVIRONMENT.md](ENVIRONMENT.md).
+
+Sanity check (optional Calico cluster):
 
 ```bash
-mockctl down
-minikube start -p mock-exams --driver=docker --cni=calico
-mockctl kubeconfig
+kubectl get pods -A | grep -iE 'calico|cilium|kube-router'
 ```
 
 Then:

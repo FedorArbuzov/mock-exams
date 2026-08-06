@@ -120,7 +120,7 @@ data-db-2    Bound   pvc-ccc...   1Gi   ReadWriteOnce
 
 The PVC name is formed as `<volumeClaimTemplate.name>-<statefulset-name>-<ordinal>`. These PVCs are **not deleted** when you delete the StatefulSet (by default), so you don't accidentally lose data.
 
-In minikube the default StorageClass is called `standard`, the provisioner is `k8s.io/minikube-hostpath`. Volumes live on the node under `/tmp/hostpath-provisioner`. This works "like real PVs" for learning purposes, but physically the files sit inside the minikube container.
+On Docker Desktop, use the **default StorageClass** (`kubectl get sc`). Volumes are provisioned locally on the node — good enough for learning, not a cloud disk.
 
 ## Update strategies
 

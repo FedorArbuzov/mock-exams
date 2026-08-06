@@ -1,6 +1,8 @@
 # 20. Lab: PDB, rolling update, drain
 
-In minikube there is a single node, so you can't fully "evacuate" the service — but we'll see all of the PDB and rolling-update behavior.
+On Docker Desktop with a **worker** node, drain can move pods off that node. On a **single-node** cluster you still see PDB blocking extra evictions, but pods have nowhere else to land — that's OK for learning.
+
+See [ENVIRONMENT.md](ENVIRONMENT.md) for drain tips.
 
 ## Setup
 
@@ -99,12 +101,15 @@ kubectl exec -n kube-system -it $(kubectl get pod -n kube-system -l k8s-app=kube
 Delete via eviction (there's a ready-made script `kubectl delete --grace-period=0`, but that is NOT via eviction; eviction is done through the API, and it's easier via `kubectl drain`):
 
 ```bash
-# Drain the current node (there's only one on minikube):
-NODE=$(kubectl get nodes -o name | head -1 | sed 's@node/@@')
+# Prefer a worker node if you have one:
+NODE=$(kubectl get nodes -l '!node-role.kubernetes.io/control-plane' -o jsonpath='{.items[0].metadata.name}')
+# fallback to any node:
+[ -z "$NODE" ] && NODE=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
+echo "draining $NODE"
 kubectl drain "$NODE" --ignore-daemonsets --delete-emptydir-data --force --pod-selector=app=web
 ```
 
-**What you'll see:** drain removes one pod, then "hangs" — because we have 4 replicas, and after removing 1 there are 3 left, but a new pod can't come up (the node is cordoned). The PDB doesn't allow evicting a second one.
+**What you'll see:** drain removes one pod, then may "hang" while waiting for PDB / reschedule. With a second node, a replacement pod can land there; with one node, the cordoned node blocks new pods until you uncordon.
 
 In a separate tab, check:
 

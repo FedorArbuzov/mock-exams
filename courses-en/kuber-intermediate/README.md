@@ -4,7 +4,14 @@ Intermediate level. It's assumed you've completed [`kuber-basic`](../kuber-basic
 
 The goal of this course is to turn "I know the objects" into "I build production-ready applications and understand operations".
 
-Local environment: the `mock-exams` cluster (`mockctl up`), `kubectl` in PATH, and Helm for lesson 6.
+## Environment
+
+See **[ENVIRONMENT.md](ENVIRONMENT.md)** (same Docker Desktop + courses UI path as basic). Short version:
+
+1. [QUICKSTART.md](../../QUICKSTART.md) → http://127.0.0.1:8091/
+2. `kubectl config use-context docker-desktop`
+3. Helm on PATH; metrics-server and ingress-nginx when a lesson asks (commands in ENVIRONMENT.md)
+4. NetworkPolicy labs (**11–12**) are **optional** on Docker Desktop (no Calico by default)
 
 ## Curriculum
 
@@ -29,8 +36,8 @@ Local environment: the `mock-exams` cluster (`mockctl up`), `kubectl` in PATH, a
 
 9. [RBAC: ServiceAccount, Role, RoleBinding](09-rbac.md)
 10. [Lab: give a pod permission to read a ConfigMap](10-lab-rbac.md)
-11. [NetworkPolicy](11-networkpolicy.md)
-12. [Lab: "lock down" a namespace except for one client](12-lab-networkpolicy.md)
+11. [NetworkPolicy](11-networkpolicy.md) *(optional without a policy CNI)*
+12. [Lab: "lock down" a namespace except for one client](12-lab-networkpolicy.md) *(optional)*
 
 ### Application production-readiness
 
@@ -61,7 +68,7 @@ Local environment: the `mock-exams` cluster (`mockctl up`), `kubectl` in PATH, a
 - You can confidently answer "how do I deploy this application to k8s": state, configs, secrets, HPA, ingress, RBAC.
 - You can read and write Helm charts.
 - You can explain QoS classes, the causes of OOMKilled and Evicted, what graceful shutdown and lifecycle hooks are.
-- You can lock down a namespace with NetworkPolicy.
+- You understand NetworkPolicy (and when your CNI actually enforces it).
 - You can cut traffic between blue and green Deployments with a Service selector switch (and explain when canary / RollingUpdate fit better).
 - You can create a simple CRD and understand how to extend it with a controller.
 
@@ -76,5 +83,3 @@ Each lesson consists of two files:
 
 - `NN-topic.md` — theory (10–20 min read).
 - `NN-lab-topic.md` — a hands-on task (15–40 min), with hints and a reference solution at the end.
-
-Files are created as you progress through the program. The current status is the course skeleton (curriculum); lessons are filled in iteratively.
