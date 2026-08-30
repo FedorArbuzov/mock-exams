@@ -4,12 +4,12 @@ Stand for [`aws-terraform`](../../courses-en/aws-terraform/README.md): LocalStac
 
 Work in **`~/aws-labs`** on the host or inside `lab` — same folder, same state.
 
-**Images (pull, no local build):**
+**Images:**
 
 | Service | Image |
 |---------|--------|
-| localstack | `localstack/localstack:3.8` |
-| lab | `ghcr.io/fedorarbuzov/mock-exams/aws-terraform-lab:latest` |
+| localstack | `localstack/localstack:3.8` (pulled) |
+| lab | built locally as `mock-aws-terraform-lab:local` (Dockerfile next to compose) |
 
 ## Start
 
@@ -36,7 +36,8 @@ bash scripts/unix-localstack-up.sh
 Or compose only:
 
 ```bash
-docker compose -f deploy/aws-terraform/docker-compose.yml pull
+docker compose -f deploy/aws-terraform/docker-compose.yml pull localstack
+docker compose -f deploy/aws-terraform/docker-compose.yml build lab
 docker compose -f deploy/aws-terraform/docker-compose.yml up -d
 ```
 
@@ -50,7 +51,7 @@ docker compose -f deploy/aws-terraform/docker-compose.yml exec lab aws --version
 
 If port **4566** is busy, stop the other LocalStack (`~/.mock-exams/localstack` or `deploy/localstack`) first.
 
-Override the lab image: `$env:AWS_TERRAFORM_LAB_IMAGE` / `export AWS_TERRAFORM_LAB_IMAGE=...`.
+Optional prebuilt lab image (needs GHCR access): `$env:AWS_TERRAFORM_LAB_IMAGE` / `export AWS_TERRAFORM_LAB_IMAGE=ghcr.io/fedorarbuzov/mock-exams/aws-terraform-lab:latest`.
 
 ## Host (default)
 
@@ -111,8 +112,7 @@ Interactive Check in the courses UI still uses the **UI / host** AWS CLI, not th
 ## Rebuild (maintainers)
 
 ```bash
-docker compose -f deploy/aws-terraform/docker-compose.yml build lab
-docker compose -f deploy/aws-terraform/docker-compose.yml push lab
+docker compose -f deploy/aws-terraform/docker-compose.yml build lab --no-cache
 ```
 
-CI: [`.github/workflows/aws-terraform-lab.yml`](../../.github/workflows/aws-terraform-lab.yml) pushes `linux/amd64` and `linux/arm64` to GHCR.
+CI still publishes `linux/amd64` + `linux/arm64` to GHCR ([workflow](../../.github/workflows/aws-terraform-lab.yml)) for people who can pull a private package. The one-liner does **not** need that.
