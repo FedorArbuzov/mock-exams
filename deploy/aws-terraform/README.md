@@ -13,12 +13,27 @@ Work in **`~/aws-labs`** on the host or inside `lab` — same folder, same state
 
 ## Start
 
-From the **mock-exams** repo root:
+**One-liner** (no clone): [LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md)
 
 ```powershell
-docker compose -f deploy/aws-terraform/docker-compose.yml pull
-docker compose -f deploy/aws-terraform/docker-compose.yml up -d
+irm https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/windows-localstack-up.ps1 | iex
 ```
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/unix-localstack-up.sh | bash
+```
+
+From this repo:
+
+```powershell
+.\scripts\windows-localstack-up.ps1
+```
+
+```bash
+bash scripts/unix-localstack-up.sh
+```
+
+Or compose only:
 
 ```bash
 docker compose -f deploy/aws-terraform/docker-compose.yml pull

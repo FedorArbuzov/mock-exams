@@ -1,96 +1,112 @@
 # AWS + Terraform
 
-A course on **Infrastructure as Code** for AWS. All labs run on **LocalStack** or **MiniStack** — a paid AWS account is not required.
+Hands-on **Infrastructure as Code** for AWS. One day, one project: a bucket on **LocalStack**, then an IAM role, then a Lambda that **writes a file into that bucket**. No paid AWS account, **no Kubernetes**.
 
+**Time:** ~5–7 hours (theory + labs). You should finish in a day.  
 **Prerequisites:** [`aws-basic`](../aws-basic/README.md) (AWS theory).
 
-## Requirements
+> Setup: **[ENVIRONMENT.md](ENVIRONMENT.md)** · LocalStack one-liner: [mockctl-setup/LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md).
 
-| Tool | Version | Installation |
-|---|---|---|
-| Docker | 20+ | Docker Desktop / engine |
-| Terraform | ≥ 1.5 | [terraform.io](https://developer.hashicorp.com/terraform/install) |
-| AWS CLI v2 | any | optional, for verification |
-| Python 3 | 3.10+ | for `tflocal` and building the Lambda zip |
-| pip | — | `pip install terraform-local` |
+Open this course in the UI: **http://127.0.0.1:8091/aws-terraform/README.md**
 
-Start the emulator from the repository root (**no minikube**):
+---
 
-```bash
-mockctl localstack up
-# fallback: docker compose -f deploy/localstack/docker-compose.yml up -d
+## How to take this course
+
+1. **ENVIRONMENT.md** once (Docker + LocalStack + Terraform).
+2. Each **theory** page is a short story, not a cheat sheet — read it, then do the lab.
+3. Work in **one folder** `~/aws-labs` (create it in lab 02). Every later lab adds files there. Skip **Cleanup** between labs.
+4. **Interactive Check** (same panel as Kubernetes labs): lessons with a sibling `*.lab.json` — 02, 04, 08, 10, 12. LocalStack must be up; Check talks to it via AWS CLI (`:4566`).
+
+---
+
+## Local stand
+
+| Component | How | URL / note |
+|-----------|-----|------------|
+| Courses UI | QUICKSTART / mockctl-setup | http://127.0.0.1:8091/ |
+| LocalStack + lab | one-liner below | http://localhost:4566 · `exec lab bash` |
+| Terraform / AWS CLI | inside `lab` (or host) | `~/aws-labs` |
+| Kubernetes | **not required** | — |
+
+Start the stand (LocalStack **and** Terraform/AWS CLI in `lab`):
+
+**Windows:**
+
+```powershell
+irm https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/windows-localstack-up.ps1 | iex
 ```
 
-Verification: `mockctl localstack status` or `curl -s http://localhost:4566/_localstack/health | head`
+**macOS / Linux:**
 
-Stop when finished: `mockctl localstack down` (does not affect a Kubernetes profile).
+```bash
+curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/unix-localstack-up.sh | bash
+```
+
+---
 
 ## Curriculum
 
-### Terraform basics
+The LocalStack block is **not** a second beginning. You already applied in lab 02; lessons 05–06 complete `endpoints` in the **same** provider. Then IAM and Lambda in that folder.
 
-1. [Terraform: HCL, provider, plan/apply](01-terraform-intro.md)
-2. [Lab: your first S3 bucket](02-lab-terraform-intro.md)
+### First apply
+
+1. [Terraform: what it is, install, plan/apply](01-terraform-intro.md)
+2. [Lab: Hello Terraform](02-lab-terraform-intro.md) — one bucket, for real
+
+### Terraform itself
+
 3. [State, variables, outputs](03-state-and-variables.md)
-4. [Lab: variables and outputs](04-lab-state-and-variables.md)
+4. [Lab: split the hello-world into variables](04-lab-state-and-variables.md)
 
-### LocalStack
+### The provider you already pasted
 
-5. [The AWS provider and endpoints](05-aws-provider-localstack.md)
-6. [Lab: LocalStack + provider](06-lab-aws-provider-localstack.md)
-7. [tflocal: one codebase for local and prod](07-tflocal.md)
-8. [Lab: workflow with tflocal](08-lab-tflocal.md)
+5. [Why skip_* and endpoints](05-aws-provider-localstack.md)
+6. [Lab: paste the full endpoints map](06-lab-aws-provider-localstack.md) — prerequisite for IAM / Lambda
 
-### AWS services in Terraform
+### Role, then Lambda
 
-9. [IAM in Terraform: role, policy attachment](09-iam-terraform.md)
-10. [Lab: execution role for Lambda](10-lab-iam-terraform.md)
-11. [S3: bucket, encryption, notifications](11-s3-terraform.md)
-12. [Lab: bucket and object upload](12-lab-s3-terraform.md)
-13. [Lambda: zip, permissions, log group](13-lambda-terraform.md)
-14. [Lab: function and invoke](14-lab-lambda-terraform.md)
-15. [DynamoDB: table, keys, TTL](15-dynamodb-terraform.md)
-16. [Lab: table and put_item](16-lab-dynamodb-terraform.md)
+7. [IAM: the role Lambda will assume](07-iam-terraform.md)
+8. [Lab: add the role](08-lab-iam-terraform.md)
+9. [Lambda: zip and invoke](09-lambda-terraform.md)
+10. [Lab: add the function](10-lab-lambda-terraform.md)
 
-### Integration
+### The win
 
-17. [Pipeline: S3 → Lambda → DynamoDB](17-s3-lambda-pipeline.md)
-18. [Lab: build the pipeline manually](18-lab-s3-lambda-pipeline.md)
-19. [Terraform modules](19-modules.md)
-20. [Lab: extract S3 into a module](20-lab-modules.md)
-21. [CI: terraform plan in GitHub Actions](21-ci-terraform.md)
-22. [Lab: workflow for the repository](22-lab-ci-terraform.md)
+11. [Lambda writes a file](11-s3-lambda-pipeline.md)
+12. [Lab: invoke and see the object](12-lab-s3-lambda-pipeline.md)
 
-### Finale
+### Wrap-up
 
-23. [Final project: image platform](23-final-project.md) — S3/Lambda/DynamoDB **plus** DLQ, API Gateway, Secrets, modules, GSI/TTL, …
-24. [How we verify](24-verification.md)
+13. [What we learned / what's next](13-next-steps.md)
 
-Starter / core reference: [`projects/image-pipeline/`](projects/image-pipeline/) (extend it; do not stop at the minimal pipeline).
+A complete copy of the same stack: [`projects/image-pipeline/`](projects/image-pipeline/).
+
+DynamoDB, secrets, modules, CI, queues, and APIs are in [`aws-intermediate`](../aws-intermediate/README.md).
+
+---
 
 ## What you should end up with
 
-- You write and apply Terraform for S3, IAM, Lambda, DynamoDB, SQS, API Gateway, Secrets Manager.
-- You structure IaC with **modules**, `for_each`/`count`, tagging, and a LocalStack↔AWS switch.
-- You prove the platform with `mockctl localstack` + `scripts/verify-final.sh`.
-- You can explain the design in an interview (events, DLQ, least privilege, state).
+- You write and apply Terraform for S3, IAM, and Lambda.
+- You invoke a Lambda that puts an object in S3.
+- You can explain least-privilege IAM (trust vs permissions).
 
 ## Lab structure
 
-Each lab is a directory `~/aws-labs/lesson-NN/` (you create it yourself). The final project can be cloned from `projects/image-pipeline/`.
+One Terraform root: **`~/aws-labs`**. Labs add `iam.tf`, `lambda.tf`, `lambda/handler.py`. Lab 12 is the finished stack.
 
 ## Relation to aws-basic
 
 | aws-basic lesson | aws-terraform lesson |
 |---|---|
-| 03 IAM | 09–10 |
-| 06 S3 | 11–12, 17–18 |
-| 07 DynamoDB | 15–16 |
-| 08 Lambda | 13–14, 17–18 |
-| 10 LocalStack | 05–08 |
+| 03 IAM | 07–08 |
+| 06 S3 | 02, 04, 11–12 |
+| 08 Lambda | 09–12 |
+| 10 LocalStack | 05–06 |
 
 ## Next
 
-- [`aws-intermediate`](../aws-intermediate/README.md) — VPC, API Gateway, SQS, EventBridge, observability.
+- [`aws-intermediate`](../aws-intermediate/README.md) — DynamoDB, secrets, KMS, modules, CI, VPC, API Gateway, SQS, EventBridge, observability. Details: [13-next-steps.md](13-next-steps.md).
 - A real AWS dev account + AWS Budgets alert.
 - Terraform Cloud / S3 backend for state in a team.

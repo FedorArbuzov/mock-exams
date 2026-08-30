@@ -1,28 +1,21 @@
 # Minimal LocalStack (shared)
 
-Generic LocalStack for [`aws-terraform`](../../courses-en/aws-terraform/README.md) and other AWS labs.
+LocalStack-**only** compose for other AWS labs (for example [`python-aws`](../python-aws/README.md)).
 
-**Preferred start** (from the mock-exams repository root — **no Kubernetes**):
+**aws-terraform** uses the public one-liner (LocalStack **plus** Terraform/AWS CLI `lab`): [LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md) · [`deploy/aws-terraform`](../aws-terraform/README.md).
 
-```bash
-mockctl localstack up
-mockctl localstack status
-curl -s http://localhost:4566/_localstack/health | head
-```
-
-Stop (volumes kept):
-
-```bash
-mockctl localstack down
-```
-
-## Fallback without mockctl
+## Compose only (no lab toolbox)
 
 ```bash
 docker compose -f deploy/localstack/docker-compose.yml up -d
 curl -s http://localhost:4566/_localstack/health
 ```
 
-**Port 4566** — only one LocalStack instance at a time.
+Stop (volumes kept):
 
-For the **python-aws** course prefer [`deploy/python-aws`](../python-aws/README.md) (LocalStack + lab container with `shop_aws`).
+```bash
+docker compose -f deploy/localstack/docker-compose.yml down
+# wipe: add -v
+```
+
+**Port 4566** — only one LocalStack instance at a time.

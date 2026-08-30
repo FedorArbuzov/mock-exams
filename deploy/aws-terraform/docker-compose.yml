@@ -37,7 +37,6 @@ services:
 
   lab:
     image: ${AWS_TERRAFORM_LAB_IMAGE:-ghcr.io/fedorarbuzov/mock-exams/aws-terraform-lab:latest}
-    build: ./lab
     container_name: mock-aws-terraform-lab
     hostname: lab
     working_dir: /aws-labs

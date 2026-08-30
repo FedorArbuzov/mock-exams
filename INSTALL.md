@@ -1,50 +1,50 @@
-# Установка mock-exams
+# РЈСЃС‚Р°РЅРѕРІРєР° mock-exams
 
-Локальный Kubernetes-кластер за одну команду через утилиту [`mockctl`](mockctl/README.md).
+Р›РѕРєР°Р»СЊРЅС‹Р№ Kubernetes-РєР»Р°СЃС‚РµСЂ Р·Р° РѕРґРЅСѓ РєРѕРјР°РЅРґСѓ С‡РµСЂРµР· СѓС‚РёР»РёС‚Сѓ [`mockctl`](mockctl/README.md).
 
 > **Quick start:** Docker Desktop -> Kubernetes -> one-liner instructions are in [QUICKSTART.md](QUICKSTART.md).
 
-## Требования
+## РўСЂРµР±РѕРІР°РЅРёСЏ
 
-- **Docker** запущен:
-  - Windows / macOS — Docker Desktop.
-  - Linux — `docker.io`/`docker-ce` (`sudo systemctl start docker`).
-  - WSL — Docker Desktop с WSL Integration **или** docker внутри Ubuntu.
-- ~5 ГБ свободного места и доступ в интернет (первый запуск качает образы Kubernetes).
+- **Docker** Р·Р°РїСѓС‰РµРЅ:
+  - Windows / macOS вЂ” Docker Desktop.
+  - Linux вЂ” `docker.io`/`docker-ce` (`sudo systemctl start docker`).
+  - WSL вЂ” Docker Desktop СЃ WSL Integration **РёР»Рё** docker РІРЅСѓС‚СЂРё Ubuntu.
+- ~5 Р“Р‘ СЃРІРѕР±РѕРґРЅРѕРіРѕ РјРµСЃС‚Р° Рё РґРѕСЃС‚СѓРї РІ РёРЅС‚РµСЂРЅРµС‚ (РїРµСЂРІС‹Р№ Р·Р°РїСѓСЃРє РєР°С‡Р°РµС‚ РѕР±СЂР°Р·С‹ Kubernetes).
 
-## Windows (PowerShell) — рекомендуется
+## Windows (PowerShell) вЂ” СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ
 
-**Нужно:** Docker Desktop с включённым Kubernetes (Settings → Kubernetes → Create cluster).
+**РќСѓР¶РЅРѕ:** Docker Desktop СЃ РІРєР»СЋС‡С‘РЅРЅС‹Рј Kubernetes (Settings в†’ Kubernetes в†’ Create cluster).
 
-Одна команда (после включения Kubernetes в Docker Desktop):
+РћРґРЅР° РєРѕРјР°РЅРґР° (РїРѕСЃР»Рµ РІРєР»СЋС‡РµРЅРёСЏ Kubernetes РІ Docker Desktop):
 
 ```powershell
-irm https://raw.githubusercontent.com/FedorArbuzov/mock-exams-win/main/windows-mockctl-web.ps1 | iex
+irm https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/windows-mockctl-web.ps1 | iex
 ```
 
-Скрипт: экспортирует kubeconfig → `docker pull` → `docker run` → проверка.
+РЎРєСЂРёРїС‚: СЌРєСЃРїРѕСЂС‚РёСЂСѓРµС‚ kubeconfig в†’ `docker pull` в†’ `docker run` в†’ РїСЂРѕРІРµСЂРєР°.
 
-Образ по умолчанию: `ghcr.io/fedorarbuzov/mock-exams/mockctl-web:latest` (переопределить: `$env:MOCKCTL_WEB_IMAGE`).
+РћР±СЂР°Р· РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ: `ghcr.io/fedorarbuzov/mock-exams/mockctl-web:latest` (РїРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ: `$env:MOCKCTL_WEB_IMAGE`).
 
-Курсы: http://127.0.0.1:8091/
+РљСѓСЂСЃС‹: http://127.0.0.1:8091/
 
-## macOS / Linux (bash) — рекомендуется
+## macOS / Linux (bash) вЂ” СЂРµРєРѕРјРµРЅРґСѓРµС‚СЃСЏ
 
-**Нужно:** Docker Desktop с включённым Kubernetes (Settings → Kubernetes → Enable Kubernetes).
+**РќСѓР¶РЅРѕ:** Docker Desktop СЃ РІРєР»СЋС‡С‘РЅРЅС‹Рј Kubernetes (Settings в†’ Kubernetes в†’ Enable Kubernetes).
 
-Одна команда:
+РћРґРЅР° РєРѕРјР°РЅРґР°:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mock-exams-win/main/unix-mockctl-web.sh | bash
+curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/unix-mockctl-web.sh | bash
 ```
 
-Образ по умолчанию: `ghcr.io/fedorarbuzov/mock-exams/mockctl-web:latest` (переопределить: `export MOCKCTL_WEB_IMAGE=...`).
+РћР±СЂР°Р· РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ: `ghcr.io/fedorarbuzov/mock-exams/mockctl-web:latest` (РїРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ: `export MOCKCTL_WEB_IMAGE=...`).
 
-Курсы: http://127.0.0.1:8091/
+РљСѓСЂСЃС‹: http://127.0.0.1:8091/
 
-### Windows — legacy (`mockctl.exe`)
+### Windows вЂ” legacy (`mockctl.exe`)
 
-На Windows 11 с **Smart App Control** скачанный `.exe` может не запуститься. Предпочтительнее bootstrap выше.
+РќР° Windows 11 СЃ **Smart App Control** СЃРєР°С‡Р°РЅРЅС‹Р№ `.exe` РјРѕР¶РµС‚ РЅРµ Р·Р°РїСѓСЃС‚РёС‚СЊСЃСЏ. РџСЂРµРґРїРѕС‡С‚РёС‚РµР»СЊРЅРµРµ bootstrap РІС‹С€Рµ.
 
 ```powershell
 $mc="$env:USERPROFILE\mockctl.exe"
@@ -65,27 +65,27 @@ chmod +x "$mc"
 "$mc" status
 ```
 
-Или одной строкой:
+РР»Рё РѕРґРЅРѕР№ СЃС‚СЂРѕРєРѕР№:
 
 ```bash
 mc=~/mockctl && curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mock-exams/master/mockctl/dist/mockctl-linux-amd64 -o "$mc" && chmod +x "$mc" && "$mc" install && "$mc" up && "$mc" status
 ```
 
-Для arm64 замените `mockctl-linux-amd64` на `mockctl-linux-arm64`.
+Р”Р»СЏ arm64 Р·Р°РјРµРЅРёС‚Рµ `mockctl-linux-amd64` РЅР° `mockctl-linux-arm64`.
 
 ## macOS
 
-Однострочник с авто-определением архитектуры (Apple Silicon или Intel):
+РћРґРЅРѕСЃС‚СЂРѕС‡РЅРёРє СЃ Р°РІС‚Рѕ-РѕРїСЂРµРґРµР»РµРЅРёРµРј Р°СЂС…РёС‚РµРєС‚СѓСЂС‹ (Apple Silicon РёР»Рё Intel):
 
 ```bash
 mc=~/mockctl && arch=$(uname -m | sed 's/x86_64/amd64/') && curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mock-exams/master/mockctl/dist/mockctl-darwin-${arch} -o "$mc" && chmod +x "$mc" && "$mc" install && "$mc" up && "$mc" status
 ```
 
-То же по шагам:
+РўРѕ Р¶Рµ РїРѕ С€Р°РіР°Рј:
 
 ```bash
 mc=~/mockctl
-arch=$(uname -m | sed 's/x86_64/amd64/')   # arm64 (Apple Silicon) или amd64 (Intel)
+arch=$(uname -m | sed 's/x86_64/amd64/')   # arm64 (Apple Silicon) РёР»Рё amd64 (Intel)
 curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mock-exams/master/mockctl/dist/mockctl-darwin-${arch} -o "$mc"
 chmod +x "$mc"
 "$mc" install
@@ -93,9 +93,9 @@ chmod +x "$mc"
 "$mc" status
 ```
 
-## Использование кластера
+## РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РєР»Р°СЃС‚РµСЂР°
 
-`mockctl up` создаёт `output/kubeconfig.yaml`. Дальше:
+`mockctl up` СЃРѕР·РґР°С‘С‚ `output/kubeconfig.yaml`. Р”Р°Р»СЊС€Рµ:
 
 ```bash
 export KUBECONFIG="$PWD/output/kubeconfig.yaml"
@@ -103,38 +103,38 @@ kubectl get nodes
 kubectl get pods -A
 ```
 
-PowerShell-аналог:
+PowerShell-Р°РЅР°Р»РѕРі:
 
 ```powershell
 $env:KUBECONFIG = "$PWD\output\kubeconfig.yaml"
 kubectl get nodes
 ```
 
-## Жизненный цикл
+## Р–РёР·РЅРµРЅРЅС‹Р№ С†РёРєР»
 
 ```bash
-mockctl up              # поднять (первый раз 3-5 мин, далее быстрее)
-mockctl status          # ноды + поды
-mockctl kubeconfig      # перевыгрузить kubeconfig, если порт сменился
-mockctl down --soft     # остановить, сохранить состояние (повторный up ~30 сек)
-mockctl down            # удалить кластер
-mockctl clean --full    # полный сброс данных, бинарники остаются
-mockctl uninstall --yes # снести всё, включая minikube/kubectl
+mockctl up              # РїРѕРґРЅСЏС‚СЊ (РїРµСЂРІС‹Р№ СЂР°Р· 3-5 РјРёРЅ, РґР°Р»РµРµ Р±С‹СЃС‚СЂРµРµ)
+mockctl status          # РЅРѕРґС‹ + РїРѕРґС‹
+mockctl kubeconfig      # РїРµСЂРµРІС‹РіСЂСѓР·РёС‚СЊ kubeconfig, РµСЃР»Рё РїРѕСЂС‚ СЃРјРµРЅРёР»СЃСЏ
+mockctl down --soft     # РѕСЃС‚Р°РЅРѕРІРёС‚СЊ, СЃРѕС…СЂР°РЅРёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ (РїРѕРІС‚РѕСЂРЅС‹Р№ up ~30 СЃРµРє)
+mockctl down            # СѓРґР°Р»РёС‚СЊ РєР»Р°СЃС‚РµСЂ
+mockctl clean --full    # РїРѕР»РЅС‹Р№ СЃР±СЂРѕСЃ РґР°РЅРЅС‹С…, Р±РёРЅР°СЂРЅРёРєРё РѕСЃС‚Р°СЋС‚СЃСЏ
+mockctl uninstall --yes # СЃРЅРµСЃС‚Рё РІСЃС‘, РІРєР»СЋС‡Р°СЏ minikube/kubectl
 ```
 
-## Если что-то пошло не так
+## Р•СЃР»Рё С‡С‚Рѕ-С‚Рѕ РїРѕС€Р»Рѕ РЅРµ С‚Р°Рє
 
-| Симптом | Что делать |
+| РЎРёРјРїС‚РѕРј | Р§С‚Рѕ РґРµР»Р°С‚СЊ |
 |---|---|
-| `docker is installed but the daemon is not responding` | Запустите Docker Desktop, или на Linux/WSL: `sudo service docker start` |
-| `permission denied while trying to connect ... docker.sock` | `sudo usermod -aG docker "$USER"`, затем (для WSL из PowerShell) `wsl --shutdown` и заново открыть терминал |
-| `winget : not recognized` (Windows) | Установите App Installer из Microsoft Store: <https://apps.microsoft.com/detail/9nblggh4nns1> |
-| `connection refused` при `kubectl ...` | `mockctl kubeconfig` |
-| Долго висит на `Verifying ingress addon...` | Подождите 1-2 минуты или используйте `mockctl up --no-addons` |
+| `docker is installed but the daemon is not responding` | Р—Р°РїСѓСЃС‚РёС‚Рµ Docker Desktop, РёР»Рё РЅР° Linux/WSL: `sudo service docker start` |
+| `permission denied while trying to connect ... docker.sock` | `sudo usermod -aG docker "$USER"`, Р·Р°С‚РµРј (РґР»СЏ WSL РёР· PowerShell) `wsl --shutdown` Рё Р·Р°РЅРѕРІРѕ РѕС‚РєСЂС‹С‚СЊ С‚РµСЂРјРёРЅР°Р» |
+| `winget : not recognized` (Windows) | РЈСЃС‚Р°РЅРѕРІРёС‚Рµ App Installer РёР· Microsoft Store: <https://apps.microsoft.com/detail/9nblggh4nns1> |
+| `connection refused` РїСЂРё `kubectl ...` | `mockctl kubeconfig` |
+| Р”РѕР»РіРѕ РІРёСЃРёС‚ РЅР° `Verifying ingress addon...` | РџРѕРґРѕР¶РґРёС‚Рµ 1-2 РјРёРЅСѓС‚С‹ РёР»Рё РёСЃРїРѕР»СЊР·СѓР№С‚Рµ `mockctl up --no-addons` |
 
-Подробности по командам и сборке: [`mockctl/README.md`](mockctl/README.md).
+РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё РїРѕ РєРѕРјР°РЅРґР°Рј Рё СЃР±РѕСЂРєРµ: [`mockctl/README.md`](mockctl/README.md).
 
-## Linux (курсы `linux-*`)
+## Linux (РєСѓСЂСЃС‹ `linux-*`)
 
 ```bash
 cd deploy/linux
@@ -143,33 +143,48 @@ docker compose up -d
 docker compose exec lab bash
 ```
 
-Стенд: **lab** (172.28.0.10), **srv1** (172.28.0.11), **srv2**, **web**, **dns**. Пользователь: `course` / `course`.
+РЎС‚РµРЅРґ: **lab** (172.28.0.10), **srv1** (172.28.0.11), **srv2**, **web**, **dns**. РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ: `course` / `course`.
 
-Подробнее: [`deploy/linux/README.md`](deploy/linux/README.md). Маршрут: [`courses/linux-basic`](courses/linux-basic/README.md) → intermediate → advanced.
+РџРѕРґСЂРѕР±РЅРµРµ: [`deploy/linux/README.md`](deploy/linux/README.md). РњР°СЂС€СЂСѓС‚: [`courses/linux-basic`](courses/linux-basic/README.md) в†’ intermediate в†’ advanced.
 
-## GitLab (курсы `gitlab-*`)
+## GitLab (РєСѓСЂСЃС‹ `gitlab-*`)
 
-Для CI/CD-курсов — GitLab CE в Docker (**4+ ГБ RAM**):
+Р”Р»СЏ CI/CD-РєСѓСЂСЃРѕРІ вЂ” GitLab CE РІ Docker (**4+ Р“Р‘ RAM**):
 
 ```bash
 docker compose -f deploy/gitlab/docker-compose.yml up -d
 ```
 
-Откройте [http://localhost:8929](http://localhost:8929), пароль root:
+РћС‚РєСЂРѕР№С‚Рµ [http://localhost:8929](http://localhost:8929), РїР°СЂРѕР»СЊ root:
 
 ```bash
 docker exec mock-gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
 
-Регистрация runner: [`deploy/gitlab/README.md`](deploy/gitlab/README.md).
+Р РµРіРёСЃС‚СЂР°С†РёСЏ runner: [`deploy/gitlab/README.md`](deploy/gitlab/README.md).
 
-## AWS LocalStack (курсы `aws-*`)
+## AWS LocalStack (aws-terraform)
 
-```bash
-docker compose -f deploy/localstack/docker-compose.yml up -d
+**No Kubernetes.** One-liner starts LocalStack **and** the Terraform/AWS CLI `lab` container: [LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md)
+
+```powershell
+# Windows
+irm https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/windows-localstack-up.ps1 | iex
 ```
 
-## PostgreSQL (курсы `postgresql-*`)
+```bash
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/unix-localstack-up.sh | bash
+```
+
+From this repo: `.\scripts\windows-localstack-up.ps1` / `bash scripts/unix-localstack-up.sh`.
+
+Then `docker compose -f ~/.mock-exams/localstack/docker-compose.yml exec lab bash`. Work in `~/aws-labs`.
+
+Course setup: [courses-en/aws-terraform/ENVIRONMENT.md](courses-en/aws-terraform/ENVIRONMENT.md).
+
+
+## PostgreSQL (РєСѓСЂСЃС‹ `postgresql-*`)
 
 ```bash
 cd deploy/postgres
@@ -178,20 +193,20 @@ docker compose up -d
 psql "postgresql://course:course@localhost:5432/course"
 ```
 
-Образ включает `hypopg`, `pgaudit`, `pg_trgm` (мини-курсы performance / security / developer).
+РћР±СЂР°Р· РІРєР»СЋС‡Р°РµС‚ `hypopg`, `pgaudit`, `pg_trgm` (РјРёРЅРё-РєСѓСЂСЃС‹ performance / security / developer).
 
-pgAdmin: [http://localhost:5050](http://localhost:5050). Подробнее: [`deploy/postgres/README.md`](deploy/postgres/README.md).
+pgAdmin: [http://localhost:5050](http://localhost:5050). РџРѕРґСЂРѕР±РЅРµРµ: [`deploy/postgres/README.md`](deploy/postgres/README.md).
 
-**Flyway** (курс `postgresql-developer`): [Flyway CLI](https://flywaydb.org/download).
+**Flyway** (РєСѓСЂСЃ `postgresql-developer`): [Flyway CLI](https://flywaydb.org/download).
 
-**MinIO** (курс `postgresql-ops`, опционально):
+**MinIO** (РєСѓСЂСЃ `postgresql-ops`, РѕРїС†РёРѕРЅР°Р»СЊРЅРѕ):
 
 ```bash
 docker compose -f deploy/postgres/docker-compose.yml -f deploy/postgres/docker-compose.ops.yml up -d
 ```
 
-Специализации: [`postgresql-performance`](courses/postgresql-performance/README.md), [`postgresql-developer`](courses/postgresql-developer/README.md), [`postgresql-ops`](courses/postgresql-ops/README.md), [`postgresql-security`](courses/postgresql-security/README.md).
+РЎРїРµС†РёР°Р»РёР·Р°С†РёРё: [`postgresql-performance`](courses/postgresql-performance/README.md), [`postgresql-developer`](courses/postgresql-developer/README.md), [`postgresql-ops`](courses/postgresql-ops/README.md), [`postgresql-security`](courses/postgresql-security/README.md).
 
-## Карта курсов
+## РљР°СЂС‚Р° РєСѓСЂСЃРѕРІ
 
 [`courses/devops-path.md`](courses/devops-path.md)
