@@ -1,7 +1,9 @@
 FROM python:3.12-slim-bookworm
 
 ARG TF_VERSION=1.9.8
-ARG TARGETARCH=amd64
+# No default: Buildx injects amd64/arm64 per platform. A default of amd64
+# made the arm64 job install the x86_64 AWS CLI (exit 127: aws not found).
+ARG TARGETARCH
 
 LABEL org.opencontainers.image.source="https://github.com/FedorArbuzov/mock-exams" \
       org.opencontainers.image.description="aws-terraform lab (Terraform + AWS CLI)"
@@ -19,16 +21,17 @@ RUN apt-get update \
 
 RUN set -eux; \
     arch="${TARGETARCH}"; \
+    echo "TARGETARCH=${arch} uname=$(uname -m)"; \
     case "$arch" in \
       amd64) aws_arch=x86_64 ;; \
       arm64) aws_arch=aarch64 ;; \
-      *) aws_arch=x86_64 ;; \
+      *) echo "unsupported TARGETARCH=${arch}" >&2; exit 1 ;; \
     esac; \
     curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${aws_arch}.zip" -o /tmp/awscliv2.zip; \
     unzip -q /tmp/awscliv2.zip -d /tmp; \
     /tmp/aws/install; \
     rm -rf /tmp/aws /tmp/awscliv2.zip; \
-    aws --version
+    /usr/local/bin/aws --version
 
 RUN set -eux; \
     arch="${TARGETARCH}"; \
