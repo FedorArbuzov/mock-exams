@@ -24,7 +24,7 @@ docker info
 
 ### B. LocalStack + lab (one-liner)
 
-This starts **LocalStack on :4566** and a **`lab` container** (Terraform + AWS CLI). Work in **`~/aws-labs`** on the host or inside `lab` — same files. The first run **builds** the lab image locally (a few minutes). It does not pull a private GitHub package.
+This starts **LocalStack on :4566** and a **`lab` container** (Terraform + AWS CLI). Work in **`~/aws-labs`** on the host or inside `lab` — same files.
 
 Public ([LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md)):
 

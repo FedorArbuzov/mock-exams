@@ -1,6 +1,8 @@
 FROM python:3.12-slim-bookworm
 
 ARG TF_VERSION=1.9.8
+# No default: Buildx injects amd64/arm64 per platform. A default of amd64
+# made the arm64 job install the x86_64 AWS CLI (exit 127: aws not found).
 ARG TARGETARCH
 
 LABEL org.opencontainers.image.source="https://github.com/FedorArbuzov/mock-exams" \
@@ -18,12 +20,12 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
-    arch="${TARGETARCH:-$(uname -m)}"; \
-    echo "TARGETARCH=${TARGETARCH:-} arch=${arch} uname=$(uname -m)"; \
+    arch="${TARGETARCH}"; \
+    echo "TARGETARCH=${arch} uname=$(uname -m)"; \
     case "$arch" in \
-      amd64|x86_64) aws_arch=x86_64; tf_arch=amd64 ;; \
-      arm64|aarch64) aws_arch=aarch64; tf_arch=arm64 ;; \
-      *) echo "unsupported arch=${arch}" >&2; exit 1 ;; \
+      amd64) aws_arch=x86_64 ;; \
+      arm64) aws_arch=aarch64 ;; \
+      *) echo "unsupported TARGETARCH=${arch}" >&2; exit 1 ;; \
     esac; \
     curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${aws_arch}.zip" -o /tmp/awscliv2.zip; \
     unzip -q /tmp/awscliv2.zip -d /tmp; \
@@ -32,16 +34,11 @@ RUN set -eux; \
     /usr/local/bin/aws --version
 
 RUN set -eux; \
-    arch="${TARGETARCH:-$(uname -m)}"; \
-    case "$arch" in \
-      amd64|x86_64) tf_arch=amd64 ;; \
-      arm64|aarch64) tf_arch=arm64 ;; \
-      *) echo "unsupported arch=${arch}" >&2; exit 1 ;; \
-    esac; \
-    curl -fsSL "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_${tf_arch}.zip" -o /tmp/tf.zip; \
+    arch="${TARGETARCH}"; \
+    curl -fsSL "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_${arch}.zip" -o /tmp/tf.zip; \
     unzip -q /tmp/tf.zip -d /usr/local/bin; \
     rm /tmp/tf.zip; \
-    /usr/local/bin/terraform version
+    terraform version
 
 COPY entrypoint.sh /entrypoint.sh
 COPY verify-final.sh /usr/local/bin/verify-final
