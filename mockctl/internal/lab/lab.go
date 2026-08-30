@@ -8,16 +8,17 @@
 // 07-lab-pods.lab.json. That keeps labs authorable as data, so new ones need
 // no recompiled binary and are embedded alongside the course content.
 //
-// The engine talks to the cluster the same way the rest of mockctl does — by
-// shelling out to kubectl against ./output/kubeconfig.yaml — rather than
-// pulling client-go into the binary.
+// The engine talks to the cluster via kubectl, or to LocalStack via the AWS
+// CLI (endpoint from MOCKCTL_AWS_ENDPOINT / Definition.awsEndpoint).
 package lab
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -29,7 +30,8 @@ import (
 
 // Op is a single setup/cleanup action against the cluster.
 type Op struct {
-	// Op is one of: "apply", "delete", "ensureNamespace", "deleteNamespace".
+	// Op is one of: "apply", "delete", "ensureNamespace", "deleteNamespace",
+	// "awsDelete" (Backend aws: remove table/bucket/lambda by Kind+Name).
 	Op string `json:"op"`
 	// Kind/Name/Namespace target a resource for "delete".
 	Kind      string `json:"kind,omitempty"`
@@ -40,11 +42,16 @@ type Op struct {
 	Manifest string `json:"manifest,omitempty"`
 }
 
-// Check is a single declarative assertion about cluster state.
+// Check is a single declarative assertion about cluster or AWS (LocalStack) state.
 type Check struct {
 	// Type is one of: exists, running, image, replicas, ready, label, env,
 	// hasKey (data key present, optional value), selector (spec.selector
-	// key=value), endpoints (>= Value ready addresses).
+	// key=value), endpoints (>= Value ready addresses), annotation
+	// (metadata.annotations key=value).
+	//
+	// When Definition.Backend is "aws", Kind is one of: s3-bucket, s3-object,
+	// dynamodb-table, lambda-function, iam-role; Name is the resource id; Key is the S3
+	// object key for s3-object; Value is optional expected state (e.g. ACTIVE).
 	Type      string `json:"type"`
 	Kind      string `json:"kind"`
 	Name      string `json:"name"`
@@ -61,6 +68,12 @@ type Check struct {
 type Definition struct {
 	ID      string  `json:"id"`
 	Title   string  `json:"title"`
+	// Backend is "kubernetes" (default) or "aws" (LocalStack via AWS CLI).
+	Backend string `json:"backend,omitempty"`
+	// AWSEndpoint overrides the default LocalStack URL (see awsEndpoint()).
+	AWSEndpoint string `json:"awsEndpoint,omitempty"`
+	// AWSRegion defaults to us-east-1.
+	AWSRegion string `json:"awsRegion,omitempty"`
 	Setup   []Op    `json:"setup"`
 	Checks  []Check `json:"checks"`
 	Cleanup []Op    `json:"cleanup"`
@@ -78,8 +91,10 @@ type Result struct {
 type Engine struct {
 	fsys fs.FS
 
-	once       sync.Once
-	kubeconfig string
+	once        sync.Once
+	kubeconfig  string
+	awsOnce     sync.Once
+	awsEndpoint string
 }
 
 // NewEngine builds an engine over the given content filesystem.
@@ -148,7 +163,13 @@ func (e *Engine) Check(def *Definition) ([]Result, bool, error) {
 	results := make([]Result, 0, len(def.Checks))
 	allPassed := true
 	for _, c := range def.Checks {
-		res, err := e.evaluate(c)
+		var res Result
+		var err error
+		if strings.EqualFold(def.Backend, "aws") {
+			res, err = e.evaluateAWS(def, c)
+		} else {
+			res, err = e.evaluate(c)
+		}
 		if err != nil {
 			return nil, false, err
 		}
@@ -195,6 +216,8 @@ func (e *Engine) runOp(op Op) error {
 			return fmt.Errorf("delete namespace %s: %v: %s", op.Name, err, strings.TrimSpace(stderr))
 		}
 		return nil
+	case "awsDelete":
+		return e.awsDelete(op)
 	default:
 		return fmt.Errorf("unknown setup/cleanup op %q", op.Op)
 	}
@@ -246,7 +269,25 @@ func (e *Engine) evaluate(c Check) (Result, error) {
 				return boolResult(label, true, fmt.Sprintf("%s=%s", c.Key, v)), nil
 			}
 		}
+		if labels, ok := getMap(obj, "spec", "template", "metadata", "labels"); ok {
+			if v, ok := labels[c.Key].(string); ok && v == c.Value {
+				return boolResult(label, true, fmt.Sprintf("pod template %s=%s", c.Key, v)), nil
+			}
+		}
 		return boolResult(label, false, fmt.Sprintf("label %s=%s not set", c.Key, c.Value)), nil
+	case "annotation":
+		if anns, ok := getMap(obj, "metadata", "annotations"); ok {
+			if v, ok := anns[c.Key].(string); ok && v == c.Value {
+				return boolResult(label, true, fmt.Sprintf("%s=%s", c.Key, v)), nil
+			}
+		}
+		// Deployments/StatefulSets: Agent Injector annotations live on the Pod template.
+		if anns, ok := getMap(obj, "spec", "template", "metadata", "annotations"); ok {
+			if v, ok := anns[c.Key].(string); ok && v == c.Value {
+				return boolResult(label, true, fmt.Sprintf("pod template %s=%s", c.Key, v)), nil
+			}
+		}
+		return boolResult(label, false, fmt.Sprintf("annotation %s=%s not set", c.Key, c.Value)), nil
 	case "env":
 		for _, ctr := range containersOf(obj) {
 			for _, ev := range getSlice(ctr, "env") {
@@ -301,6 +342,209 @@ func (e *Engine) evaluate(c Check) (Result, error) {
 	default:
 		return Result{Name: label, Passed: false, Message: "unknown check type " + c.Type}, nil
 	}
+}
+
+func (e *Engine) evaluateAWS(def *Definition, c Check) (Result, error) {
+	label := c.Desc
+	if label == "" {
+		label = fmt.Sprintf("%s: %s/%s", c.Type, c.Kind, c.Name)
+	}
+	if c.Type != "exists" {
+		return Result{Name: label, Passed: false, Message: "aws backend supports type exists only (for now)"}, nil
+	}
+
+	switch c.Kind {
+	case "dynamodb-table":
+		stdout, stderr, err := e.awsCLI(def, "dynamodb", "describe-table", "--table-name", c.Name)
+		if err != nil {
+			if strings.Contains(stderr, "ResourceNotFoundException") || strings.Contains(stderr, "not found") {
+				return Result{Name: label, Passed: false, Message: "table " + c.Name + " not found"}, nil
+			}
+			return Result{}, fmt.Errorf("dynamodb describe-table: %v: %s", err, strings.TrimSpace(stderr))
+		}
+		var out struct {
+			Table struct {
+				TableStatus string `json:"TableStatus"`
+			} `json:"Table"`
+		}
+		if err := json.Unmarshal([]byte(stdout), &out); err != nil {
+			return Result{}, err
+		}
+		status := out.Table.TableStatus
+		want := c.Value
+		if want == "" {
+			want = "ACTIVE"
+		}
+		return boolResult(label, status == want, fmt.Sprintf("TableStatus=%s (want %s)", status, want)), nil
+
+	case "s3-bucket":
+		_, stderr, err := e.awsCLI(def, "s3api", "head-bucket", "--bucket", c.Name)
+		if err != nil {
+			if strings.Contains(stderr, "404") || strings.Contains(stderr, "Not Found") || strings.Contains(stderr, "NoSuchBucket") {
+				return Result{Name: label, Passed: false, Message: "bucket " + c.Name + " not found"}, nil
+			}
+			return Result{}, fmt.Errorf("s3 head-bucket: %v: %s", err, strings.TrimSpace(stderr))
+		}
+		return Result{Name: label, Passed: true, Message: "bucket exists"}, nil
+
+	case "s3-object":
+		if c.Key == "" {
+			return Result{Name: label, Passed: false, Message: "s3-object check needs key"}, nil
+		}
+		_, stderr, err := e.awsCLI(def, "s3api", "head-object", "--bucket", c.Name, "--key", c.Key)
+		if err != nil {
+			if strings.Contains(stderr, "404") || strings.Contains(stderr, "Not Found") || strings.Contains(stderr, "NoSuchKey") {
+				return Result{Name: label, Passed: false, Message: fmt.Sprintf("s3://%s/%s not found", c.Name, c.Key)}, nil
+			}
+			return Result{}, fmt.Errorf("s3 head-object: %v: %s", err, strings.TrimSpace(stderr))
+		}
+		return Result{Name: label, Passed: true, Message: fmt.Sprintf("s3://%s/%s exists", c.Name, c.Key)}, nil
+
+	case "lambda-function":
+		stdout, stderr, err := e.awsCLI(def, "lambda", "get-function", "--function-name", c.Name)
+		if err != nil {
+			if strings.Contains(stderr, "ResourceNotFoundException") || strings.Contains(stderr, "not found") {
+				return Result{Name: label, Passed: false, Message: "function " + c.Name + " not found"}, nil
+			}
+			return Result{}, fmt.Errorf("lambda get-function: %v: %s", err, strings.TrimSpace(stderr))
+		}
+		var out struct {
+			Configuration struct {
+				State string `json:"State"`
+			} `json:"Configuration"`
+		}
+		if err := json.Unmarshal([]byte(stdout), &out); err != nil {
+			return Result{}, err
+		}
+		state := out.Configuration.State
+		want := c.Value
+		if want == "" {
+			want = "Active"
+		}
+		return boolResult(label, state == want, fmt.Sprintf("State=%s (want %s)", state, want)), nil
+
+	case "iam-role":
+		_, stderr, err := e.awsCLI(def, "iam", "get-role", "--role-name", c.Name)
+		if err != nil {
+			if strings.Contains(stderr, "NoSuchEntity") || strings.Contains(stderr, "not found") {
+				return Result{Name: label, Passed: false, Message: "role " + c.Name + " not found"}, nil
+			}
+			return Result{}, fmt.Errorf("iam get-role: %v: %s", err, strings.TrimSpace(stderr))
+		}
+		return Result{Name: label, Passed: true, Message: "role exists"}, nil
+
+	case "secretsmanager-secret":
+		_, stderr, err := e.awsCLI(def, "secretsmanager", "describe-secret", "--secret-id", c.Name)
+		if err != nil {
+			if strings.Contains(stderr, "ResourceNotFoundException") || strings.Contains(stderr, "not found") {
+				return Result{Name: label, Passed: false, Message: "secret " + c.Name + " not found"}, nil
+			}
+			return Result{}, fmt.Errorf("secretsmanager describe-secret: %v: %s", err, strings.TrimSpace(stderr))
+		}
+		return Result{Name: label, Passed: true, Message: "secret exists"}, nil
+
+	default:
+		return Result{Name: label, Passed: false, Message: "unknown aws kind " + c.Kind}, nil
+	}
+}
+
+func (e *Engine) awsDelete(op Op) error {
+	def := &Definition{Backend: "aws"}
+	switch op.Kind {
+	case "dynamodb-table":
+		_, stderr, err := e.awsCLI(def, "dynamodb", "delete-table", "--table-name", op.Name)
+		if err != nil && !strings.Contains(stderr, "ResourceNotFoundException") {
+			return fmt.Errorf("delete dynamodb table %s: %v: %s", op.Name, err, strings.TrimSpace(stderr))
+		}
+		return nil
+	case "lambda-function":
+		_, stderr, err := e.awsCLI(def, "lambda", "delete-function", "--function-name", op.Name)
+		if err != nil && !strings.Contains(stderr, "ResourceNotFoundException") {
+			return fmt.Errorf("delete lambda %s: %v: %s", op.Name, err, strings.TrimSpace(stderr))
+		}
+		return nil
+	case "s3-bucket":
+		_, _, _ = e.awsCLI(def, "s3", "rm", "s3://"+op.Name, "--recursive")
+		_, stderr, err := e.awsCLI(def, "s3api", "delete-bucket", "--bucket", op.Name)
+		if err != nil && !strings.Contains(stderr, "NoSuchBucket") {
+			return fmt.Errorf("delete bucket %s: %v: %s", op.Name, err, strings.TrimSpace(stderr))
+		}
+		return nil
+	case "iam-role":
+		return e.awsDeleteRole(def, op.Name)
+	case "secretsmanager-secret":
+		_, stderr, err := e.awsCLI(def, "secretsmanager", "delete-secret", "--secret-id", op.Name, "--force-delete-without-recovery")
+		if err != nil && !strings.Contains(stderr, "ResourceNotFoundException") && !strings.Contains(stderr, "not found") {
+			return fmt.Errorf("delete secret %s: %v: %s", op.Name, err, strings.TrimSpace(stderr))
+		}
+		return nil
+	default:
+		return fmt.Errorf("awsDelete: unknown kind %q", op.Kind)
+	}
+}
+
+func (e *Engine) awsDeleteRole(def *Definition, name string) error {
+	stdout, stderr, err := e.awsCLI(def, "iam", "list-role-policies", "--role-name", name)
+	if err != nil {
+		if strings.Contains(stderr, "NoSuchEntity") || strings.Contains(stderr, "not found") {
+			return nil
+		}
+		return fmt.Errorf("list-role-policies %s: %v: %s", name, err, strings.TrimSpace(stderr))
+	}
+	var listed struct {
+		PolicyNames []string `json:"PolicyNames"`
+	}
+	if err := json.Unmarshal([]byte(stdout), &listed); err != nil {
+		return fmt.Errorf("parse list-role-policies: %w", err)
+	}
+	for _, pol := range listed.PolicyNames {
+		_, stderr, err := e.awsCLI(def, "iam", "delete-role-policy", "--role-name", name, "--policy-name", pol)
+		if err != nil && !strings.Contains(stderr, "NoSuchEntity") {
+			return fmt.Errorf("delete-role-policy %s/%s: %v: %s", name, pol, err, strings.TrimSpace(stderr))
+		}
+	}
+	_, stderr, err = e.awsCLI(def, "iam", "delete-role", "--role-name", name)
+	if err != nil && !strings.Contains(stderr, "NoSuchEntity") {
+		return fmt.Errorf("delete-role %s: %v: %s", name, err, strings.TrimSpace(stderr))
+	}
+	return nil
+}
+
+func (e *Engine) awsCLI(def *Definition, args ...string) (string, string, error) {
+	awsBin, err := toolpath.Find("aws")
+	if err != nil {
+		return "", "", fmt.Errorf("%w. Install AWS CLI v2 and ensure LocalStack is up", err)
+	}
+	endpoint := e.resolveAWSEndpoint(def)
+	region := "us-east-1"
+	if def != nil && def.AWSRegion != "" {
+		region = def.AWSRegion
+	}
+	full := append([]string{"--endpoint-url", endpoint, "--region", region}, args...)
+	cmd := exec.Command(awsBin, full...)
+	cmd.Env = append(os.Environ(),
+		"AWS_ACCESS_KEY_ID=test",
+		"AWS_SECRET_ACCESS_KEY=test",
+		"AWS_DEFAULT_REGION="+region,
+	)
+	var outBuf, errBuf bytes.Buffer
+	cmd.Stdout = &outBuf
+	cmd.Stderr = &errBuf
+	err = cmd.Run()
+	return outBuf.String(), errBuf.String(), err
+}
+
+func (e *Engine) resolveAWSEndpoint(def *Definition) string {
+	if def != nil && def.AWSEndpoint != "" {
+		return def.AWSEndpoint
+	}
+	if v := os.Getenv("MOCKCTL_AWS_ENDPOINT"); v != "" {
+		return v
+	}
+	e.awsOnce.Do(func() {
+		e.awsEndpoint = "http://localhost:4566"
+	})
+	return e.awsEndpoint
 }
 
 func boolResult(name string, passed bool, msg string) Result {

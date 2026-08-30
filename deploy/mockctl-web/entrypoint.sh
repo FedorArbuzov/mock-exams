@@ -19,5 +19,8 @@ if [ -f "$HOST_KC" ]; then
   export KUBECONFIG="$CONTAINER_KC"
 fi
 
+# LocalStack on the host (aws-terraform Interactive Check).
+export MOCKCTL_AWS_ENDPOINT="${MOCKCTL_AWS_ENDPOINT:-http://host.docker.internal:4566}"
+
 cd /work
 exec mockctl "$@"

@@ -14,10 +14,14 @@ RUN CGO_ENABLED=0 go build -tags embed -trimpath -ldflags "-s -w" -o /mockctl .
 FROM debian:bookworm-slim
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends ca-certificates curl \
+  && apt-get install -y --no-install-recommends ca-certificates curl unzip \
   && KVER="$(curl -fsSL https://dl.k8s.io/release/stable.txt)" \
   && curl -fsSL "https://dl.k8s.io/release/${KVER}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl \
   && chmod +x /usr/local/bin/kubectl \
+  && curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip \
+  && unzip -q /tmp/awscliv2.zip -d /tmp \
+  && /tmp/aws/install \
+  && rm -rf /tmp/aws /tmp/awscliv2.zip \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /mockctl /usr/local/bin/mockctl

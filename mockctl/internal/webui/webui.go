@@ -548,7 +548,7 @@ var pageTemplate = template.Must(template.New("page").Parse(`<!doctype html>
 <div data-copy-chunk="true">{{.BodyHead}}</div>
 {{if .LabPath}}<section class="lab-panel" data-lab-path="{{.LabPath}}">
 <h2>Interactive lab</h2>
-<p class="lab-hint">Start prepares the cluster, Check validates your work, Cleanup removes this lab's resources. Requires a running cluster (<code>mockctl up</code>).</p>
+<p class="lab-hint">Start prepares the environment, Check validates your work (Kubernetes or LocalStack), Cleanup removes this lab's resources.</p>
 <div class="lab-actions">
 <button type="button" data-action="start">Start lab</button>
 <button type="button" data-action="check" class="secondary">Check</button>
