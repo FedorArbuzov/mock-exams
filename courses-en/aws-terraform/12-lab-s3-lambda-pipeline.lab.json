@@ -1,0 +1,27 @@
+{
+  "id": "aws-terraform/12-lab-s3-lambda-pipeline",
+  "title": "Lab: Lambda writes a file to S3",
+  "backend": "aws",
+  "setup": [],
+  "checks": [
+    {
+      "type": "exists",
+      "kind": "s3-bucket",
+      "name": "course-lab-hello-dev",
+      "desc": "S3 bucket course-lab-hello-dev exists"
+    },
+    {
+      "type": "exists",
+      "kind": "iam-role",
+      "name": "course-lambda-exec",
+      "desc": "IAM role course-lambda-exec exists"
+    },
+    {
+      "type": "exists",
+      "kind": "lambda-function",
+      "name": "course-hello",
+      "desc": "Lambda function course-hello exists"
+    }
+  ],
+  "cleanup": []
+}

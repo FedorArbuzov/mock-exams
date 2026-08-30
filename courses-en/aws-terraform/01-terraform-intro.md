@@ -1,28 +1,40 @@
 # 01. Terraform: HCL, provider, plan/apply
 
-## Why IaC
+You already have **LocalStack** running ([ENVIRONMENT.md](ENVIRONMENT.md)). This lesson is only about Terraform: what it is, how to install it, and what you will type in the next lab.
 
-**Infrastructure as Code** — infrastructure is described in files, versioned in Git, and checked in CI. Instead of "I created a bucket in the Console" — `terraform apply` from the same commit as the application code.
+## Why not click in a console
 
-| Approach | Pros | Cons |
-|---|---|---|
-| Console / CLI manually | Fast for experiments | Drift, no history, human error |
-| CloudFormation (AWS) | Native to AWS | AWS only, YAML/JSON |
-| **Terraform** | Multi-cloud, HCL, ecosystem | State must be protected |
+A bucket created in the AWS Console exists in *your* account, with *your* clicks, and nobody can replay it. **Infrastructure as Code** means the same files live in Git as the application: `terraform apply` from a commit is how the bucket appears.
 
-## How Terraform works
+Terraform is a popular choice because one language (HCL) talks to AWS, Kubernetes, GitHub, … CloudFormation is AWS-only. The cost: Terraform keeps a **state file** — we will treat that as sacred starting in lesson 03.
 
-```text
-.tf files (HCL)
-    → terraform plan  (what will change?)
-    → terraform apply (create/modify/delete)
-    → Provider API (AWS, Kubernetes, ...)
-    → State file (terraform.tfstate) — a map "resource in code ↔ id in the cloud"
+## Install Terraform
+
+The CLI runs **on your laptop**, not inside the LocalStack container. Need **1.5 or newer**.
+
+Full official instructions (zip for every OS, Linux apt/yum, checksums): **[developer.hashicorp.com/terraform/install](https://developer.hashicorp.com/terraform/install)**.
+
+Package managers, if you prefer:
+
+```powershell
+# Windows — id is Hashicorp.Terraform (lowercase c). -e is case-sensitive.
+winget install --id Hashicorp.Terraform -e
 ```
 
-Terraform is **declarative**: you describe the desired state, and the engine computes the diff.
+Close the terminal and open a **new** one, then `terraform version`.
 
-## HCL — minimal example
+```bash
+# macOS
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+terraform version
+```
+
+Linux: use the apt/yum steps on the HashiCorp page, or unpack a zip into `/usr/local/bin`.
+
+## Three blocks you will see everywhere
+
+A tiny project is three kinds of block. You do **not** apply this snippet yet — it talks to real AWS. Lab 02 points the same shapes at LocalStack.
 
 ```hcl
 terraform {
@@ -44,44 +56,27 @@ resource "aws_s3_bucket" "course" {
 }
 ```
 
-| Block | Purpose |
-|---|---|
-| `terraform` | Terraform and provider versions |
-| `provider` | Plugin settings (region, credentials) |
-| `resource` | The object to create (`<provider>_<type>.<name>`) |
-| `data` | Reading existing resources (not in the first lesson) |
+- **`terraform`** — which Terraform and which plugins. `init` reads this and downloads the AWS provider.
+- **`provider "aws"`** — how to reach AWS (region, keys). In the lab this block will include LocalStack endpoints.
+- **`resource`** — one object to create. The address is `aws_s3_bucket.course`: type + local name.
 
-## Command lifecycle
+`data` blocks read existing things. Skip them until you need them.
+
+## Four commands
 
 ```bash
-terraform init      # download providers, backend
-terraform fmt       # format .tf files
-terraform validate  # syntax
-terraform plan      # plan of changes
-terraform apply     # apply (confirmation or -auto-approve)
-terraform destroy   # delete everything from state
+terraform init      # once per project (and after you change required_providers)
+terraform plan      # show the diff; changes nothing
+terraform apply     # make the world match the files (asks yes)
+terraform destroy   # end of the course: delete everything this project created
 ```
 
-**init** is required after cloning the repo or changing `required_providers`.
+`fmt` and `validate` are hygiene — useful, not the plot. **init** is not optional: without it there is no AWS plugin.
 
-## Resource graph
+Terraform is **declarative**. You describe the desired bucket; the engine diffs against state. A second `apply` with no file changes should print `No changes`. If a Lambda uses an IAM role, Terraform creates the role first — references in HCL are enough, `depends_on` is the exception.
 
-Terraform builds a dependency graph. If a Lambda references an IAM Role, the role is created first (`depends_on` is usually not needed — attribute references are enough).
+After `apply` you will find **`terraform.tfstate`** in the folder. That file *is* Terraform's memory. Do not commit it (secrets leak). Lesson 03 is entirely about that file.
 
-## Idempotency
+## Next
 
-A repeat `apply` with no changes in `.tf` → `No changes`. This is the goal of IaC.
-
-## What NOT to keep in Git
-
-- `terraform.tfstate` with secrets — for solo labs, keeping it locally is OK; in a team, use a **remote backend** (S3 + DynamoDB lock).
-- `*.tfvars` with passwords — in `.gitignore`.
-
-## Checklist
-
-- How does `plan` differ from `apply`?
-- Why `terraform init`?
-- What is `resource` vs `provider`?
-- Where does Terraform store the mapping of resource names to IDs in AWS?
-
-Next lesson: [02-lab-terraform-intro.md](02-lab-terraform-intro.md).
+Install is done when `terraform version` prints `v1.5` or higher. Then write one bucket and actually apply it: [02-lab-terraform-intro.md](02-lab-terraform-intro.md).

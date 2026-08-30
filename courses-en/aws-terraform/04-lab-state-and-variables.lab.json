@@ -1,0 +1,19 @@
+{
+  "id": "aws-terraform/04-lab-state-and-variables",
+  "title": "Lab: variables and outputs",
+  "backend": "aws",
+  "setup": [
+    { "op": "awsDelete", "kind": "s3-bucket", "name": "course-lab-hello-dev" }
+  ],
+  "checks": [
+    {
+      "type": "exists",
+      "kind": "s3-bucket",
+      "name": "course-lab-hello-dev",
+      "desc": "S3 bucket course-lab-hello-dev exists (dev.tfvars applied)"
+    }
+  ],
+  "cleanup": [
+    { "op": "awsDelete", "kind": "s3-bucket", "name": "course-lab-hello-dev" }
+  ]
+}

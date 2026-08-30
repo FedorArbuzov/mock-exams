@@ -1,113 +1,55 @@
-# 05. The AWS provider and endpoints for LocalStack
+# 05. Why the provider looks like that
 
-## The hashicorp/aws provider
+Lab 02 already applied to LocalStack. This page is only *why* that `provider` block looks so noisy — and the **full `endpoints` map** you paste into **this** project (IAM, Lambda).
 
-The plugin talks to the **AWS API**. For LocalStack, the same calls go to `http://localhost:4566`.
+The AWS provider always speaks the **AWS API**. Real AWS is a set of **different hostnames per service**:
 
-Key settings for emulation:
-
-| Parameter | Why |
+| Call | Default destination |
 |---|---|
-| `access_key` / `secret_key` | Any values (`test`/`test`) |
-| `skip_credentials_validation` | Don't call the real STS |
-| `skip_requesting_account_id` | Don't request the account id |
-| `skip_metadata_api_check` | No EC2 metadata on a laptop |
-| `s3_use_path_style = true` | S3 path-style URLs for LocalStack |
-| `endpoints { ... }` | Override service URLs |
+| S3 `CreateBucket` | `s3.<region>.amazonaws.com` |
+| IAM `CreateRole` | `iam.amazonaws.com` |
+| Lambda `CreateFunction` | `lambda.<region>.amazonaws.com` |
+| STS, logs, … | each has its own host |
 
-## Full endpoints block
+LocalStack is one process on **`http://localhost:4566`**. It pretends to be all of those APIs. `endpoints { s3 = "...", iam = "...", lambda = "..." }` means: for *this* service, do not use Amazon’s hostname — use `:4566`.
+
+Without a key, that service still goes to real AWS. `test`/`test` then fails (or, if a real profile is set, you may create resources in a real account). `skip_*` only skips extra checks (STS, IMDS); it does **not** redirect API calls.
+
+| Setting | Why lab 02 needed it |
+|---|---|
+| `access_key` / `secret_key` = `test` | LocalStack accepts anything |
+| `skip_credentials_validation` | Do not call real STS to validate the key |
+| `skip_requesting_account_id` | Do not ask AWS for an account id |
+| `skip_metadata_api_check` | No EC2 metadata on a laptop |
+| `s3_use_path_style` | LocalStack wants `/bucket`, not `bucket.s3.amazonaws.com` |
+
+Hello world only listed `s3`. Next labs need more keys. **Prerequisite:** paste the map below (lab 06) into the same `provider` block.
 
 ```hcl
 provider "aws" {
-  region = var.aws_region
-
-  access_key                  = var.aws_access_key
-  secret_key                  = var.aws_secret_key
+  region                      = "us-east-1"
+  access_key                  = "test"
+  secret_key                  = "test"
   skip_credentials_validation = true
   skip_requesting_account_id  = true
   skip_metadata_api_check     = true
   s3_use_path_style           = true
 
   endpoints {
-    s3       = var.localstack_endpoint
-    dynamodb = var.localstack_endpoint
-    lambda   = var.localstack_endpoint
-    iam      = var.localstack_endpoint
-    sqs      = var.localstack_endpoint
-    sts      = var.localstack_endpoint
-    logs     = var.localstack_endpoint
+    s3     = "http://localhost:4566"
+    lambda = "http://localhost:4566"
+    iam    = "http://localhost:4566"
+    sts    = "http://localhost:4566"
   }
 }
 ```
 
-Not every service is needed in every project — add them as you use them.
+That is everything this course talks to. [`aws-intermediate`](../aws-intermediate/README.md) adds more keys (`dynamodb`, `sqs`, `apigateway`, `secretsmanager`, …) the same way.
 
-## Switching local ↔ real AWS
+On **real AWS** you omit `endpoints` and the dummy keys. A `use_localstack` flag (same idea, `dynamic "endpoints"`) is optional if you later share one module between laptop and an account — not required for this course.
 
-A pattern **without** duplicating `.tf`:
+LocalStack is already running from ENVIRONMENT.md. This course pins **3.8**. VPC/RDS are the usual local gaps.
 
-```hcl
-variable "use_localstack" {
-  type    = bool
-  default = true
-}
+## Next
 
-provider "aws" {
-  region = var.aws_region
-
-  dynamic "endpoints" {
-    for_each = var.use_localstack ? [1] : []
-    content {
-      s3       = var.localstack_endpoint
-      dynamodb = var.localstack_endpoint
-      lambda   = var.localstack_endpoint
-      iam      = var.localstack_endpoint
-    }
-  }
-
-  # for real AWS — credentials from env AWS_PROFILE / IAM role
-  access_key = var.use_localstack ? "test" : null
-  secret_key = var.use_localstack ? "test" : null
-  skip_credentials_validation = var.use_localstack
-  skip_requesting_account_id  = var.use_localstack
-  s3_use_path_style           = var.use_localstack
-}
-```
-
-`prod.tfvars`: `use_localstack = false`.
-
-## Docker Compose from the repository
-
-```yaml
-# deploy/localstack/docker-compose.yml
-services:
-  localstack:
-    image: localstack/localstack:latest
-    ports:
-      - "4566:4566"
-    environment:
-      - SERVICES=s3,lambda,dynamodb,iam,sqs,sts,logs
-```
-
-`LAMBDA_EXECUTOR=docker` — Lambda in LocalStack runs containers (a Docker socket is required).
-
-## MiniStack
-
-The same port `4566`, the same endpoints. Replace the image in the compose file or:
-
-```bash
-docker run --rm -p 4566:4566 ministackorg/ministack
-```
-
-## Limitations
-
-- Not every resource type works the same way (especially VPC, RDS).
-- The AWS provider version and the LocalStack version must be compatible — for strange errors, check the [LocalStack docs](https://docs.localstack.cloud/).
-
-## Checklist
-
-- Why `s3_use_path_style`?
-- Which `skip_*` are only needed for LocalStack?
-- How do you switch a single `.tf` to prod?
-
-Next lesson: [06-lab-aws-provider-localstack.md](06-lab-aws-provider-localstack.md).
+Paste the map so later labs have a working provider: [06-lab-aws-provider-localstack.md](06-lab-aws-provider-localstack.md).

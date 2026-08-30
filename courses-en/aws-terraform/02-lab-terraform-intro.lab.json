@@ -1,0 +1,19 @@
+{
+  "id": "aws-terraform/02-lab-terraform-intro",
+  "title": "Lab: Hello Terraform",
+  "backend": "aws",
+  "setup": [
+    { "op": "awsDelete", "kind": "s3-bucket", "name": "nimbus-tf-hello" }
+  ],
+  "checks": [
+    {
+      "type": "exists",
+      "kind": "s3-bucket",
+      "name": "nimbus-tf-hello",
+      "desc": "S3 bucket nimbus-tf-hello exists"
+    }
+  ],
+  "cleanup": [
+    { "op": "awsDelete", "kind": "s3-bucket", "name": "nimbus-tf-hello" }
+  ]
+}

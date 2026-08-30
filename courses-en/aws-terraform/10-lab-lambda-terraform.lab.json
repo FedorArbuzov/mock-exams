@@ -1,0 +1,19 @@
+{
+  "id": "aws-terraform/10-lab-lambda-terraform",
+  "title": "Lab: invoke a Lambda",
+  "backend": "aws",
+  "setup": [
+    { "op": "awsDelete", "kind": "lambda-function", "name": "course-hello" }
+  ],
+  "checks": [
+    {
+      "type": "exists",
+      "kind": "lambda-function",
+      "name": "course-hello",
+      "desc": "Lambda function course-hello exists and is Active"
+    }
+  ],
+  "cleanup": [
+    { "op": "awsDelete", "kind": "lambda-function", "name": "course-hello" }
+  ]
+}

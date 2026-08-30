@@ -1,18 +1,34 @@
-# 02. Lab: your first Terraform project
+# 02. Lab: Hello Terraform
 
-Goal: install Terraform, initialize a project, and create an S3 bucket **in LocalStack** (we'll start the emulator in lesson 06; here we cover the project structure and commands).
+Lesson 01 was the map. Now you type one `main.tf` and run `apply` against the LocalStack you already started in [ENVIRONMENT.md](ENVIRONMENT.md). One bucket. You **keep** this project and grow it. Variables come next.
 
-## Preparation
+> **Interactive check.** Open this lesson in the courses UI (http://127.0.0.1:8091/). **Start lab** deletes a leftover bucket named `nimbus-tf-hello`. Apply the tasks, press **Check** (that bucket must still exist). Skip **Cleanup** and do **not** `destroy` — lab 04 uses this folder.
+
+## Prep
 
 ```bash
 terraform version   # >= 1.5
-mkdir -p ~/aws-labs/lesson-02
-cd ~/aws-labs/lesson-02
+curl -s http://localhost:4566/_localstack/health
+mkdir -p ~/aws-labs
+cd ~/aws-labs
 ```
 
-While LocalStack isn't running yet, we prepare the files; you'll run `apply` in [06-lab-aws-provider-localstack.md](06-lab-aws-provider-localstack.md) or right after `docker compose up`.
+Windows PowerShell:
 
-## Task 1. versions.tf
+```powershell
+terraform version
+Invoke-WebRequest http://localhost:4566/_localstack/health -UseBasicParsing
+New-Item -ItemType Directory -Force "$HOME\aws-labs" | Out-Null
+Set-Location "$HOME\aws-labs"
+```
+
+If `terraform` is not found, install it in [01-terraform-intro.md](01-terraform-intro.md) and open a new terminal.
+
+If health fails, start LocalStack (ENVIRONMENT.md) and retry.
+
+## Task 1. `main.tf`
+
+Create **one** file. Paste the `terraform` / `provider` blocks as-is (they point at LocalStack). Then add a bucket resource — and **change the S3 name**. Check does not accept the placeholder in the snippet.
 
 ```hcl
 terraform {
@@ -24,123 +40,103 @@ terraform {
     }
   }
 }
-```
 
-## Task 2. provider.tf (stub — you'll add endpoints in lesson 06)
-
-```hcl
+# Talks to LocalStack, not real AWS. Lesson 05 explains the skip_* flags.
 provider "aws" {
-  region                      = var.aws_region
+  region                      = "us-east-1"
   access_key                  = "test"
   secret_key                  = "test"
   skip_credentials_validation = true
   skip_requesting_account_id  = true
   skip_metadata_api_check     = true
-
-  s3_use_path_style = true
+  s3_use_path_style           = true
 
   endpoints {
-    s3 = var.localstack_endpoint
+    s3 = "http://localhost:4566"
   }
 }
+
+resource "aws_s3_bucket" "hello" {
+  bucket = "example-bucket"
+}
 ```
 
-## Task 3. variables.tf
+### What those lines are
+
+A Terraform file is not a script. It is a list of objects. Three kinds of block:
+
+| Block | Job in this file |
+|---|---|
+| `terraform { }` | Which Terraform version, which plugins. `init` reads this and downloads `hashicorp/aws`. |
+| `provider "aws" { }` | How to talk to AWS. Here: fake keys, skip real-AWS checks, send S3 to `localhost:4566` (LocalStack). |
+| `resource` | One thing to create. |
+
+The resource line is three separate names. Mixing them up is the usual first-lab mistake.
 
 ```hcl
-variable "aws_region" {
-  type    = string
-  default = "us-east-1"
-}
-
-variable "localstack_endpoint" {
-  type    = string
-  default = "http://localhost:4566"
-}
-
-variable "bucket_name" {
-  type        = string
-  description = "Globally unique bucket name"
+resource "aws_s3_bucket" "hello" {
+  bucket = "example-bucket"
 }
 ```
 
-## Task 4. main.tf
+- **`resource`** — “create and manage this.”
+- **`"aws_s3_bucket"`** — **type**. The AWS provider’s name for an S3 bucket. You do not invent this string; it is in the provider docs. After `apply`, LocalStack (pretending to be AWS) actually has a bucket.
+- **`"hello"`** — **local name** inside *this* project. Terraform’s address becomes `aws_s3_bucket.hello` (`terraform state list` prints that). You could call it `box` or `images`; Check does **not** look at this word.
+- **`bucket = "..."`** — argument: the **real S3 name** (the one `aws s3 ls` shows). In real AWS this name is global. LocalStack is a single fake account, but the same field still has to be set.
 
-```hcl
-resource "aws_s3_bucket" "lab" {
-  bucket = var.bucket_name
-}
+`example-bucket` in the snippet is a dummy. Check looks in LocalStack for a bucket named **`nimbus-tf-hello`**. Put that string in `bucket =`, then `apply`. Leaving the placeholder (or renaming only `"hello"`) fails Check.
 
-resource "aws_s3_bucket_versioning" "lab" {
-  bucket = aws_s3_bucket.lab.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-```
-
-## Task 5. outputs.tf
-
-```hcl
-output "bucket_name" {
-  value = aws_s3_bucket.lab.id
-}
-
-output "bucket_arn" {
-  value = aws_s3_bucket.lab.arn
-}
-```
-
-## Task 6. terraform.tfvars
-
-```hcl
-bucket_name = "course-lab-02-yourname-123"
-```
-
-Replace `yourname` with a unique suffix.
-
-## Task 7. Commands
+## Task 2. Run it
 
 ```bash
 terraform init
-terraform fmt -recursive
-terraform validate
-terraform plan -var-file=terraform.tfvars
+terraform plan
+terraform apply
 ```
 
-After starting LocalStack:
+Confirm with `yes` (or pass `-auto-approve`).
+
+**What you'll see:** `Plan: 1 to add`, then Apply complete.
+
+Check that Terraform remembered the bucket:
 
 ```bash
-terraform apply -var-file=terraform.tfvars
+terraform state list
 ```
 
-**What you'll see:** `Plan: 2 to add` (bucket + versioning). After apply — outputs.
+You should see `aws_s3_bucket.hello` (the local name). The S3 name lives inside that resource, not in the address.
 
-Verification with AWS CLI:
+Same bucket via [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) (install in [ENVIRONMENT.md](ENVIRONMENT.md) — Check uses `aws` too). `--endpoint-url` sends the call to **LocalStack**, not real AWS (`test`/`test` are dummy keys LocalStack accepts):
 
 ```bash
+export AWS_ACCESS_KEY_ID=test
+export AWS_SECRET_ACCESS_KEY=test
+export AWS_DEFAULT_REGION=us-east-1
 aws --endpoint-url=http://localhost:4566 s3 ls
 ```
 
-## Task 8. Cleanup
+You should see `nimbus-tf-hello` in the list.
 
-```bash
-terraform destroy -var-file=terraform.tfvars
-```
+## Task 3. Check, then keep the stack
+
+In the UI, press **Check**. After it passes, **do not destroy**. You will rename the bucket with variables in lab 04.
+
+Leave LocalStack running.
 
 ## Success criteria
 
-- [ ] `init` runs without errors
-- [ ] `plan` shows the bucket being created
-- [ ] `apply` completed, bucket visible in `aws s3 ls`
-- [ ] `destroy` removed the resources
+- [ ] `terraform init` downloaded the AWS provider
+- [ ] `apply` created **`nimbus-tf-hello`** (UI Check is green; `s3 ls` shows that name)
+- [ ] The folder `~/aws-labs` still has state — you will add files here
 
 ## Common mistakes
 
-| Error | Solution |
+| Error | Fix |
 |---|---|
-| `connection refused :4566` | Start LocalStack |
-| `BucketAlreadyExists` | Change `bucket_name` |
-| Provider auth error | Check `skip_*` and `access_key = "test"` |
+| `connection refused :4566` | LocalStack is down — see ENVIRONMENT.md |
+| Check red, `s3 ls` shows `example-bucket` | You pasted the snippet as-is. Set `bucket = "nimbus-tf-hello"` and `apply` again |
+| Check red, state has `aws_s3_bucket.nimbus-tf-hello` | You renamed the local name. Check wants the **S3** name (`bucket =`), not the label after the type |
+| `BucketAlreadyExists` | Leftover from a previous try — UI **Start lab** or destroy first |
+| Auth / credentials error | Keep `access_key = "test"` and the `skip_*` flags |
 
 Next lesson: [03-state-and-variables.md](03-state-and-variables.md).

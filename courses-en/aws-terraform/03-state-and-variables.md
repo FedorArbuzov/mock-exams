@@ -1,47 +1,33 @@
 # 03. State, variables, outputs
 
-## State — Terraform's memory
-
-The file **`terraform.tfstate`** (JSON) stores:
-
-- Resource IDs in AWS (`arn`, `bucket`, …)
-- Dependencies between resources
-- Metadata for the next `plan`
-
-Without state, Terraform doesn't know that the bucket `course-lab` is the **same** resource as `aws_s3_bucket.lab`.
+In lab 02 you ran `apply`. In the same folder Terraform wrote **`terraform.tfstate`**. Open it (it is JSON). You will see the bucket name, its ARN, and a lot of noise. That file is why a second `apply` said `No changes`: Terraform already knows `aws_s3_bucket.hello` **is** that bucket in LocalStack.
 
 ```text
-resource "aws_s3_bucket" "lab"  ←── terraform.tfstate ──→  real bucket in AWS/LocalStack
+main.tf  →  resource "aws_s3_bucket" "hello"
+                ↕ terraform.tfstate
+            LocalStack bucket nimbus-tf-hello
 ```
 
-**Never edit state manually** without `terraform state` commands (except recovery).
+Without state, the next `apply` would try to create a second bucket (or fail with `BucketAlreadyExists`) because Terraform would not recognize the first one.
 
-## Remote state (briefly)
+**Do not edit state in a text editor.** `terraform state list` / `show` / `rm` exist for a reason. If two people `apply` the same project at once, they can corrupt it — that is why teams put state in S3 with a **lock** (DynamoDB). You do not need a remote backend for these labs; keep `tfstate` on disk and out of Git.
 
-In a team, state lives in S3:
+## One folder is one module
 
-```hcl
-terraform {
-  backend "s3" {
-    bucket         = "company-tfstate"
-    key            = "aws/prod/terraform.tfstate"
-    region         = "eu-central-1"
-    dynamodb_table = "tf-lock"
-    encrypt        = true
-  }
-}
-```
+Terraform does **not** `import` files. It loads **every `*.tf` in the current directory** and treats them as one program. `variable "bucket_name"` in `variables.tf` is visible in `main.tf` as `var.bucket_name`. Split files only so humans can read them.
 
-+ **state locking** — two `apply` runs don't break the infrastructure.
+`.tfvars` files are **not** in that merge. They are a bag of values you pass with `-var-file=dev.tfvars` (or name the file `terraform.tfvars` / `*.auto.tfvars` if you want it picked up automatically). Lab 04 uses `-var-file` on purpose so you see the link.
 
-## Variables
+## Hardcoded names get old
 
-| Declaration type | Example |
+`bucket = "nimbus-tf-hello"` was fine for hello world. The next lab should not edit `main.tf` every time the name or environment changes. That is what **variables** are for.
+
+| You write | Meaning |
 |---|---|
-| `variable` | Input parameters |
-| `locals` | Computed constants inside a module |
-| `terraform.tfvars` | Default values for an environment |
-| `-var` / `TF_VAR_*` | Override from CLI/CI |
+| `variable "bucket_name"` | Input. Caller must supply it (or a `default`). |
+| `locals { ... }` | Computed inside the module. Not passed from outside. |
+| `dev.tfvars` | Values for one environment. Pass `-var-file=dev.tfvars`. |
+| `-var` / `TF_VAR_bucket_name` | One-off override from the shell or CI. |
 
 ```hcl
 variable "environment" {
@@ -58,60 +44,31 @@ locals {
 }
 ```
 
-## Outputs
+`validation` fails *before* any call to LocalStack. Use it for enums and obvious mistakes.
 
-Pass values **outward** — to CI, another module, or a person:
+**Locals** are for values you *derive* inside the module — a tag map, a prefixed name, a concatenated ARN. You do not pass them from the CLI. If you copy-pasted `Project = var.project` onto five resources, a sixth resource would miss a tag; `local.common_tags` is one map, reused. They are not inputs (that is `variable`) and not something you print for the outside world (that is `output`).
+
+**Outputs** are the opposite direction: after `apply`, Terraform knows the real id/ARN/tags. A human or CI should not open `terraform.tfstate` to copy them. `terraform output bucket_name` (or a later module that reads this one) is the supported door. Lab 04 prints the tag map so you see that door; later, a Lambda will need the bucket name without hardcoding it.
 
 ```hcl
-output "lambda_function_name" {
-  value       = aws_lambda_function.resize.function_name
-  description = "Name for aws lambda invoke"
+output "bucket_name" {
+  value       = aws_s3_bucket.hello.id
+  description = "Name to use in aws s3 ls"
 }
 ```
 
 ```bash
 terraform output bucket_name
-terraform output -json
 ```
 
-## Sensitive data
+## Secrets
 
-```hcl
-output "db_password" {
-  value     = var.db_password
-  sensitive = true
-}
-```
+`sensitive = true` on an output hides it from the terminal. It is **still in state**. Do not put production passwords in `.tfvars` that you commit. Secrets Manager (CLI owns the value, Terraform looks up the ARN) is in [`aws-intermediate`](../aws-intermediate/11-secrets-kms.md).
 
-Secrets can still end up in state — better to use **Secrets Manager** + a data source, not a variable with a password in plain text.
+Workspaces (`terraform workspace new prod`) are another way to get two state files from one folder. For this course, **separate directories or `-var-file`** are clearer. Skip workspaces until a team forces them on you.
 
-## Workspaces (briefly)
+`lifecycle { prevent_destroy = true }` is a seatbelt on a resource you must not delete. You will not need it on lab buckets.
 
-```bash
-terraform workspace new dev
-terraform workspace new prod
-```
+## Next
 
-One codebase — different state files. An alternative is separate directories or `-var-file=prod.tfvars`.
-
-## Lifecycle meta-arguments
-
-```hcl
-resource "aws_s3_bucket" "lab" {
-  bucket = var.bucket_name
-
-  lifecycle {
-    prevent_destroy = true   # terraform destroy won't delete it
-    ignore_changes  = [tags] # don't change on tags drift
-  }
-}
-```
-
-## Checklist
-
-- Why is state needed?
-- How does `variable` differ from `local`?
-- Where do you set values for prod without committing to Git?
-- Why does `sensitive = true` not mean "the secret is not in state"?
-
-Next lesson: [04-lab-state-and-variables.md](04-lab-state-and-variables.md).
+Take the hello-world project and split the hardcoded name into variables: [04-lab-state-and-variables.md](04-lab-state-and-variables.md).

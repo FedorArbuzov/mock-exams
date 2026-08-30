@@ -1,36 +1,25 @@
-resource "aws_cloudwatch_log_group" "lambda" {
-  name              = "/aws/lambda/${var.project}-resize"
-  retention_in_days = 7
-  tags              = var.tags
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_file = "${path.module}/lambda/handler.py"
+  output_path = "${path.module}/lambda.zip"
 }
 
-resource "aws_lambda_function" "resize" {
-  function_name = "${var.project}-resize"
+resource "aws_lambda_function" "writer" {
+  function_name = "${var.project}-writer"
   role          = aws_iam_role.lambda_exec.arn
   handler       = "handler.main"
   runtime       = "python3.12"
-  timeout       = 60
-  memory_size   = 512
+  timeout       = 30
+  memory_size   = 128
 
-  filename         = "${path.module}/lambda.zip"
-  source_code_hash = filebase64sha256("${path.module}/lambda.zip")
+  filename         = data.archive_file.lambda_zip.output_path
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
   environment {
     variables = {
-      DYNAMODB_TABLE = aws_dynamodb_table.images.name
-      THUMB_PREFIX   = "thumbs/"
+      BUCKET_NAME = aws_s3_bucket.files.id
     }
   }
 
-  depends_on = [aws_cloudwatch_log_group.lambda]
-
   tags = var.tags
-}
-
-resource "aws_lambda_permission" "allow_s3" {
-  statement_id  = "AllowS3Invoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.resize.function_name
-  principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.images.arn
 }

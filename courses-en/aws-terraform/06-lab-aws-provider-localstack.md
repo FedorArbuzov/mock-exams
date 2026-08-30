@@ -1,74 +1,29 @@
-# 06. Lab: LocalStack + provider
+# 06. Lab: endpoints for the rest of the course
 
-## Preparation
+**Prerequisite for IAM and Lambda.** Lab 02 only routed S3. Each of those services is a different AWS hostname; LocalStack serves them all on `:4566`. If the `provider` is missing `iam` or `lambda`, that call goes to real AWS (or hangs).
 
-From the root of the `mock-exams` repository:
+Same folder: **`~/aws-labs`**. You are not building a new stack — you are completing the provider this project will keep using.
 
-```bash
-docker compose -f deploy/localstack/docker-compose.yml up -d
-curl -s http://localhost:4566/_localstack/health
-```
+## Task 1. Full `endpoints` map
 
-Windows PowerShell:
+Replace the `endpoints { s3 = ... }` block with the full map from [lesson 05](05-aws-provider-localstack.md). Keep `skip_*` and `test`/`test`.
 
-```powershell
-docker compose -f deploy/localstack/docker-compose.yml up -d
-Invoke-WebRequest -Uri http://localhost:4566/_localstack/health -UseBasicParsing
-```
-
-## Task 1. provider.tf (full version)
-
-Copy the pattern from [05-aws-provider-localstack.md](05-aws-provider-localstack.md) into `~/aws-labs/lesson-02` or create `lesson-06`.
-
-## Task 2. apply bucket
+## Task 2. Still applies
 
 ```bash
-cd ~/aws-labs/lesson-02
-terraform apply -var-file=terraform.tfvars
+cd ~/aws-labs
+terraform apply -var-file=dev.tfvars
 ```
 
-## Task 3. AWS CLI
+(If you never did lab 04: `terraform apply` is enough.) The bucket should be `No changes` or already match state. You are proving S3 still works after the extra keys.
 
-```bash
-export AWS_ACCESS_KEY_ID=test
-export AWS_SECRET_ACCESS_KEY=test
-export AWS_DEFAULT_REGION=us-east-1
-
-aws --endpoint-url=http://localhost:4566 s3 ls
-aws --endpoint-url=http://localhost:4566 s3 cp README.md s3://YOUR_BUCKET/test.txt
-aws --endpoint-url=http://localhost:4566 s3 ls s3://YOUR_BUCKET/
-```
-
-## Task 4. use_localstack flag
-
-Add `variable "use_localstack"` and `dynamic "endpoints"` from lesson 05.
-
-`local.tfvars`:
-
-```hcl
-use_localstack = true
-bucket_name    = "course-local-yourname"
-```
-
-## Task 5. LocalStack logs on error
-
-```bash
-docker compose -f deploy/localstack/docker-compose.yml logs -f localstack
-```
+LocalStack must be up: `curl -s http://localhost:4566/_localstack/health`
 
 ## Success criteria
 
-- [ ] The health endpoint responds
-- [ ] `terraform apply` created the bucket
-- [ ] The CLI uploaded and read the object
-- [ ] After `destroy` the bucket disappeared from `s3 ls`
+- [ ] `provider` lists s3, iam, sts, lambda (same URL)
+- [ ] Apply did not try to talk to real AWS
 
-## Stopping
+Do not destroy. Next labs add files in this folder.
 
-```bash
-docker compose -f deploy/localstack/docker-compose.yml down
-```
-
-(path: `deploy/localstack/docker-compose.yml`)
-
-Next lesson: [07-tflocal.md](07-tflocal.md).
+Next: [07-iam-terraform.md](07-iam-terraform.md).
