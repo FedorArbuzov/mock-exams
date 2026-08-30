@@ -165,7 +165,7 @@ docker exec mock-gitlab grep 'Password:' /etc/gitlab/initial_root_password
 
 ## AWS LocalStack (aws-terraform)
 
-**No Kubernetes.** One-liner starts LocalStack **and** the Terraform/AWS CLI `lab` container: [LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md)
+**No Kubernetes.** One-liner starts LocalStack, the Terraform/AWS CLI `lab` container, and the courses UI: [LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md)
 
 ```powershell
 # Windows
@@ -179,7 +179,7 @@ curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/uni
 
 From this repo: `.\scripts\windows-localstack-up.ps1` / `bash scripts/unix-localstack-up.sh`.
 
-Then `docker compose -f ~/.mock-exams/localstack/docker-compose.yml exec lab bash`. Work in `~/aws-labs`.
+Then open **http://127.0.0.1:8091/aws-terraform/README.md**. Terraform: `docker compose -f ~/.mock-exams/localstack/docker-compose.yml exec lab bash`. Work in `~/aws-labs`.
 
 Course setup: [courses-en/aws-terraform/ENVIRONMENT.md](courses-en/aws-terraform/ENVIRONMENT.md).
 

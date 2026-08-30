@@ -1,6 +1,6 @@
 # LocalStack + lab toolbox
 
-Stand for [`aws-terraform`](../../courses-en/aws-terraform/README.md): LocalStack on **4566**, plus a `lab` container with Terraform, AWS CLI, and `verify-final`.
+Stand for [`aws-terraform`](../../courses-en/aws-terraform/README.md): LocalStack on **4566**, a `lab` container with Terraform/AWS CLI, and the **courses UI** on **8091**. Interactive Check talks to LocalStack over the AWS API from the UI container.
 
 Work in **`~/aws-labs`** on the host or inside `lab` — same folder, same state.
 
@@ -10,6 +10,7 @@ Work in **`~/aws-labs`** on the host or inside `lab` — same folder, same state
 |---------|--------|
 | localstack | `localstack/localstack:3.8` |
 | lab | `ghcr.io/fedorarbuzov/mock-exams/aws-terraform-lab:latest` |
+| web | `ghcr.io/fedorarbuzov/mock-exams/mockctl-web:latest` |
 
 ## Start
 
@@ -44,11 +45,12 @@ Sanity:
 
 ```bash
 curl -s http://localhost:4566/_localstack/health
+curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8091/aws-terraform/README.md
 docker compose -f deploy/aws-terraform/docker-compose.yml exec lab terraform version
 docker compose -f deploy/aws-terraform/docker-compose.yml exec lab aws --version
 ```
 
-If port **4566** is busy, stop the other LocalStack (`~/.mock-exams/localstack` or `deploy/localstack`) first.
+If port **4566** is busy, stop the other LocalStack first. If **8091** is busy, stop a leftover `mockctl-web`.
 
 Override the lab image: `$env:AWS_TERRAFORM_LAB_IMAGE` / `export AWS_TERRAFORM_LAB_IMAGE=...`.
 
@@ -106,7 +108,7 @@ docker compose -f deploy/aws-terraform/docker-compose.yml down
 | `verify-final` | optional probe after lab 12 |
 | `lab-help` | short reminder |
 
-Interactive Check in the courses UI still uses the **UI / host** AWS CLI, not this container. If Check is red but `lab` is green, trust `lab`.
+Interactive Check in the courses UI uses AWS CLI **inside the `web` container** (`MOCKCTL_AWS_ENDPOINT=http://localstack:4566`). If Check is red but `lab` is green, check `docker compose … logs web`.
 
 ## Rebuild (maintainers)
 

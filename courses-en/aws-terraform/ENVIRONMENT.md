@@ -6,9 +6,9 @@ This course uses **LocalStack** (AWS emulator in Docker) and the **courses UI** 
 
 | Piece | Role |
 |-------|------|
-| Docker Desktop | Runs LocalStack + the `lab` container |
-| One-liner | LocalStack **and** Terraform/AWS CLI in Docker |
-| Courses UI (optional but handy) | Read theory / labs in the browser |
+| Docker Desktop | Runs LocalStack, `lab`, and the courses UI |
+| One-liner | LocalStack **and** Terraform/AWS CLI **and** lessons on **:8091** |
+| Courses UI | Same stack — **http://127.0.0.1:8091/aws-terraform/README.md** |
 
 **No Kubernetes.** Enable it only if you also take K8s / GitLab deploy courses.
 
@@ -24,7 +24,7 @@ docker info
 
 ### B. LocalStack + lab (one-liner)
 
-This starts **LocalStack on :4566** and a **`lab` container** (Terraform + AWS CLI). Work in **`~/aws-labs`** on the host or inside `lab` — same files.
+This starts **LocalStack on :4566**, a **`lab` container** (Terraform + AWS CLI), and the **courses UI on :8091**. Work in **`~/aws-labs`**. Interactive Check talks to LocalStack via AWS CLI inside the UI container.
 
 Public ([LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md)):
 
@@ -52,6 +52,7 @@ Then:
 
 ```bash
 curl -s http://localhost:4566/_localstack/health
+# open http://127.0.0.1:8091/aws-terraform/README.md
 docker compose -f ~/.mock-exams/localstack/docker-compose.yml exec lab terraform version
 docker compose -f ~/.mock-exams/localstack/docker-compose.yml exec lab bash
 ```
@@ -138,27 +139,19 @@ $env:AWS_SECRET_ACCESS_KEY = "test"
 $env:AWS_DEFAULT_REGION = "us-east-1"
 ```
 
-### D. Courses UI (lessons in the browser)
+### D. Courses UI
 
-**No Kubernetes.** Do not use the main mockctl-web one-liner (it requires a cluster). Use the UI-only scripts from [LOCALSTACK.md](https://github.com/FedorArbuzov/mockctl-setup/blob/main/LOCALSTACK.md):
+Already started by the one-liner in **B**. Open **http://127.0.0.1:8091/aws-terraform/README.md**.
 
-```powershell
-irm https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/windows-courses-ui.ps1 | iex
-```
+Do **not** use the main mockctl-web one-liner (that path needs Kubernetes). A leftover `mockctl-web` on **8091** will block this stack — the LocalStack script removes it.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/FedorArbuzov/mockctl-setup/main/unix-courses-ui.sh | bash
-```
-
-Then **http://127.0.0.1:8091/** → **aws-terraform**. Terraform still runs on the host against LocalStack.
+**Requires:** LocalStack on **http://localhost:4566**. Check from the UI uses `aws` inside the `web` container against `http://localstack:4566`.
 
 ## How labs work
 
 1. **Read** the theory page in the courses UI (or in the repo).
 2. **Do** the lab in **`~/aws-labs`** (one Terraform root for the whole course).
 3. **Check** — lessons with a sidecar `*.lab.json` show **Interactive Check** in the UI (queries LocalStack via AWS API — same idea as Kubernetes labs). Other lessons: self-check in the text. Optional probe: [`scripts/verify-final.sh`](scripts/verify-final.sh).
-
-**Requires:** LocalStack on **http://localhost:4566** and **AWS CLI** (`aws --version` without a traceback) on the same machine as the courses UI (`mockctl web` on the host, or inside `mockctl-web` — from the container the endpoint is `host.docker.internal:4566`).
 
 ## Working directory tip
 
@@ -179,10 +172,9 @@ Complete copy of the same stack: [`projects/image-pipeline/`](projects/image-pip
 
 - [ ] `docker info` works  
 - [ ] `curl http://localhost:4566/_localstack/health` → 200  
+- [ ] **http://127.0.0.1:8091/aws-terraform/README.md** opens  
 - [ ] `terraform version` ≥ 1.5 (host **or** `docker compose … exec lab terraform version`)  
-- [ ] `aws --version` (1.x or 2.x, no `_awscrt` traceback) — host Check; or use `lab`  
 - [ ] provider `endpoints` point at LocalStack (lesson 05)  
-- [ ] http://127.0.0.1:8091/ → courses (if you use the UI)  
 
 ## Related
 
