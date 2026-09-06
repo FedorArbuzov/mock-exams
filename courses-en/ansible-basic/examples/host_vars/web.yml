@@ -1,0 +1,4 @@
+# Overrides for inventory host web
+# Copy to ~/ansible-lab/host_vars/web.yml
+nginx_server_name: shop.lab.local
+nginx_listen_port: 80

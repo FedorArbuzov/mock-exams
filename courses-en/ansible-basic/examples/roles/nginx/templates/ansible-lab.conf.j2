@@ -1,0 +1,13 @@
+server {
+    listen {{ nginx_listen_port }};
+    server_name {{ nginx_server_name }};
+
+    root {{ nginx_docroot }};
+    index index.html;
+
+    location / {
+        proxy_pass http://{{ nginx_upstream }};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}

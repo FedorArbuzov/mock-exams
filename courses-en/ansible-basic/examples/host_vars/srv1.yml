@@ -1,0 +1,3 @@
+# Overrides for inventory host srv1 only
+# Copy to ~/ansible-lab/host_vars/srv1.yml
+app_env: staging

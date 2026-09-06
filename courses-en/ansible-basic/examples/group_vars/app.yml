@@ -1,0 +1,18 @@
+# group_vars for inventory group [app] (srv1, srv2)
+# Copy to ~/ansible-lab/group_vars/app.yml
+app_env: production
+app_port: 8080
+lab_marker_path: /etc/ansible-lab-env
+
+# labs 16 / 21
+lab_packages:
+  - htop
+  - curl
+  - ca-certificates
+lab_users:
+  - name: deploy
+    groups: sudo
+    shell: /bin/bash
+lab_dirs:
+  - /opt/nimbus
+  - /opt/nimbus/app

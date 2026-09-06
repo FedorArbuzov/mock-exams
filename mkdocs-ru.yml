@@ -1,11 +1,11 @@
 site_name: Mock Exams
-site_description: Hands-on courses — Kubernetes, Linux, Ansible, AWS, PostgreSQL, and more.
-site_url: https://fedorarbuzov.github.io/mock-exams/
+site_description: Учебные курсы DevOps, backend, Kubernetes, PostgreSQL и др.
+site_url: https://fedorarbuzov.github.io/mock-exams/ru/
 repo_url: https://github.com/FedorArbuzov/mock-exams
 repo_name: FedorArbuzov/mock-exams
-edit_uri: edit/master/courses-en/
+edit_uri: edit/master/courses/
 
-docs_dir: courses-en
+docs_dir: courses
 
 exclude_docs: |
   **/node_modules/**
@@ -32,7 +32,7 @@ validation:
 
 theme:
   name: material
-  language: en
+  language: ru
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -40,14 +40,14 @@ theme:
       accent: indigo
       toggle:
         icon: material/brightness-7
-        name: Dark mode
+        name: Тёмная тема
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-4
-        name: Light mode
+        name: Светлая тема
   features:
     - navigation.instant
     - navigation.tracking
@@ -62,7 +62,7 @@ theme:
 
 plugins:
   - search:
-      lang: en
+      lang: ru
   - awesome-pages
 
 markdown_extensions:

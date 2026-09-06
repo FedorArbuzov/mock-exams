@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Generate mkdocs-awesome-pages .pages files for each course directory."""
+"""Generate mkdocs-awesome-pages .pages files when a course directory has none."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-COURSES = ROOT / "courses"
 
 PATH_FILES = [
     "devops-path.md",
@@ -14,6 +13,8 @@ PATH_FILES = [
     "javascript-path.md",
     "golang-path.md",
 ]
+
+TREES = (ROOT / "courses", ROOT / "courses-en")
 
 
 def course_title(readme: Path, fallback: str) -> str:
@@ -25,31 +26,39 @@ def course_title(readme: Path, fallback: str) -> str:
 
 
 def write_course_pages(course_dir: Path) -> None:
+    pages = course_dir / ".pages"
+    if pages.exists():
+        return
     title = course_title(course_dir / "README.md", course_dir.name)
-    content = f"title: {title}\nnav:\n  - README.md\n  - ...\n"
-    (course_dir / ".pages").write_text(content, encoding="utf-8")
+    pages.write_text(f"title: {title}\nnav:\n  - README.md\n  - ...\n", encoding="utf-8")
 
 
-def write_root_pages() -> None:
-    lines = [
-        "nav:",
-        "  - README.md",
-    ]
+def write_root_pages(courses: Path) -> None:
+    pages = courses / ".pages"
+    if pages.exists():
+        return
+    lines = ["nav:", "  - README.md"]
     for path_file in PATH_FILES:
-        lines.append(f"  - {path_file}")
+        if (courses / path_file).is_file():
+            lines.append(f"  - {path_file}")
     lines.append("  - ...")
-    (COURSES / ".pages").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    pages.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main() -> None:
-    write_root_pages()
-    for entry in sorted(COURSES.iterdir()):
-        if not entry.is_dir():
+    generated = 0
+    for courses in TREES:
+        if not courses.is_dir():
             continue
-        if entry.name.startswith("."):
-            continue
-        write_course_pages(entry)
-    print(f"Generated .pages for {len(list(COURSES.glob('*/.pages')))} course directories")
+        write_root_pages(courses)
+        for entry in sorted(courses.iterdir()):
+            if not entry.is_dir() or entry.name.startswith("."):
+                continue
+            before = (entry / ".pages").exists()
+            write_course_pages(entry)
+            if not before and (entry / ".pages").exists():
+                generated += 1
+    print(f"Generated {generated} missing course .pages files")
 
 
 if __name__ == "__main__":

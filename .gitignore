@@ -1,5 +1,7 @@
 output/
 site/
+site-en-test/
+site-ru-test/
 .venv-pdf/
 .venv-docs/
 courses/.pages

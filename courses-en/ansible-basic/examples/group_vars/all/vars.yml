@@ -1,0 +1,5 @@
+# Plaintext mapping for the finale.
+# Copy to ~/ansible-lab/group_vars/all/vars.yml
+# (same directory as encrypted vault.yml — do not also create group_vars/all.yml)
+# The password itself lives in encrypted group_vars/all/vault.yml as vault_db_password.
+db_password: "{{ vault_db_password }}"

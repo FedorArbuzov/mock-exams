@@ -1,0 +1,13 @@
+---
+# Skeleton for final project — fill in roles/nginx and roles/app
+- name: Edge
+  hosts: web
+  become: true
+  roles:
+    - nginx
+
+- name: App tier
+  hosts: app
+  become: true
+  roles:
+    - app

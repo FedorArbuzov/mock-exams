@@ -1,0 +1,13 @@
+[Unit]
+Description=Nimbus lab app on {{ inventory_hostname }}
+After=network.target
+
+[Service]
+User={{ app_user }}
+Group={{ app_user }}
+WorkingDirectory={{ app_root }}
+ExecStart=/usr/bin/python3 -m http.server {{ app_port }} --bind 0.0.0.0
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
