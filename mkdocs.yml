@@ -63,7 +63,8 @@ theme:
 plugins:
   - search:
       lang: en
-  - awesome-pages
+  - awesome-pages:
+      strict: false
 
 markdown_extensions:
   - admonition
