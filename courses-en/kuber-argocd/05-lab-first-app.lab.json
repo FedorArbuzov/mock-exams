@@ -1,0 +1,12 @@
+{
+  "id": "kuber-argocd/05-lab-first-app",
+  "title": "Lab: first Application",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "lab-argocd", "desc": "Namespace lab-argocd exists" },
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "hello", "desc": "Application hello exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd", "name": "hello", "desc": "Deployment hello exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd", "name": "hello", "value": "1", "desc": "hello Ready ≥1" }
+  ],
+  "cleanup": []
+}

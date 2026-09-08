@@ -1,0 +1,11 @@
+{
+  "id": "kuber-argocd/07-lab-self-heal",
+  "title": "Lab: self-heal and prune",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "hello", "desc": "Application hello still exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd", "name": "hello", "desc": "Deployment hello exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd", "name": "hello", "value": "1", "desc": "hello Ready ≥1 (selfHeal restored replicas)" }
+  ],
+  "cleanup": []
+}

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+data:
+  index.html: |
+    <html><body>
+    <h1>{{ .Values.message }}</h1>
+    <p>env={{ .Values.env }}</p>
+    </body></html>

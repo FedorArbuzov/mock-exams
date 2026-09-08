@@ -1,0 +1,21 @@
+# Intentional mistakes: bad path. Lab 13 — fix path to apps/hello
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-fix
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: YOUR_GITOPS_REPO
+    targetRevision: HEAD
+    path: apps/hello-missing
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: lab-argocd-fix
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,12 @@
+{
+  "id": "kuber-argocd/13-lab-troubleshooting",
+  "title": "Lab: fix a broken Application",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "hello-fix", "desc": "Application hello-fix exists" },
+    { "type": "exists", "kind": "namespace", "name": "lab-argocd-fix", "desc": "Namespace lab-argocd-fix exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd-fix", "name": "hello", "desc": "Deployment hello exists in lab-argocd-fix" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd-fix", "name": "hello", "value": "1", "desc": "hello Ready ≥1" }
+  ],
+  "cleanup": []
+}

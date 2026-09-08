@@ -1,0 +1,18 @@
+{
+  "id": "kuber-argocd/11-lab-appset",
+  "title": "Lab: staging + prod with ApplicationSet",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "appproject", "namespace": "argocd", "name": "shop", "desc": "AppProject shop exists" },
+    { "type": "exists", "kind": "applicationset", "namespace": "argocd", "name": "shop-envs", "desc": "ApplicationSet shop-envs exists" },
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "shop-staging", "desc": "Application shop-staging exists" },
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "shop-prod", "desc": "Application shop-prod exists" },
+    { "type": "exists", "kind": "namespace", "name": "lab-argocd-staging", "desc": "Namespace lab-argocd-staging exists" },
+    { "type": "exists", "kind": "namespace", "name": "lab-argocd-prod", "desc": "Namespace lab-argocd-prod exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd-staging", "name": "shop-staging", "desc": "Deployment shop-staging exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd-prod", "name": "shop-prod", "desc": "Deployment shop-prod exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd-staging", "name": "shop-staging", "value": "1", "desc": "shop-staging Ready ≥1" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd-prod", "name": "shop-prod", "value": "1", "desc": "shop-prod Ready ≥1" }
+  ],
+  "cleanup": []
+}

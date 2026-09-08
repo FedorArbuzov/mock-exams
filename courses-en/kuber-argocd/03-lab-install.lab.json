@@ -1,0 +1,12 @@
+{
+  "id": "kuber-argocd/03-lab-install",
+  "title": "Lab: install Argo CD",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "argocd", "desc": "Namespace argocd exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "argocd", "name": "argocd-server", "desc": "Deployment argocd-server exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "argocd", "name": "argocd-repo-server", "desc": "Deployment argocd-repo-server exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "argocd", "name": "argocd-server", "value": "1", "desc": "argocd-server Ready ≥1" }
+  ],
+  "cleanup": []
+}

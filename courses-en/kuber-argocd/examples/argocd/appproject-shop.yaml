@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: shop
+  namespace: argocd
+spec:
+  description: Shop apps for kuber-argocd labs
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: lab-argocd-staging
+      server: https://kubernetes.default.svc
+    - namespace: lab-argocd-prod
+      server: https://kubernetes.default.svc
+    - namespace: lab-argocd-final
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

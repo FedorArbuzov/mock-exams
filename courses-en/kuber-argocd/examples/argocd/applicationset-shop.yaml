@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: shop-envs
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: staging
+            namespace: lab-argocd-staging
+          - env: prod
+            namespace: lab-argocd-prod
+  template:
+    metadata:
+      name: "shop-{{env}}"
+    spec:
+      project: shop
+      source:
+        repoURL: YOUR_GITOPS_REPO
+        targetRevision: HEAD
+        path: charts/shop
+        helm:
+          valueFiles:
+            - "values-{{env}}.yaml"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

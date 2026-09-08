@@ -1,0 +1,12 @@
+{
+  "id": "kuber-argocd/09-lab-helm",
+  "title": "Lab: Helm Application",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "lab-argocd-helm", "desc": "Namespace lab-argocd-helm exists" },
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "shop-helm", "desc": "Application shop-helm exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd-helm", "name": "shop-helm", "desc": "Deployment shop-helm exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd-helm", "name": "shop-helm", "value": "1", "desc": "shop-helm Ready ≥1" }
+  ],
+  "cleanup": []
+}

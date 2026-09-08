@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: shop-final
+  namespace: argocd
+spec:
+  project: shop
+  source:
+    repoURL: YOUR_GITOPS_REPO
+    targetRevision: HEAD
+    path: charts/shop
+    helm:
+      valueFiles:
+        - values-final.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: lab-argocd-final
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

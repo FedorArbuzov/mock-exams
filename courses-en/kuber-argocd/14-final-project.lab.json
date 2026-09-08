@@ -1,0 +1,12 @@
+{
+  "id": "kuber-argocd/14-final-project",
+  "title": "Final: shop from Git",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "lab-argocd-final", "desc": "Namespace lab-argocd-final exists" },
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "shop-final", "desc": "Application shop-final exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd-final", "name": "shop-final", "desc": "Deployment shop-final exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd-final", "name": "shop-final", "value": "2", "desc": "shop-final Ready ≥2" }
+  ],
+  "cleanup": []
+}
