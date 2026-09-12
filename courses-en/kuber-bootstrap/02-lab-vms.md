@@ -1,10 +1,12 @@
 # 02. Lab: three VMs and Ansible ping
 
-You create the stand yourself: a folder, a `Vagrantfile`, Ansible inventory, then three Ubuntu VMs. Do **not** install Kubernetes yet. You do **not** need the `courses-en` tree.
+You create the stand yourself. Do **not** install Kubernetes yet. You do **not** need the `courses-en` tree.
 
-## Prep
+**Path B (16 GB rented VM + LXD):** finish [ENVIRONMENT.md](ENVIRONMENT.md) Path B first. Skip Tasks 1–3 here. You already have `ansible.cfg` + `inventory/lab.ini` from **B5**. Jump to **Task 4**.
 
-[ENVIRONMENT.md](ENVIRONMENT.md) — VirtualBox + Vagrant on the host; Ansible on Linux/macOS or **WSL2**.
+## Prep (Path A)
+
+[ENVIRONMENT.md](ENVIRONMENT.md) Path A — VirtualBox + Vagrant on the host; Ansible on Linux/macOS or **WSL2**.
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "$HOME\kuber-bootstrap\inventory" | Out-Null

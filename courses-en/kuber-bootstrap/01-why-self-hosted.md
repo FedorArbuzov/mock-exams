@@ -40,7 +40,7 @@ Ansible does **not** invent the control plane. First `kubeadm init` is **by hand
 ## Checklist
 
 - [ ] You can separate “used kubectl” from “installed the API”
-- [ ] You know this course needs **VMs**, not `docker-desktop`
+- [ ] You know this course needs **three Linux nodes**, not `docker-desktop` (Vagrant **or** a 16 GB VM + LXD)
 - [ ] [ENVIRONMENT.md](ENVIRONMENT.md) RAM and Windows/WSL notes are read
 
 Next: [02. Lab: three VMs](02-lab-vms.md).

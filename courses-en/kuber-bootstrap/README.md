@@ -7,18 +7,18 @@ Hands-on **cluster install**: three Linux VMs, **kubeadm** init/join, CNI, etcd 
 
 > This is **not** Docker Desktop Kubernetes and **not** EKS. You build a control plane. Setup: **[ENVIRONMENT.md](ENVIRONMENT.md)**.
 
-Open this course in the UI: **http://127.0.0.1:8091/kuber-bootstrap/README.md** (reading). Labs run on **Vagrant VMs**, not Interactive Check.
+Open this course in the UI: **http://127.0.0.1:8091/kuber-bootstrap/README.md** (reading). Labs are three Linux nodes (Vagrant **or** LXD on a 16 GB VM), not Interactive Check.
 
 ---
 
 ## How to take this course
 
-1. **ENVIRONMENT.md** once — VirtualBox + Vagrant + Ansible (WSL2 on Windows).
+1. **ENVIRONMENT.md** once — Path A (VirtualBox + Vagrant) or Path B (rented 16 GB Ubuntu + LXD).
 2. **Read** the theory page.
-3. **Do** the lab on the three VMs. Lesson 06 is `kubeadm init` **by hand**. Later labs wrap the same steps in roles.
+3. **Do** the lab on the three nodes. Lesson 06 is `kubeadm init` **by hand**. Later labs wrap the same steps in roles.
 4. There is **no** Interactive Check (the lab runner talks to Docker Desktop / LocalStack, not these VMs). Success criteria + [`scripts/verify.sh`](scripts/verify.sh).
 
-Keep Docker Desktop Kubernetes **off** while the VMs run — RAM.
+Path A: turn **off** Docker Desktop Kubernetes — RAM. Path B: do not open `6443` on the public IP.
 
 ---
 
@@ -32,11 +32,12 @@ w2   192.168.56.12   worker          ~1.5 GB
 
 | Piece | Role |
 |-------|------|
-| VirtualBox + Vagrant | three Ubuntu VMs |
-| Ansible on the host (or WSL2) | inventory + roles |
-| `kubectl` on the host | after you copy `admin.conf` from `cp` |
+| Path A: VirtualBox + Vagrant | three Ubuntu VMs on the laptop |
+| Path B: LXD on a 16 GB VM | three containers, same IPs — [ENVIRONMENT](ENVIRONMENT.md) |
+| Ansible | inventory + roles (laptop/WSL or the rented VM) |
+| `kubectl` | after you copy `admin.conf` from `cp` |
 
-**RAM:** **10 GB** free is comfortable; **8 GB** works if you stop Docker Desktop k8s and other stacks.
+**RAM:** Path A — **10 GB** free on the laptop. Path B — **16 GB** on the rented box.
 
 You type the Vagrantfile, inventory, and roles in the labs. There is no checkout of `courses-en` on the student machine. [`examples/`](examples/README.md) is an author reference only.
 
