@@ -1,0 +1,20 @@
+{
+  "id": "kuber-argocd/16-optional-eso",
+  "title": "Optional: External Secrets",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "external-secrets", "desc": "Namespace external-secrets exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "external-secrets", "name": "external-secrets", "desc": "ESO Deployment exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "external-secrets", "name": "external-secrets", "value": "1", "desc": "ESO Ready ≥1" },
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "shop-eso", "desc": "Application shop-eso exists" },
+    { "type": "exists", "kind": "namespace", "name": "lab-argocd-eso", "desc": "Namespace lab-argocd-eso exists" },
+    { "type": "exists", "kind": "serviceaccount", "namespace": "lab-argocd-eso", "name": "shop-eso", "desc": "ServiceAccount shop-eso exists" },
+    { "type": "exists", "kind": "secretstore", "namespace": "lab-argocd-eso", "name": "vault-backend", "desc": "SecretStore vault-backend exists" },
+    { "type": "exists", "kind": "externalsecret", "namespace": "lab-argocd-eso", "name": "shop-eso-db", "desc": "ExternalSecret shop-eso-db exists" },
+    { "type": "exists", "kind": "secret", "namespace": "lab-argocd-eso", "name": "shop-eso-db", "desc": "Synced Secret shop-eso-db exists" },
+    { "type": "hasKey", "kind": "secret", "namespace": "lab-argocd-eso", "name": "shop-eso-db", "key": "password", "desc": "Secret has key password" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd-eso", "name": "shop-eso", "desc": "Deployment shop-eso exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd-eso", "name": "shop-eso", "value": "1", "desc": "shop-eso Ready ≥1" }
+  ],
+  "cleanup": []
+}

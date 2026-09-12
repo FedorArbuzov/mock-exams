@@ -16,6 +16,7 @@ Your GitLab job ends with `kubectl apply -f deploy/`. A weekend hotfix is `kubec
 | Helm / directory source | How repo-server renders manifests |
 | ApplicationSet | Many Applications from one template |
 | Troubleshooting | ComparisonError, bad path, git auth |
+| Optional Vault Injector / ESO | Git has annotations or ExternalSecret; the password is not in Git |
 
 ## CI vs CD
 
@@ -51,7 +52,7 @@ Benefits: review in a merge request, audit via git log, rollback via git, drift 
 ## What GitOps does **not** replace
 
 - Image builds and unit tests — still CI  
-- Secrets in plaintext Git — use Vault / External Secrets ([kuber-vault](../kuber-vault/README.md))  
+- Secrets in plaintext Git — optional [15](15-optional-vault-inject.md) (Injector) and [16](16-optional-eso.md) (ESO), or the full [`kuber-vault`](../kuber-vault/README.md) track  
 - Database contents — backups, not `git revert` on a Deployment  
 
 ## When **not** to force GitOps

@@ -1,0 +1,18 @@
+{
+  "id": "kuber-argocd/15-optional-vault-inject",
+  "title": "Optional: Vault Injector",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "vault", "desc": "Namespace vault exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "vault", "name": "vault-agent-injector", "desc": "Injector Deployment exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "vault", "name": "vault-agent-injector", "value": "1", "desc": "Injector Ready ≥1" },
+    { "type": "exists", "kind": "application", "namespace": "argocd", "name": "shop-vault", "desc": "Application shop-vault exists" },
+    { "type": "exists", "kind": "namespace", "name": "lab-argocd-vault", "desc": "Namespace lab-argocd-vault exists" },
+    { "type": "exists", "kind": "serviceaccount", "namespace": "lab-argocd-vault", "name": "shop-vault", "desc": "ServiceAccount shop-vault exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-argocd-vault", "name": "shop-vault", "desc": "Deployment shop-vault exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-argocd-vault", "name": "shop-vault", "value": "1", "desc": "shop-vault Ready ≥1" },
+    { "type": "annotation", "kind": "deployment", "namespace": "lab-argocd-vault", "name": "shop-vault", "key": "vault.hashicorp.com/agent-inject", "value": "true", "desc": "Pod template has vault.hashicorp.com/agent-inject=true" },
+    { "type": "annotation", "kind": "deployment", "namespace": "lab-argocd-vault", "name": "shop-vault", "key": "vault.hashicorp.com/role", "value": "shop-vault", "desc": "Pod template has vault.hashicorp.com/role=shop-vault" }
+  ],
+  "cleanup": []
+}

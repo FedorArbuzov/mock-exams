@@ -25,41 +25,28 @@ kubectl get nodes
 helm version
 ```
 
-### C. Public Git repo (required)
+### C. Public Git repo (you create it in lesson 05)
 
-Create an empty **public** GitHub or GitLab repository, for example `gitops-lab`. Clone it and copy the course examples into the **repo root**:
+Do **not** copy files from this course repo. In [05-lab-first-app.md](05-lab-first-app.md) you:
 
-```bash
-# from the mock-exams checkout
-cp -r courses-en/kuber-argocd/examples/apps ./gitops-lab/
-cp -r courses-en/kuber-argocd/examples/charts ./gitops-lab/
-cd gitops-lab
-git add apps charts
-git commit -m "lab: hello app + shop chart"
-git push
-```
+1. Create `~/gitops-lab` and write `apps/hello/app.yaml` yourself  
+2. Push it to an empty **public** GitHub/GitLab repository  
+3. Apply the Application CR from `~/kuber-argocd/` (that YAML stays **off** Git)
 
-PowerShell (from the mock-exams checkout):
+Argo CD clones **HTTPS**. Keep the repo public so you do not need a token.
 
-```powershell
-Copy-Item -Recurse courses-en\kuber-argocd\examples\apps gitops-lab\
-Copy-Item -Recurse courses-en\kuber-argocd\examples\charts gitops-lab\
-```
-
-Repo layout Argo will see:
+Later labs add paths in the **same** repo:
 
 ```text
-apps/hello/          # plain YAML (lessons 05, 07, 13)
-charts/shop/         # Helm chart (lessons 09, 11, 14)
+apps/hello/          # you write in lesson 05 (also 07, 13)
+charts/shop/         # you write in lesson 09 (also 11, 14)
+apps/shop-vault/     # optional lesson 15 — annotations only, no password
+apps/shop-eso/       # optional lesson 16 — ExternalSecret, no password
 ```
-
-Set your HTTPS URL (no credentials — keep the repo public):
 
 ```bash
 export GITOPS_REPO=https://github.com/YOUR_USER/gitops-lab.git
 ```
-
-You will paste this URL into Application YAMLs under [examples/argocd/](examples/argocd/) (`YOUR_GITOPS_REPO`).
 
 **Refresh after every push:** Argo polls on an interval (often ~3 min). In the UI click **Refresh**, or:
 
@@ -120,7 +107,7 @@ Optional CLI: install `argocd` from [Argo CD releases](https://github.com/argopr
 mkdir -p ~/kuber-argocd && cd ~/kuber-argocd
 ```
 
-Keep Application CRs here (copied from `examples/argocd/`). Workloads belong in Git, not in this folder.
+Application CRs (`hello.yaml`, …) live here. Workloads live in **`~/gitops-lab`** and on Git, not in this folder.
 
 | Namespace | Role |
 |-----------|------|
@@ -130,6 +117,8 @@ Keep Application CRs here (copied from `examples/argocd/`). Workloads belong in 
 | `lab-argocd-staging` / `lab-argocd-prod` | ApplicationSet lab |
 | `lab-argocd-fix` | Troubleshooting lab |
 | `lab-argocd-final` | Final project |
+| `vault` / `lab-argocd-vault` | Optional lesson 15 (Vault + injected app) |
+| `external-secrets` / `lab-argocd-eso` | Optional lesson 16 (ESO + synced Secret) |
 
 ## Interactive Check
 
@@ -146,13 +135,12 @@ If you already run the [gitlab-cicd](../gitlab-cicd/ENVIRONMENT.md) one-liner, y
 
 ## Uninstall (end of course)
 
-```bash
+```powershell
 kubectl -n argocd delete applicationset,application,appproject --all
 helm uninstall argocd -n argocd
-kubectl delete namespace argocd lab-argocd lab-argocd-helm \
-  lab-argocd-staging lab-argocd-prod lab-argocd-fix lab-argocd-final \
-  --ignore-not-found
-# CRDs may remain — optional: kubectl get crd | grep argoproj.io
+helm uninstall vault -n vault
+helm uninstall external-secrets -n external-secrets
+kubectl delete namespace argocd vault external-secrets lab-argocd lab-argocd-helm lab-argocd-staging lab-argocd-prod lab-argocd-fix lab-argocd-final lab-argocd-vault lab-argocd-eso --ignore-not-found
 ```
 
 ## Sanity checklist
@@ -160,7 +148,7 @@ kubectl delete namespace argocd lab-argocd lab-argocd-helm \
 - [ ] `kubectl get nodes` → Ready  
 - [ ] Pods Running in `argocd`  
 - [ ] UI login as `admin` works  
-- [ ] Public `GITOPS_REPO` has `apps/hello` and `charts/shop`  
+- [ ] After lesson 05: public `GITOPS_REPO` has `apps/hello/app.yaml` you wrote  
 - [ ] http://127.0.0.1:8091/ → courses  
 
 ## Related

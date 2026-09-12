@@ -84,22 +84,14 @@ Interactive Check on this lesson.
 4. Scale to 1 → selfHeal back to 2  
 5. Interactive Check pass  
 
-## Cleanup
-
-```bash
-kubectl -n argocd delete application shop-final --ignore-not-found
-kubectl -n argocd delete applicationset shop-envs --ignore-not-found
-kubectl -n argocd delete application hello hello-fix shop-helm --ignore-not-found
-helm uninstall argocd -n argocd
-kubectl delete namespace argocd lab-argocd lab-argocd-helm \
-  lab-argocd-staging lab-argocd-prod lab-argocd-fix lab-argocd-final \
-  --ignore-not-found
-```
-
 ## Self-check
 
 - [ ] Where does a production image tag change belong — CI commit to gitops, or `kubectl set image`?  
 - [ ] App-of-apps vs ApplicationSet — which did you use here?  
 - [ ] What breaks if this Application and a GitLab `kubectl apply` job share the Deployment?  
 
-Congratulations — you completed the Argo CD track.
+Optional next (secrets without Git): [15. Vault Injector](15-optional-vault-inject.md). Skip cleanup if you continue — Argo must stay installed.
+
+## Cleanup
+
+Only when you are **done** with optional 15 (or you skip 15). Commands: [15 cleanup](15-optional-vault-inject.md#cleanup-end-of-the-whole-course) or [ENVIRONMENT.md](ENVIRONMENT.md).

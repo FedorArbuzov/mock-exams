@@ -7,11 +7,13 @@ Install Argo CD into namespace **`argocd`** with Helm and open the UI.
 ## Prerequisites
 
 - [ENVIRONMENT.md](ENVIRONMENT.md) — Docker Desktop Ready, Helm 3  
-- Public gitops repo prepared (you will use it from lesson 05)
+- GitHub/GitLab account (you create the gitops repo in [lesson 05](05-lab-first-app.md), not now)
+
+Paste **one command per line**. PowerShell does not treat `\` as a line break.
 
 ## Task 1. Helm repo
 
-```bash
+```powershell
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 ```
@@ -20,39 +22,33 @@ helm repo update
 
 Dex and notifications are off to save RAM. `server.insecure` lets you port-forward over **HTTP**.
 
-```bash
-helm upgrade --install argocd argo/argo-cd \
-  --namespace argocd --create-namespace \
-  --set dex.enabled=false \
-  --set notifications.enabled=false \
-  --set configs.params."server.insecure"=true
+```powershell
+helm upgrade --install argocd argo/argo-cd --namespace argocd --create-namespace --set dex.enabled=false --set notifications.enabled=false --set configs.params."server.insecure"=true
 ```
 
-```bash
+```powershell
 kubectl -n argocd get pods -w
-# server, repo-server, application-controller, redis, applicationset-controller Ready
-# Ctrl+C
 ```
+
+Wait until `server`, `repo-server`, `application-controller`, `redis`, `applicationset-controller` are Ready. Then Ctrl+C.
 
 ## Task 3. Password and UI
 
-```bash
-kubectl -n argocd get secret argocd-initial-admin-secret \
-  -o jsonpath="{.data.password}" | base64 -d
-echo
+```powershell
+[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}")))
 ```
 
-```bash
+```powershell
 kubectl -n argocd port-forward svc/argocd-server 8080:80
 ```
 
-Open **http://127.0.0.1:8080** — user **`admin`**, password from the secret. Use `127.0.0.1` on Windows.
+Open **http://127.0.0.1:8080** — user **`admin`**, password from the command above. Use `127.0.0.1`, not `localhost`.
 
 ## Task 4. Smoke
 
-```bash
+```powershell
 kubectl -n argocd get deploy
-kubectl -n argocd get crd | grep argoproj.io
+kubectl get crd | findstr argoproj
 ```
 
 You should see `applications.argoproj.io` and `applicationsets.argoproj.io`.

@@ -28,10 +28,10 @@ Setup: **[ENVIRONMENT.md](ENVIRONMENT.md)** · UI: **http://127.0.0.1:8091/kuber
 | Courses UI | QUICKSTART | http://127.0.0.1:8091/ |
 | Kubernetes | Docker Desktop | context `docker-desktop` |
 | Argo CD | Helm `argo/argo-cd` | namespace `argocd` |
-| Desired state | **your public Git repo** | copy `examples/apps` + `examples/charts` |
+| Desired state | **your public Git repo** | you write YAML there starting in lesson 05 |
 | UI | port-forward `argocd-server` | http://127.0.0.1:8080 |
 
-**RAM:** **6+ GB** free for Docker recommended (Argo CD + a few apps). Disable Dex/notifications in the install (lesson 03) to keep it light.
+**RAM:** **6+ GB** free for Docker recommended (Argo CD + a few apps). Optional lesson 15 adds Vault — **8 GB** is more comfortable. Disable Dex/notifications in the install (lesson 03) to keep it light.
 
 **Git:** Argo CD clones **HTTPS**. A public GitHub/GitLab repo is enough. Local GitLab from [`gitlab-cicd`](../gitlab-cicd/ENVIRONMENT.md) is optional, not required.
 
@@ -71,6 +71,11 @@ Setup: **[ENVIRONMENT.md](ENVIRONMENT.md)** · UI: **http://127.0.0.1:8091/kuber
 13. [Lab: fix a broken Application](13-lab-troubleshooting.md)
 14. [Final project: shop from Git](14-final-project.md)
 
+### Optional (15)
+
+15. [Vault Injector after GitOps](15-optional-vault-inject.md) — Helm Vault, annotations in Git, file in the Pod
+16. [External Secrets](16-optional-eso.md) — Helm ESO, `ExternalSecret` in Git, native Secret from Vault
+
 ---
 
 ## What you should end up with
@@ -82,6 +87,7 @@ Setup: **[ENVIRONMENT.md](ENVIRONMENT.md)** · UI: **http://127.0.0.1:8091/kuber
 - Generate staging + prod with an **ApplicationSet** (list generator).
 - Debug ComparisonError, bad path, and stuck sync.
 - Keep **CI** (build image, bump tag in Git) separate from **CD** (Argo syncs).
+- Optional: Injector (file in the Pod) vs **ESO** (Secret in the cluster); neither puts the password in Git.
 
 ## Related
 

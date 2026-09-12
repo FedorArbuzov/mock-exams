@@ -1,0 +1,11 @@
+{
+  "id": "kuber-vault/11-lab-compare",
+  "title": "Lab: plain Secret contrast",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "secret", "namespace": "checkout", "name": "checkout-db-plain", "desc": "Secret checkout-db-plain exists" },
+    { "type": "hasKey", "kind": "secret", "namespace": "checkout", "name": "checkout-db-plain", "key": "password", "desc": "Secret has key password" },
+    { "type": "exists", "kind": "deployment", "namespace": "checkout", "name": "checkout", "desc": "Injected Deployment checkout still present" }
+  ],
+  "cleanup": []
+}

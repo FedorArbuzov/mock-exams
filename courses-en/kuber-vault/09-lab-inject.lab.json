@@ -1,0 +1,12 @@
+{
+  "id": "kuber-vault/09-lab-inject",
+  "title": "Lab: Agent Injector",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "deployment", "namespace": "checkout", "name": "checkout", "desc": "Deployment checkout exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "checkout", "name": "checkout", "value": "1", "desc": "Deployment checkout Ready ≥1" },
+    { "type": "annotation", "kind": "deployment", "namespace": "checkout", "name": "checkout", "key": "vault.hashicorp.com/agent-inject", "value": "true", "desc": "Pod template has vault.hashicorp.com/agent-inject=true" },
+    { "type": "annotation", "kind": "deployment", "namespace": "checkout", "name": "checkout", "key": "vault.hashicorp.com/role", "value": "checkout-app", "desc": "Pod template has vault.hashicorp.com/role=checkout-app" }
+  ],
+  "cleanup": []
+}

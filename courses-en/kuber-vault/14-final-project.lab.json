@@ -1,0 +1,14 @@
+{
+  "id": "kuber-vault/14-final-project",
+  "title": "Final project: checkout secrets",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "lab-vault-final", "desc": "Namespace lab-vault-final exists" },
+    { "type": "exists", "kind": "serviceaccount", "namespace": "lab-vault-final", "name": "checkout-app", "desc": "ServiceAccount checkout-app exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "lab-vault-final", "name": "checkout", "desc": "Deployment checkout exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "lab-vault-final", "name": "checkout", "value": "1", "desc": "Deployment checkout Ready ≥1" },
+    { "type": "annotation", "kind": "deployment", "namespace": "lab-vault-final", "name": "checkout", "key": "vault.hashicorp.com/agent-inject", "value": "true", "desc": "agent-inject=true on Pod template" },
+    { "type": "annotation", "kind": "deployment", "namespace": "lab-vault-final", "name": "checkout", "key": "vault.hashicorp.com/role", "value": "checkout-final", "desc": "role=checkout-final on Pod template" }
+  ],
+  "cleanup": []
+}

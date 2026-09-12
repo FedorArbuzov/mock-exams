@@ -1,0 +1,38 @@
+---
+- name: kubeadm init (first time only)
+  ansible.builtin.command: >
+    kubeadm init
+    --apiserver-advertise-address={{ k8s_advertise_address }}
+    --pod-network-cidr={{ pod_network_cidr }}
+  args:
+    creates: /etc/kubernetes/admin.conf
+
+- name: kubeconfig for vagrant
+  ansible.builtin.file:
+    path: /home/vagrant/.kube
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: "0755"
+
+- name: Copy admin.conf for vagrant
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/vagrant/.kube/config
+    remote_src: true
+    owner: vagrant
+    group: vagrant
+    mode: "0600"
+
+- name: Wait for API
+  ansible.builtin.command: kubectl --kubeconfig=/etc/kubernetes/admin.conf get --raw=/healthz
+  register: api_health
+  retries: 30
+  delay: 4
+  until: api_health.rc == 0
+  changed_when: false
+
+- name: Apply Flannel
+  ansible.builtin.command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f {{ flannel_manifest }}
+  register: flannel_apply
+  changed_when: "'created' in flannel_apply.stdout or 'configured' in flannel_apply.stdout"

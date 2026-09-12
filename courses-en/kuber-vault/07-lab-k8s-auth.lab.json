@@ -1,0 +1,12 @@
+{
+  "id": "kuber-vault/07-lab-k8s-auth",
+  "title": "Lab: Kubernetes auth role bindings",
+  "setup": [
+    { "op": "ensureNamespace", "name": "checkout" }
+  ],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "checkout", "desc": "Namespace checkout exists" },
+    { "type": "exists", "kind": "serviceaccount", "namespace": "checkout", "name": "checkout-app", "desc": "ServiceAccount checkout-app exists" }
+  ],
+  "cleanup": []
+}

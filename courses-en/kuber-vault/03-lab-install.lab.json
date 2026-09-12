@@ -1,0 +1,12 @@
+{
+  "id": "kuber-vault/03-lab-install",
+  "title": "Lab: install Vault",
+  "setup": [],
+  "checks": [
+    { "type": "exists", "kind": "namespace", "name": "vault", "desc": "Namespace vault exists" },
+    { "type": "exists", "kind": "statefulset", "namespace": "vault", "name": "vault", "desc": "StatefulSet vault exists" },
+    { "type": "exists", "kind": "deployment", "namespace": "vault", "name": "vault-agent-injector", "desc": "Injector Deployment exists" },
+    { "type": "ready", "kind": "deployment", "namespace": "vault", "name": "vault-agent-injector", "value": "1", "desc": "Injector Ready ≥1" }
+  ],
+  "cleanup": []
+}
