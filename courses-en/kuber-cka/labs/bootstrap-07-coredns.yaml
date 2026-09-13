@@ -1,0 +1,20 @@
+id: bootstrap-07-coredns
+title: Bootstrap 07 — CoreDNS
+track: bootstrap
+prerequisites:
+- type: nodes_ready
+  min: 3
+  desc: nodes Ready
+setup: []
+initial_state: []
+task: Bootstrap 07 — CoreDNS
+verify:
+- type: coredns_healthy
+  desc: CoreDNS Ready
+  points: 5
+- type: dns_resolves
+  name: kubernetes.default.svc.cluster.local
+  namespace: default
+  desc: cluster DNS resolves kubernetes.default
+  points: 5
+cleanup: []

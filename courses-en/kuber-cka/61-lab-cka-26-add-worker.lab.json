@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/61-lab-cka-26-add-worker",
+  "title": "CKA 26 \u2014 Add a worker",
+  "backend": "labctl",
+  "labId": "cka-26-add-worker",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/48-lab-cka-19-etcd",
+  "title": "CKA 19 \u2014 etcd degradation",
+  "backend": "labctl",
+  "labId": "cka-19-etcd",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

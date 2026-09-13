@@ -1,0 +1,36 @@
+id: oncall-09
+title: ON-CALL 09 — etcd degradation
+track: oncall
+namespace: oncall-09
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: tc_delay
+  node: control-plane
+  value: 2000ms
+initial_state:
+- type: etcd_healthy
+  desc: etcd process still present
+task: 'Kubernetes API is extremely slow.
+
+  Investigate control-plane health.'
+root_cause: Artificial latency in front of the control plane / etcd path.
+hide_root_cause: true
+verify:
+- type: etcd_healthy
+  desc: etcd healthy
+  points: 5
+- type: control_plane_healthy
+  desc: control plane healthy
+  points: 5
+cleanup:
+- op: tc_clear
+  node: control-plane
+ticket:
+  id: INC-09
+  priority: P1
+  title: etcd degradation
+  body: 'Kubernetes API is extremely slow.
+
+    Investigate control-plane health.'

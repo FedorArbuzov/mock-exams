@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/21-lab-cka-01-pod",
+  "title": "CKA 01 \u2014 Create a Pod",
+  "backend": "labctl",
+  "labId": "cka-01-pod",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

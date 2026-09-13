@@ -1,0 +1,38 @@
+id: oncall-18
+title: ON-CALL 18 — Kubernetes upgrade
+track: oncall
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup: []
+initial_state:
+- type: nodes_ready
+  min: 3
+  desc: cluster healthy before upgrade
+task: 'Upgrade the Kubernetes cluster to the required
+
+  version with minimal disruption.'
+verify:
+- type: kubernetes_version
+  value: v1.32
+  desc: server version 1.32.x
+  points: 6
+- type: nodes_ready
+  min: 3
+  desc: nodes Ready after upgrade
+  points: 4
+cleanup: []
+ticket:
+  id: INC-18
+  priority: P2
+  title: Kubernetes upgrade
+  body: 'Upgrade the Kubernetes cluster to the required
+
+    version with minimal disruption.'

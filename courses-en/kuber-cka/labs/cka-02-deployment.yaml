@@ -1,0 +1,54 @@
+id: cka-02-deployment
+title: Deployment
+track: cka
+namespace: cka-02
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-02
+- op: ensure_namespace
+  name: cka-02
+initial_state:
+- type: namespace_exists
+  name: cka-02
+  desc: Namespace cka-02 exists
+task: Create Deployment frontend in cka-02 with 3 replicas, image nginx:1.27. Rollout
+  must complete.
+verify:
+- type: exists
+  kind: deployment
+  name: frontend
+  namespace: cka-02
+  desc: Deployment frontend exists
+  points: 2
+- type: replicas
+  kind: deployment
+  name: frontend
+  namespace: cka-02
+  value: '3'
+  desc: 3 replicas
+  points: 3
+- type: image
+  kind: deployment
+  name: frontend
+  namespace: cka-02
+  value: nginx:1.27
+  desc: image nginx:1.27
+  points: 2
+- type: rollout_complete
+  name: frontend
+  namespace: cka-02
+  desc: rollout complete
+  points: 3
+cleanup:
+- op: delete_namespace
+  name: cka-02

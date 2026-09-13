@@ -1,0 +1,49 @@
+id: oncall-05
+title: ON-CALL 05 — DNS failure
+track: oncall
+namespace: oncall-05
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: backup_configmap
+  name: coredns
+  namespace: kube-system
+- op: apply
+  file: manifests/broken-coredns.yaml
+- op: sleep
+  value: '5'
+initial_state:
+- type: api_reachable
+  desc: API still reachable
+task: 'Applications cannot resolve internal
+
+  Kubernetes service names.'
+root_cause: CoreDNS Corefile was replaced with a broken forwarder.
+hide_root_cause: true
+verify:
+- type: coredns_healthy
+  desc: CoreDNS healthy
+  points: 4
+- type: dns_resolves
+  name: kubernetes.default.svc.cluster.local
+  namespace: default
+  desc: kubernetes.default resolves
+  points: 6
+cleanup:
+- op: apply
+  file: manifests/coredns-good.yaml
+- op: kubectl
+  args:
+  - -n
+  - kube-system
+  - rollout
+  - restart
+  - deploy/coredns
+ticket:
+  id: INC-05
+  priority: P1
+  title: DNS failure
+  body: 'Applications cannot resolve internal
+
+    Kubernetes service names.'

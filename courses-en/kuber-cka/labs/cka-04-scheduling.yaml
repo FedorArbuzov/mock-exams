@@ -1,0 +1,50 @@
+id: cka-04-scheduling
+title: Scheduling
+track: cka
+namespace: cka-04
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-04
+- op: ensure_namespace
+  name: cka-04
+- op: label_node
+  node: worker-1
+  key: disk
+  value: ssd
+initial_state:
+- type: namespace_exists
+  name: cka-04
+  desc: Namespace ready
+task: Create Pod web in cka-04 that must run only on the node labeled disk=ssd. Image
+  nginx:1.27. Pod Running on that node.
+verify:
+- type: pod_running
+  name: web
+  namespace: cka-04
+  desc: Pod web Running
+  points: 4
+- type: pod_on_node
+  name: web
+  namespace: cka-04
+  labels:
+    disk: ssd
+  desc: scheduled on disk=ssd
+  points: 6
+cleanup:
+- op: delete_namespace
+  name: cka-04
+- op: unlabel_node
+  node: worker-1
+  key: disk
+explanation: nodeSelector or nodeAffinity both pass if the Pod lands on the labeled
+  node.

@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/81-lab-oncall-11",
+  "title": "ON-CALL 11 \u2014 DiskPressure",
+  "backend": "labctl",
+  "labId": "oncall-11",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

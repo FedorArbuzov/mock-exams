@@ -97,6 +97,7 @@ mockctl localstack down
 
 - `setup`/`cleanup` op: `apply` (манифест YAML из дерева курсов, `"manifest": "<fs-путь>"`), `delete` (kind/name/namespace), `ensureNamespace`, `deleteNamespace`.
 - `checks` type: `exists`, `running`, `image`, `replicas`, `ready`, `label` (+`key`/`value`), `env` (+`key`/`value`).
+- `backend: "labctl"` — делегирует Start/Check/Cleanup в Python-движок [`labctl`](../labctl/README.md) (курс `kuber-cka`, настоящий multi-node кластер). Поле `labId` — id YAML-определения.
 
 Первый пример — [`courses-en/kuber-basic/07-lab-pods.lab.json`](../courses-en/kuber-basic/07-lab-pods.lab.json).
 

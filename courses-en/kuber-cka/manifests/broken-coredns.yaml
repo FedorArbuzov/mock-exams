@@ -1,0 +1,20 @@
+# Applied onto kube-system CoreDNS to make DNS fail while the Pod may still run.
+# Cleanup restores the Corefile via kubectl rollout / known good snippet.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+data:
+  Corefile: |
+    .:53 {
+        errors
+        # ready plugin removed on purpose — plus a bogus forward
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+           pods insecure
+           fallthrough in-addr.arpa ip6.arpa
+        }
+        forward . 203.0.113.1
+        loop
+        cache 30
+    }

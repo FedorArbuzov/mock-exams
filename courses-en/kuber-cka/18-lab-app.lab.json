@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/18-lab-app",
+  "title": "Bootstrap 08 \u2014 Shop app",
+  "backend": "labctl",
+  "labId": "bootstrap-08-app",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

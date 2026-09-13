@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/52-lab-cka-23-drain",
+  "title": "CKA 23 \u2014 Cordon / drain",
+  "backend": "labctl",
+  "labId": "cka-23-drain",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

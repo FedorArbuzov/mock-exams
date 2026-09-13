@@ -1,0 +1,80 @@
+id: cka-07-ingress
+title: Ingress
+track: cka
+namespace: cka-07
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-07
+- op: ensure_namespace
+  name: cka-07
+- op: kubectl
+  args:
+  - -n
+  - cka-07
+  - create
+  - deployment
+  - frontend
+  - --image=nginx:1.27
+  - --replicas=1
+- op: kubectl
+  args:
+  - -n
+  - cka-07
+  - label
+  - deploy
+  - frontend
+  - app=frontend
+  - --overwrite
+- op: kubectl
+  args:
+  - -n
+  - cka-07
+  - expose
+  - deploy
+  - frontend
+  - --port=80
+  - --target-port=80
+  - --name=frontend
+- op: wait
+  kind: deployment
+  name: frontend
+  namespace: cka-07
+initial_state:
+- type: exists
+  kind: service
+  name: frontend
+  namespace: cka-07
+  desc: frontend Service exists
+task: 'Create Ingress app in cka-07: host app.example.com → Service frontend:80.'
+verify:
+- type: exists
+  kind: ingress
+  name: app
+  namespace: cka-07
+  desc: Ingress app exists
+  points: 3
+- type: ingress_host
+  name: app
+  namespace: cka-07
+  host: app.example.com
+  desc: host app.example.com
+  points: 4
+- type: ingress_backend
+  name: app
+  namespace: cka-07
+  value: frontend
+  desc: backend frontend
+  points: 3
+cleanup:
+- op: delete_namespace
+  name: cka-07

@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/23-lab-cka-03-rollout",
+  "title": "CKA 03 \u2014 Rolling update",
+  "backend": "labctl",
+  "labId": "cka-03-rollout",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

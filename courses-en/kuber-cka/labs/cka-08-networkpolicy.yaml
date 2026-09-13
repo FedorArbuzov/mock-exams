@@ -1,0 +1,51 @@
+id: cka-08-networkpolicy
+title: NetworkPolicy
+track: cka
+namespace: cka-08
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-08
+- op: ensure_namespace
+  name: cka-08
+initial_state:
+- type: namespace_exists
+  name: cka-08
+  desc: Namespace cka-08 exists
+task: 'In cka-08 create frontend, backend, redis (labels app=frontend|backend|redis)
+  and NetworkPolicies: frontend→backend ALLOW, backend→redis ALLOW, frontend→redis
+  DENY. Default deny other ingress in the namespace is acceptable.'
+verify:
+- type: exists
+  kind: networkpolicy
+  name: allow-frontend-to-backend
+  namespace: cka-08
+  desc: policy frontend→backend
+  points: 4
+- type: exists
+  kind: networkpolicy
+  name: allow-backend-to-redis
+  namespace: cka-08
+  desc: policy backend→redis
+  points: 3
+- type: exists
+  kind: networkpolicy
+  name: deny-frontend-to-redis
+  namespace: cka-08
+  desc: policy frontend↛redis (or equivalent default-deny)
+  points: 3
+cleanup:
+- op: delete_namespace
+  name: cka-08
+explanation: Names can differ if you used one default-deny plus two allow policies
+  — then rename or add the expected objects. The listed names are the contract for
+  this lab.

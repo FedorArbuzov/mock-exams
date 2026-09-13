@@ -1,0 +1,14 @@
+id: bootstrap-05-etcd
+title: Bootstrap 05 — etcd
+track: bootstrap
+prerequisites:
+- type: api_reachable
+  desc: API reachable
+setup: []
+initial_state: []
+task: Bootstrap 05 — etcd
+verify:
+- type: etcd_healthy
+  desc: etcd Pod Running
+  points: 10
+cleanup: []

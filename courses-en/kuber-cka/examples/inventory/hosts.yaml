@@ -1,0 +1,34 @@
+# Kubespray-style inventory (v2.27). Copy ideas into
+# ~/kuber-cka/kubespray/inventory/lab/hosts.yaml — do not assume this path is live.
+all:
+  hosts:
+    node-01:
+      ansible_host: 192.168.56.10
+      ip: 192.168.56.10
+      access_ip: 192.168.56.10
+    node-02:
+      ansible_host: 192.168.56.11
+      ip: 192.168.56.11
+      access_ip: 192.168.56.11
+    node-03:
+      ansible_host: 192.168.56.12
+      ip: 192.168.56.12
+      access_ip: 192.168.56.12
+  children:
+    kube_control_plane:
+      hosts:
+        node-01:
+    kube_node:
+      hosts:
+        node-01:
+        node-02:
+        node-03:
+    etcd:
+      hosts:
+        node-01:
+    k8s_cluster:
+      children:
+        kube_control_plane:
+        kube_node:
+    calico_rr:
+      hosts: {}

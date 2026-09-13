@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/11-lab-nodes",
+  "title": "Bootstrap 01 \u2014 Linux nodes",
+  "backend": "labctl",
+  "labId": "bootstrap-01-nodes",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

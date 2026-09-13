@@ -1,0 +1,64 @@
+id: cka-11-pvc
+title: PVC
+track: cka
+namespace: cka-11
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-11
+- op: ensure_namespace
+  name: cka-11
+initial_state:
+- type: namespace_exists
+  name: cka-11
+  desc: Namespace ready
+task: Create PVC data 1Gi ReadWriteOnce. Mount it on Pod keeper (nginx:1.27) at /data.
+  PVC Bound, Pod Running.
+verify:
+- type: exists
+  kind: pvc
+  name: data
+  namespace: cka-11
+  desc: PVC data exists
+  points: 2
+- type: pvc_size
+  name: data
+  namespace: cka-11
+  value: 1Gi
+  desc: 1Gi
+  points: 2
+- type: pvc_access_mode
+  name: data
+  namespace: cka-11
+  value: ReadWriteOnce
+  desc: ReadWriteOnce
+  points: 2
+- type: pvc_bound
+  name: data
+  namespace: cka-11
+  desc: PVC Bound
+  points: 2
+- type: volume_mounted
+  kind: pod
+  name: keeper
+  namespace: cka-11
+  value: data
+  desc: mounted in Pod keeper
+  points: 1
+- type: pod_running
+  name: keeper
+  namespace: cka-11
+  desc: Pod Running
+  points: 1
+cleanup:
+- op: delete_namespace
+  name: cka-11

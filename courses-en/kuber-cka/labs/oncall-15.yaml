@@ -1,0 +1,46 @@
+id: oncall-15
+title: ON-CALL 15 — CoreDNS failure
+track: oncall
+namespace: oncall-15
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: kubectl
+  args:
+  - -n
+  - kube-system
+  - set
+  - image
+  - deploy/coredns
+  - coredns=nginx:does-not-exist
+- op: sleep
+  value: '5'
+initial_state:
+- type: api_reachable
+  desc: API reachable
+task: Internal DNS resolution has stopped working.
+root_cause: CoreDNS image was pointed at a nonexistent image.
+hide_root_cause: true
+verify:
+- type: coredns_healthy
+  desc: CoreDNS healthy
+  points: 5
+- type: dns_resolves
+  name: kubernetes.default.svc.cluster.local
+  namespace: default
+  desc: DNS works
+  points: 5
+cleanup:
+- op: kubectl
+  args:
+  - -n
+  - kube-system
+  - rollout
+  - undo
+  - deploy/coredns
+ticket:
+  id: INC-15
+  priority: P1
+  title: CoreDNS failure
+  body: Internal DNS resolution has stopped working.

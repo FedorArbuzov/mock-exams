@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/26-lab-cka-06-service",
+  "title": "CKA 06 \u2014 Service",
+  "backend": "labctl",
+  "labId": "cka-06-service",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

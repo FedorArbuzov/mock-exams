@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/77-lab-oncall-07",
+  "title": "ON-CALL 07 \u2014 Ingress only works on one node",
+  "backend": "labctl",
+  "labId": "oncall-07",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

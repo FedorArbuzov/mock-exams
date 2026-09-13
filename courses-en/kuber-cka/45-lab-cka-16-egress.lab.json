@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/45-lab-cka-16-egress",
+  "title": "CKA 16 \u2014 No Internet egress",
+  "backend": "labctl",
+  "labId": "cka-16-egress",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

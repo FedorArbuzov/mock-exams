@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/49-lab-cka-20-oom",
+  "title": "CKA 20 \u2014 OOMKilled",
+  "backend": "labctl",
+  "labId": "cka-20-oom",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

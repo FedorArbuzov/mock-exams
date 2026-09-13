@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/62-lab-cka-27-remove-worker",
+  "title": "CKA 27 \u2014 Remove a worker",
+  "backend": "labctl",
+  "labId": "cka-27-remove-worker",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

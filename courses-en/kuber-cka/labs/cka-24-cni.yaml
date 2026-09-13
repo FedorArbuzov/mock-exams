@@ -1,0 +1,32 @@
+id: cka-24-cni
+title: CKA 24 — Broken CNI
+track: troubleshooting
+namespace: cka-24
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: ssh
+  node: worker-1
+  command: ip link set cni0 down 2>/dev/null || ip link set flannel.1 down 2>/dev/null
+    || true
+initial_state:
+- type: api_reachable
+  desc: API reachable
+task: Pod-to-Pod traffic between nodes is broken. Diagnose Linux networking and CNI.
+  Restore it.
+root_cause: A CNI bridge/interface was put down on a worker.
+hide_root_cause: true
+verify:
+- type: cni_healthy
+  desc: CNI healthy
+  points: 5
+- type: nodes_ready
+  min: 3
+  desc: nodes Ready
+  points: 5
+cleanup:
+- op: ssh
+  node: worker-1
+  command: ip link set cni0 up 2>/dev/null || ip link set flannel.1 up 2>/dev/null
+    || true

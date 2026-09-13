@@ -1,0 +1,45 @@
+id: cka-12-pending
+title: CKA 12 — Pod Pending
+track: troubleshooting
+namespace: cka-12
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-12
+- op: ensure_namespace
+  name: cka-12
+- op: apply
+  file: manifests/pending-nodeselector.yaml
+initial_state:
+- type: pod_pending
+  name: checkout
+  namespace: cka-12
+  desc: workload checkout is Pending
+task: Pod checkout in cka-12 is Pending. Find why and make it Running. Do not delete
+  the Pod and replace it with an unrelated app.
+root_cause: The Pod has a nodeSelector that matches no node.
+hide_root_cause: true
+verify:
+- type: exists
+  kind: pod
+  name: checkout
+  namespace: cka-12
+  desc: Pod checkout still exists
+  points: 2
+- type: pod_running
+  name: checkout
+  namespace: cka-12
+  desc: Pod is Running
+  points: 8
+cleanup:
+- op: delete_namespace
+  name: cka-12

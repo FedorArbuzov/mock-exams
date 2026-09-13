@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/25-lab-cka-05-taints",
+  "title": "CKA 05 \u2014 Taints / tolerations",
+  "backend": "labctl",
+  "labId": "cka-05-taints",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

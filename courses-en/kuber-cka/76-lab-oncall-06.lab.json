@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/76-lab-oncall-06",
+  "title": "ON-CALL 06 \u2014 Internet egress",
+  "backend": "labctl",
+  "labId": "oncall-06",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

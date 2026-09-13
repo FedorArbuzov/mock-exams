@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/17-lab-coredns",
+  "title": "Bootstrap 07 \u2014 CoreDNS",
+  "backend": "labctl",
+  "labId": "bootstrap-07-coredns",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

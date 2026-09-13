@@ -1,0 +1,52 @@
+id: oncall-10
+title: ON-CALL 10 — OOMKilled
+track: oncall
+namespace: oncall-10
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: oncall-10
+- op: ensure_namespace
+  name: oncall-10
+- op: apply
+  file: manifests/oom-backend.yaml
+- op: sleep
+  value: '8'
+initial_state:
+- type: exists
+  kind: deployment
+  name: backend
+  namespace: oncall-10
+  desc: backend Deployment exists
+task: Backend Pods are repeatedly restarting.
+root_cause: Memory limit below what the process allocates.
+hide_root_cause: true
+verify:
+- type: deployment_ready
+  name: backend
+  namespace: oncall-10
+  desc: backend Ready
+  points: 6
+- type: restart_count
+  name: backend
+  namespace: oncall-10
+  max: 8
+  desc: restarts not climbing without bound
+  points: 4
+cleanup:
+- op: delete_namespace
+  name: oncall-10
+ticket:
+  id: INC-10
+  priority: P2
+  title: OOMKilled
+  body: Backend Pods are repeatedly restarting.

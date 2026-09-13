@@ -1,0 +1,33 @@
+id: cka-13-notready
+title: CKA 13 — Node NotReady
+track: troubleshooting
+namespace: cka-13
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: stop_service
+  node: worker-1
+  service: kubelet
+- op: sleep
+  value: '8'
+initial_state:
+- type: node_not_ready
+  node: worker-1
+  desc: one worker is not Ready
+task: One node is NotReady. Diagnose from kubectl through kubelet/containerd/logs.
+  Restore Ready.
+root_cause: kubelet was stopped on a worker.
+hide_root_cause: true
+verify:
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+  points: 10
+cleanup:
+- op: start_service
+  node: worker-1
+  service: kubelet
+- op: start_service
+  node: worker-1
+  service: containerd

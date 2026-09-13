@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/78-lab-oncall-08",
+  "title": "ON-CALL 08 \u2014 API Server timeout",
+  "backend": "labctl",
+  "labId": "oncall-08",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

@@ -1,0 +1,88 @@
+id: cka-01-pod
+title: Create a Pod
+track: cka
+namespace: cka-01
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-01
+- op: ensure_namespace
+  name: cka-01
+initial_state:
+- type: namespace_exists
+  name: cka-01
+  desc: Namespace cka-01 exists
+- type: absent
+  kind: pod
+  name: nginx
+  namespace: cka-01
+  desc: Pod nginx is not present yet
+task: '
+
+  Create a Pod named nginx in namespace cka-01.
+
+
+  Requirements:
+
+  - image: nginx:1.27
+
+  - container port: 80
+
+  - requests: cpu 50m, memory 64Mi
+
+  - limits: cpu 200m, memory 128Mi
+
+
+  The Pod must become Running.
+
+  '
+hints:
+- A single Pod object is enough — Deployment is optional.
+- Check requests and limits on the container, not the node.
+explanation: The grader looks at the Pod spec and phase. kubectl run or a YAML apply
+  both work.
+verify:
+- type: exists
+  kind: pod
+  name: nginx
+  namespace: cka-01
+  desc: Pod nginx exists
+  points: 1
+- type: pod_running
+  name: nginx
+  namespace: cka-01
+  desc: Pod is Running
+  points: 2
+- type: pod_image
+  name: nginx
+  namespace: cka-01
+  value: nginx:1.27
+  desc: Image nginx:1.27
+  points: 2
+- type: pod_port
+  name: nginx
+  namespace: cka-01
+  port: 80
+  desc: containerPort 80
+  points: 1
+- type: pod_resources
+  name: nginx
+  namespace: cka-01
+  request_cpu: 50m
+  request_memory: 64Mi
+  limit_cpu: 200m
+  limit_memory: 128Mi
+  desc: requests and limits match
+  points: 4
+cleanup:
+- op: delete_namespace
+  name: cka-01

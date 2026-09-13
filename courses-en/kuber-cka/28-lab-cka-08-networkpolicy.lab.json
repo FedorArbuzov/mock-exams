@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/28-lab-cka-08-networkpolicy",
+  "title": "CKA 08 \u2014 NetworkPolicy",
+  "backend": "labctl",
+  "labId": "cka-08-networkpolicy",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

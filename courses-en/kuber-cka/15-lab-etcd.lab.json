@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/15-lab-etcd",
+  "title": "Bootstrap 05 \u2014 etcd",
+  "backend": "labctl",
+  "labId": "bootstrap-05-etcd",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

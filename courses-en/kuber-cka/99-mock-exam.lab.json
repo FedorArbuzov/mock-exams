@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/99-mock-exam",
+  "title": "Final CKA mock",
+  "backend": "labctl",
+  "labId": "mock-exam",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

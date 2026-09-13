@@ -1,0 +1,36 @@
+id: bootstrap-09-ingress
+title: Bootstrap 09 — Ingress
+track: bootstrap
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup: []
+initial_state: []
+task: Bootstrap 09 — Ingress
+verify:
+- type: exists
+  kind: ingress
+  name: shop
+  namespace: shop
+  desc: Ingress shop exists
+  points: 4
+- type: ingress_host
+  name: shop
+  namespace: shop
+  host: app.example.com
+  desc: host app.example.com
+  points: 3
+- type: ingress_backend
+  name: shop
+  namespace: shop
+  value: frontend
+  desc: backend frontend
+  points: 3
+cleanup: []

@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/27-lab-cka-07-ingress",
+  "title": "CKA 07 \u2014 Ingress",
+  "backend": "labctl",
+  "labId": "cka-07-ingress",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

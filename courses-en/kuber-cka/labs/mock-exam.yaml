@@ -1,0 +1,93 @@
+id: mock-exam
+title: Final CKA mock
+track: mock
+hide_hints: true
+hide_root_cause: true
+pass_score: 80
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: exam
+- op: ensure_namespace
+  name: exam
+initial_state:
+- type: namespace_exists
+  name: exam
+  desc: exam namespace ready
+task: '
+
+  Timed mock (2 hours, you run the timer).
+
+
+  1. Pod exam-nginx in exam: nginx:1.27, port 80, Running (15)
+
+  2. Deployment exam-web in exam: 2 replicas nginx:1.27, rollout complete (15)
+
+  3. ClusterIP exam-web-svc selecting app=exam-web port 80 targetPort 80 with endpoints
+  (15)
+
+  4. Ingress exam-web host exam.example.com → exam-web-svc (15)
+
+  5. ConfigMap exam-cfg KEY=cka used by Deployment exam-web (10)
+
+  6. PVC exam-data 1Gi RWO Bound (15)
+
+  7. Pod exam-disk mounts exam-data, Running (15)
+
+  '
+verify:
+- type: pod_running
+  name: exam-nginx
+  namespace: exam
+  desc: Pod exam-nginx Running
+  points: 15
+- type: rollout_complete
+  name: exam-web
+  namespace: exam
+  desc: exam-web rollout
+  points: 15
+- type: exists
+  kind: service
+  name: exam-web-svc
+  namespace: exam
+  desc: exam-web-svc
+  points: 5
+- type: endpoints
+  name: exam-web-svc
+  namespace: exam
+  desc: service endpoints
+  points: 10
+- type: ingress_host
+  name: exam-web
+  namespace: exam
+  host: exam.example.com
+  desc: Ingress host
+  points: 15
+- type: exists
+  kind: configmap
+  name: exam-cfg
+  namespace: exam
+  desc: ConfigMap exam-cfg
+  points: 10
+- type: pvc_bound
+  name: exam-data
+  namespace: exam
+  desc: PVC Bound
+  points: 15
+- type: pod_running
+  name: exam-disk
+  namespace: exam
+  desc: exam-disk Running
+  points: 15
+cleanup:
+- op: delete_namespace
+  name: exam

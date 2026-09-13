@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: checkout
+  namespace: cka-12
+  labels:
+    app: checkout
+spec:
+  nodeSelector:
+    cka-lab: does-not-exist
+  containers:
+    - name: checkout
+      image: nginx:1.27
+      ports:
+        - containerPort: 80
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi

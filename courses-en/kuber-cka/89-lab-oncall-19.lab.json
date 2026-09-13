@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/89-lab-oncall-19",
+  "title": "ON-CALL 19 \u2014 etcd backup",
+  "backend": "labctl",
+  "labId": "oncall-19",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

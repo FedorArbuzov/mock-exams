@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/53-lab-cka-24-cni",
+  "title": "CKA 24 \u2014 Broken CNI",
+  "backend": "labctl",
+  "labId": "cka-24-cni",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

@@ -89,7 +89,8 @@ kuber-basic → kuber-intermediate → ansible-basic
             kuber-bootstrap   ← you are here
                     ↓
             kuber-advanced (etcd/upgrade are no longer theory-only)
-            mock-cka
+            mock-cka-kubeadm   ← CKA drills on *this* cluster
+            mock-cka          ← API speed on Docker Desktop
 ```
 
 ## Related
@@ -98,6 +99,8 @@ kuber-basic → kuber-intermediate → ansible-basic
 |--------|----------|
 | [`ansible-basic`](../ansible-basic/README.md) | Inventory, roles — this course **uses** them |
 | [`kuber-advanced`](../kuber-advanced/README.md) | Control plane internals on a cluster you already have |
-| [`mock-cka`](../mock-cka/README.md) | Exam timing; kubeadm tasks still want a VM (this course) |
+| [`kuber-cka`](../kuber-cka/README.md) | Same class of stand, **Kubespray** + sequential CKA / ON-CALL engine |
+| [`mock-cka-kubeadm`](../mock-cka-kubeadm/README.md) | Timed CKA runs on these three nodes (drain, etcd, kubelet) |
+| [`mock-cka`](../mock-cka/README.md) | Exam timing on Docker Desktop (no kubeadm/etcd) |
 | [`bare-metal` 09](../bare-metal/09-kubernetes-on-bare-metal.md) | MetalLB, Talos — theory |
 | [`aws-advanced`](../aws-advanced/README.md) 13–18 | Managed control plane (EKS), not kubeadm |

@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/88-lab-oncall-18",
+  "title": "ON-CALL 18 \u2014 Kubernetes upgrade",
+  "backend": "labctl",
+  "labId": "oncall-18",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

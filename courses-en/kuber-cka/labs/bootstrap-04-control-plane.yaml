@@ -1,0 +1,17 @@
+id: bootstrap-04-control-plane
+title: Bootstrap 04 — Control plane
+track: bootstrap
+prerequisites:
+- type: api_reachable
+  desc: API reachable
+setup: []
+initial_state: []
+task: Bootstrap 04 — Control plane
+verify:
+- type: control_plane_healthy
+  desc: apiserver, controller-manager, scheduler Running
+  points: 7
+- type: api_reachable
+  desc: API readyz
+  points: 3
+cleanup: []

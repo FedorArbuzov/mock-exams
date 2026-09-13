@@ -1,0 +1,56 @@
+id: oncall-06
+title: ON-CALL 06 — Internet egress
+track: oncall
+namespace: oncall-06
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: set_sysctl
+  node: worker-1
+  key: net.ipv4.ip_forward
+  value: '0'
+- op: set_sysctl
+  node: worker-2
+  key: net.ipv4.ip_forward
+  value: '0'
+initial_state:
+- type: coredns_healthy
+  desc: CoreDNS still healthy
+task: Applications cannot access external APIs.
+root_cause: ip_forward was disabled on workers.
+hide_root_cause: true
+verify:
+- type: sysctl
+  node: worker-1
+  key: net.ipv4.ip_forward
+  value: '1'
+  desc: ip_forward on worker-1
+  points: 5
+- type: sysctl
+  node: worker-2
+  key: net.ipv4.ip_forward
+  value: '1'
+  desc: ip_forward on worker-2
+  points: 5
+cleanup:
+- op: set_sysctl
+  node: worker-1
+  key: net.ipv4.ip_forward
+  value: '1'
+- op: set_sysctl
+  node: worker-2
+  key: net.ipv4.ip_forward
+  value: '1'
+ticket:
+  id: INC-06
+  priority: P2
+  title: Internet egress
+  body: Applications cannot access external APIs.

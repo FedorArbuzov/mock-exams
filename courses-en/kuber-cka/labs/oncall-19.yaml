@@ -1,0 +1,29 @@
+id: oncall-19
+title: ON-CALL 19 — etcd backup
+track: oncall
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup: []
+initial_state:
+- type: etcd_healthy
+  desc: etcd healthy
+task: Create and validate a recoverable etcd backup.
+verify:
+- type: snapshot_valid
+  path: ~/kuber-cka/etcd-snapshot.db
+  desc: snapshot file exists and is non-empty
+  points: 10
+cleanup: []
+ticket:
+  id: INC-19
+  priority: P2
+  title: etcd backup
+  body: Create and validate a recoverable etcd backup.

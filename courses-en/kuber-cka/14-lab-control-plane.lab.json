@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/14-lab-control-plane",
+  "title": "Bootstrap 04 \u2014 Control plane",
+  "backend": "labctl",
+  "labId": "bootstrap-04-control-plane",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

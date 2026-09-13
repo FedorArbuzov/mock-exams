@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/41-lab-cka-12-pending",
+  "title": "CKA 12 \u2014 Pod Pending",
+  "backend": "labctl",
+  "labId": "cka-12-pending",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

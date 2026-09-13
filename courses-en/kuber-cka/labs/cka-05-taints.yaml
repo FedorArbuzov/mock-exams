@@ -1,0 +1,58 @@
+id: cka-05-taints
+title: Taints / tolerations
+track: cka
+namespace: cka-05
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-05
+- op: ensure_namespace
+  name: cka-05
+- op: taint_node
+  node: worker-2
+  key: cka-lab
+  value: 'true'
+  effect: NoSchedule
+initial_state:
+- type: node_has_taint
+  node: worker-2
+  key: cka-lab
+  value: 'true'
+  desc: a worker carries the lab taint
+task: Create Pod tainted-ok in cka-05 with image nginx:1.27 that runs on the tainted
+  worker (toleration required). Pod Running on that node.
+verify:
+- type: pod_running
+  name: tainted-ok
+  namespace: cka-05
+  desc: Pod Running
+  points: 4
+- type: pod_has_toleration
+  name: tainted-ok
+  namespace: cka-05
+  key: cka-lab
+  desc: toleration present
+  points: 3
+- type: pod_on_node
+  name: tainted-ok
+  namespace: cka-05
+  node: worker-2
+  desc: on the tainted worker
+  points: 3
+cleanup:
+- op: delete_namespace
+  name: cka-05
+- op: untaint_node
+  node: worker-2
+  key: cka-lab
+  value: 'true'
+  effect: NoSchedule

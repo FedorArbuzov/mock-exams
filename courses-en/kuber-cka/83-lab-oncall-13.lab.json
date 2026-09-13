@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/83-lab-oncall-13",
+  "title": "ON-CALL 13 \u2014 Node maintenance",
+  "backend": "labctl",
+  "labId": "oncall-13",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

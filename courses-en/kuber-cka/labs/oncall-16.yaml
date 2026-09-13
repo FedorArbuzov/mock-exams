@@ -1,0 +1,41 @@
+id: oncall-16
+title: ON-CALL 16 — Add worker
+track: oncall
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup: []
+initial_state:
+- type: nodes_ready
+  min: 3
+  desc: starting from three Ready nodes
+task: 'The cluster needs additional compute capacity.
+
+  Add a new worker node.'
+verify:
+- type: node_count
+  min: 4
+  desc: four nodes registered
+  points: 4
+- type: nodes_ready
+  min: 4
+  desc: four Ready
+  points: 4
+- type: cni_healthy
+  desc: CNI healthy
+  points: 2
+cleanup: []
+ticket:
+  id: INC-16
+  priority: P2
+  title: Add worker
+  body: 'The cluster needs additional compute capacity.
+
+    Add a new worker node.'

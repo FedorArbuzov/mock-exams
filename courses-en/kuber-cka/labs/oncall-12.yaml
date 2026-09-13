@@ -1,0 +1,78 @@
+id: oncall-12
+title: ON-CALL 12 — Scheduling
+track: oncall
+namespace: oncall-12
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: oncall-12
+- op: ensure_namespace
+  name: oncall-12
+- op: label_node
+  node: worker-1
+  key: zone
+  value: a
+- op: label_node
+  node: worker-2
+  key: zone
+  value: b
+- op: taint_node
+  node: worker-2
+  key: dedicated
+  value: batch
+  effect: NoSchedule
+- op: kubectl
+  args:
+  - -n
+  - oncall-12
+  - run
+  - stuck
+  - --image=nginx:1.27
+  - --overrides
+  - '{"spec":{"nodeSelector":{"zone":"b"}}}'
+initial_state:
+- type: pod_pending
+  name: stuck
+  namespace: oncall-12
+  desc: workload stuck is Pending
+task: 'New workloads are being scheduled incorrectly
+
+  and cluster capacity is not being used properly.'
+root_cause: nodeSelector targets a tainted zone with no toleration.
+hide_root_cause: true
+verify:
+- type: pod_running
+  name: stuck
+  namespace: oncall-12
+  desc: Pod stuck is Running
+  points: 10
+cleanup:
+- op: delete_namespace
+  name: oncall-12
+- op: unlabel_node
+  node: worker-1
+  key: zone
+- op: unlabel_node
+  node: worker-2
+  key: zone
+- op: untaint_node
+  node: worker-2
+  key: dedicated
+  value: batch
+  effect: NoSchedule
+ticket:
+  id: INC-12
+  priority: P2
+  title: Scheduling
+  body: 'New workloads are being scheduled incorrectly
+
+    and cluster capacity is not being used properly.'

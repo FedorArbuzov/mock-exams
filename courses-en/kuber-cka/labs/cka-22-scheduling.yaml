@@ -1,0 +1,71 @@
+id: cka-22-scheduling
+title: CKA 22 — Scheduling failure
+track: troubleshooting
+namespace: cka-22
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-22
+- op: ensure_namespace
+  name: cka-22
+- op: label_node
+  node: worker-1
+  key: zone
+  value: a
+- op: label_node
+  node: worker-2
+  key: zone
+  value: b
+- op: taint_node
+  node: worker-2
+  key: dedicated
+  value: batch
+  effect: NoSchedule
+- op: kubectl
+  args:
+  - -n
+  - cka-22
+  - run
+  - stuck
+  - --image=nginx:1.27
+  - --overrides
+  - '{"spec":{"nodeSelector":{"zone":"b"}}}'
+initial_state:
+- type: pod_pending
+  name: stuck
+  namespace: cka-22
+  desc: workload stuck is Pending
+task: Workload stuck in cka-22 is scheduled incorrectly / not at all. Use labels,
+  selectors, affinity, taints, resources. Make it Running on a node that can take
+  it. Do not remove unrelated production taints on the control plane.
+root_cause: nodeSelector targets a tainted zone with no toleration.
+hide_root_cause: true
+verify:
+- type: pod_running
+  name: stuck
+  namespace: cka-22
+  desc: Pod stuck is Running
+  points: 10
+cleanup:
+- op: delete_namespace
+  name: cka-22
+- op: unlabel_node
+  node: worker-1
+  key: zone
+- op: unlabel_node
+  node: worker-2
+  key: zone
+- op: untaint_node
+  node: worker-2
+  key: dedicated
+  value: batch
+  effect: NoSchedule

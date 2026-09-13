@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/19-lab-ingress",
+  "title": "Bootstrap 09 \u2014 Ingress",
+  "backend": "labctl",
+  "labId": "bootstrap-09-ingress",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

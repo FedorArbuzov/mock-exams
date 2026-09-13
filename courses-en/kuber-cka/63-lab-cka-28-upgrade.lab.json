@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/63-lab-cka-28-upgrade",
+  "title": "CKA 28 \u2014 Kubernetes upgrade",
+  "backend": "labctl",
+  "labId": "cka-28-upgrade",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

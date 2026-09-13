@@ -1,0 +1,18 @@
+id: bootstrap-06-cni
+title: Bootstrap 06 — CNI
+track: bootstrap
+prerequisites:
+- type: api_reachable
+  desc: API reachable
+setup: []
+initial_state: []
+task: Bootstrap 06 — CNI
+verify:
+- type: cni_healthy
+  desc: CNI healthy
+  points: 5
+- type: nodes_ready
+  min: 3
+  desc: three Ready nodes
+  points: 5
+cleanup: []

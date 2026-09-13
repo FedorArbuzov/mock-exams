@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/22-lab-cka-02-deployment",
+  "title": "CKA 02 \u2014 Deployment",
+  "backend": "labctl",
+  "labId": "cka-02-deployment",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

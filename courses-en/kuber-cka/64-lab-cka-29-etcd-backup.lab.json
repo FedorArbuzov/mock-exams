@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/64-lab-cka-29-etcd-backup",
+  "title": "CKA 29 \u2014 etcd backup",
+  "backend": "labctl",
+  "labId": "cka-29-etcd-backup",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

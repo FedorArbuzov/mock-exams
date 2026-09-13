@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/50-lab-cka-21-diskpressure",
+  "title": "CKA 21 \u2014 DiskPressure",
+  "backend": "labctl",
+  "labId": "cka-21-diskpressure",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

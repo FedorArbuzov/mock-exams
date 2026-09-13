@@ -1,0 +1,43 @@
+id: cka-30-etcd-restore
+title: etcd restore
+track: admin
+prerequisites:
+- type: api_reachable
+  desc: API reachable
+- type: snapshot_valid
+  path: ~/kuber-cka/etcd-snapshot.db
+  desc: backup from CKA 29 exists
+setup:
+- op: ensure_namespace
+  name: cka-30
+- op: kubectl
+  args:
+  - -n
+  - cka-30
+  - create
+  - configmap
+  - restore-marker
+  - --from-literal=ok=yes
+- op: delete_namespace
+  name: cka-30
+initial_state:
+- type: snapshot_valid
+  path: ~/kuber-cka/etcd-snapshot.db
+  desc: snapshot available
+task: etcd data for the marker namespace was removed. Restore from ~/kuber-cka/etcd-snapshot.db.
+  Control plane and workloads must come back. If your snapshot predates cka-30, restore
+  procedure + healthy etcd/API is the bar — recreate shop if needed.
+verify:
+- type: etcd_healthy
+  desc: etcd healthy
+  points: 4
+- type: control_plane_healthy
+  desc: API server healthy
+  points: 3
+- type: nodes_ready
+  min: 3
+  desc: nodes Ready
+  points: 3
+cleanup: []
+explanation: A full etcd restore is destructive. The grader checks control-plane health
+  after you restore. Keep a copy of admin.conf.

@@ -1,0 +1,76 @@
+id: oncall-04
+title: ON-CALL 04 — Service unavailable
+track: oncall
+namespace: oncall-04
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: oncall-04
+- op: ensure_namespace
+  name: oncall-04
+- op: apply
+  file: manifests/broken-service.yaml
+- op: wait
+  kind: deployment
+  name: backend
+  namespace: oncall-04
+initial_state:
+- type: deployment_ready
+  name: backend
+  namespace: oncall-04
+  desc: backend Pods are healthy
+- type: exists
+  kind: service
+  name: backend-svc
+  namespace: oncall-04
+  desc: Service backend-svc exists
+task: 'Backend Service is unavailable,
+
+  while backend Pods appear healthy.'
+root_cause: Wrong Service selector and targetPort.
+hide_root_cause: true
+verify:
+- type: selector
+  name: backend-svc
+  namespace: oncall-04
+  key: app
+  value: backend
+  desc: selector matches Pods
+  points: 3
+- type: service_port
+  name: backend-svc
+  namespace: oncall-04
+  port: 80
+  target_port: 80
+  desc: port/targetPort
+  points: 3
+- type: endpoints
+  name: backend-svc
+  namespace: oncall-04
+  min: 1
+  desc: EndpointSlice populated
+  points: 2
+- type: http_get
+  namespace: oncall-04
+  url: http://backend-svc.oncall-04.svc.cluster.local
+  desc: Service reachable
+  points: 2
+cleanup:
+- op: delete_namespace
+  name: oncall-04
+ticket:
+  id: INC-04
+  priority: P1
+  title: Service unavailable
+  body: 'Backend Service is unavailable,
+
+    while backend Pods appear healthy.'

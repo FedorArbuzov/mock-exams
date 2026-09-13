@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/80-lab-oncall-10",
+  "title": "ON-CALL 10 \u2014 OOMKilled",
+  "backend": "labctl",
+  "labId": "oncall-10",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

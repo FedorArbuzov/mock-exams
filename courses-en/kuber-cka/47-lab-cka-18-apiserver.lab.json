@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/47-lab-cka-18-apiserver",
+  "title": "CKA 18 \u2014 API Server timeout",
+  "backend": "labctl",
+  "labId": "cka-18-apiserver",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

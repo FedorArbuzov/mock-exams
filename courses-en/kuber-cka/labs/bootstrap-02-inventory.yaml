@@ -1,0 +1,20 @@
+id: bootstrap-02-inventory
+title: Bootstrap 02 — Kubespray inventory
+track: bootstrap
+prerequisites: []
+setup: []
+initial_state: []
+task: Bootstrap 02 — Kubespray inventory
+verify:
+- type: dir_exists
+  path: ~/kuber-cka/kubespray/inventory/lab
+  desc: inventory/lab exists
+  points: 5
+- type: ssh_reachable
+  nodes:
+  - node-01
+  - node-02
+  - node-03
+  desc: Ansible hosts reachable
+  points: 5
+cleanup: []

@@ -173,10 +173,13 @@ func newHandler(fsys fs.FS, engine *lab.Engine) http.HandlerFunc {
 
 // labResponse is the JSON returned by every /api/lab/ action.
 type labResponse struct {
-	OK      bool         `json:"ok"`
-	Passed  bool         `json:"passed"`
-	Error   string       `json:"error,omitempty"`
-	Results []lab.Result `json:"results,omitempty"`
+	OK       bool         `json:"ok"`
+	Passed   bool         `json:"passed"`
+	Error    string       `json:"error,omitempty"`
+	Results  []lab.Result `json:"results,omitempty"`
+	Score    *int         `json:"score,omitempty"`
+	MaxScore *int         `json:"maxScore,omitempty"`
+	Note     string       `json:"note,omitempty"`
 }
 
 // newLabHandler serves the lab lifecycle API: POST /api/lab/{start,check,
@@ -199,24 +202,33 @@ func newLabHandler(engine *lab.Engine) http.HandlerFunc {
 
 		switch action {
 		case "start":
-			if err := engine.Start(def); err != nil {
-				writeLabJSON(w, http.StatusInternalServerError, labResponse{Error: err.Error()})
-				return
-			}
-			writeLabJSON(w, http.StatusOK, labResponse{OK: true})
-		case "check":
-			results, passed, err := engine.Check(def)
+			results, note, err := engine.StartDetailed(def)
 			if err != nil {
-				writeLabJSON(w, http.StatusInternalServerError, labResponse{Error: err.Error()})
+				writeLabJSON(w, http.StatusInternalServerError, labResponse{Error: err.Error(), Results: results, Note: note})
 				return
 			}
-			writeLabJSON(w, http.StatusOK, labResponse{OK: true, Passed: passed, Results: results})
+			writeLabJSON(w, http.StatusOK, labResponse{OK: true, Results: results, Note: note})
+		case "check":
+			rep, err := engine.CheckDetailed(def)
+			if err != nil {
+				writeLabJSON(w, http.StatusInternalServerError, labResponse{Error: err.Error(), Results: rep.Results, Note: rep.Note})
+				return
+			}
+			writeLabJSON(w, http.StatusOK, labResponse{
+				OK:       true,
+				Passed:   rep.Passed,
+				Results:  rep.Results,
+				Score:    rep.Score,
+				MaxScore: rep.MaxScore,
+				Note:     rep.Note,
+			})
 		case "cleanup":
-			if err := engine.Cleanup(def); err != nil {
-				writeLabJSON(w, http.StatusInternalServerError, labResponse{Error: err.Error()})
+			note, err := engine.CleanupDetailed(def)
+			if err != nil {
+				writeLabJSON(w, http.StatusInternalServerError, labResponse{Error: err.Error(), Note: note})
 				return
 			}
-			writeLabJSON(w, http.StatusOK, labResponse{OK: true})
+			writeLabJSON(w, http.StatusOK, labResponse{OK: true, Note: note})
 		default:
 			writeLabJSON(w, http.StatusNotFound, labResponse{Error: "unknown action: " + action})
 		}
@@ -607,17 +619,26 @@ var pageTemplate = template.Must(template.New("page").Parse(`<!doctype html>
           statusEl.textContent = "";
           verdictEl.textContent = "Error: " + data.error;
           verdictEl.className = "lab-verdict fail";
+          renderResults(data.results);
           return;
         }
-        if (action === "start") {
-          statusEl.textContent = "Lab ready. Do the tasks above, then press Check.";
-        } else if (action === "cleanup") {
-          statusEl.textContent = "Cleaned up. The cluster is still running.";
-        } else if (action === "check") {
-          statusEl.textContent = "";
+        if (data.results && data.results.length) {
           renderResults(data.results);
-          verdictEl.textContent = data.passed ? "PASSED \u2014 well done!" : "Not there yet \u2014 fix the failing checks and try again.";
+        }
+        if (action === "start") {
+          statusEl.textContent = data.note || "Lab ready. Do the tasks above, then press Check.";
+        } else if (action === "cleanup") {
+          statusEl.textContent = data.note || "Cleaned up. The cluster is still running.";
+        } else if (action === "check") {
+          var score = "";
+          if (data.score != null && data.maxScore != null) {
+            score = " Score: " + data.score + "/" + data.maxScore;
+          }
+          verdictEl.textContent = data.passed
+            ? "PASSED" + score
+            : "Not there yet" + score + " — fix the failing checks and try again.";
           verdictEl.className = "lab-verdict " + (data.passed ? "pass" : "fail");
+          statusEl.textContent = data.note || "";
         }
       })
       .catch(function (err) {

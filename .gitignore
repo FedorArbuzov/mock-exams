@@ -19,6 +19,8 @@ mockctl/courses/
 .env.test.local
 .env.production.local
 deploy/gitops/config/repo.env
+__pycache__/
+*.py[cod]
 node_modules/
 remotion/out/
 

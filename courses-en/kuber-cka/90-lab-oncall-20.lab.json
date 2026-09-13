@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/90-lab-oncall-20",
+  "title": "ON-CALL 20 \u2014 Disaster recovery",
+  "backend": "labctl",
+  "labId": "oncall-20",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

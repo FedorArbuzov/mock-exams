@@ -1,0 +1,35 @@
+id: oncall-17
+title: ON-CALL 17 — Remove worker
+track: oncall
+prerequisites:
+- type: api_reachable
+  desc: API reachable
+- type: node_count
+  min: 4
+  desc: node-04 still in the cluster
+setup: []
+initial_state:
+- type: node_count
+  min: 4
+  desc: four nodes present
+task: A worker node must be permanently decommissioned.
+verify:
+- type: node_count
+  min: 3
+  desc: back to three nodes
+  points: 4
+- type: nodes_ready
+  min: 3
+  desc: three Ready
+  points: 4
+- type: absent
+  kind: node
+  name: node-04
+  desc: node-04 gone
+  points: 2
+cleanup: []
+ticket:
+  id: INC-17
+  priority: P2
+  title: Remove worker
+  body: A worker node must be permanently decommissioned.

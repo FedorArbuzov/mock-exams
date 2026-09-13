@@ -1,0 +1,89 @@
+id: cka-06-service
+title: Service
+track: cka
+namespace: cka-06
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-06
+- op: ensure_namespace
+  name: cka-06
+- op: kubectl
+  args:
+  - -n
+  - cka-06
+  - create
+  - deployment
+  - backend
+  - --image=nginx:1.27
+  - --replicas=2
+- op: kubectl
+  args:
+  - -n
+  - cka-06
+  - label
+  - deploy
+  - backend
+  - app=backend
+  - --overwrite
+- op: wait
+  kind: deployment
+  name: backend
+  namespace: cka-06
+initial_state:
+- type: deployment_ready
+  name: backend
+  namespace: cka-06
+  desc: backend Deployment is healthy
+task: Create ClusterIP Service backend-svc in cka-06 selecting app=backend, port 80,
+  targetPort 80. EndpointSlice populated. Service reachable.
+verify:
+- type: exists
+  kind: service
+  name: backend-svc
+  namespace: cka-06
+  desc: Service exists
+  points: 1
+- type: service_type
+  name: backend-svc
+  namespace: cka-06
+  value: ClusterIP
+  desc: type ClusterIP
+  points: 1
+- type: selector
+  name: backend-svc
+  namespace: cka-06
+  key: app
+  value: backend
+  desc: selector app=backend
+  points: 2
+- type: service_port
+  name: backend-svc
+  namespace: cka-06
+  port: 80
+  target_port: 80
+  desc: port 80 → 80
+  points: 2
+- type: endpoints
+  name: backend-svc
+  namespace: cka-06
+  min: 1
+  desc: EndpointSlice populated
+  points: 2
+- type: http_get
+  namespace: cka-06
+  url: http://backend-svc.cka-06.svc.cluster.local
+  desc: Service reachable from a test Pod
+  points: 2
+cleanup:
+- op: delete_namespace
+  name: cka-06

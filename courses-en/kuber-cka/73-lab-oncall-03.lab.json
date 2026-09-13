@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/73-lab-oncall-03",
+  "title": "ON-CALL 03 \u2014 Pod-to-Pod networking",
+  "backend": "labctl",
+  "labId": "oncall-03",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

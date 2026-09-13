@@ -66,17 +66,21 @@ type Check struct {
 
 // Definition is the full declarative spec for one lab.
 type Definition struct {
-	ID      string  `json:"id"`
-	Title   string  `json:"title"`
-	// Backend is "kubernetes" (default) or "aws" (LocalStack via AWS CLI).
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	// Backend is "kubernetes" (default), "aws" (LocalStack via AWS CLI),
+	// or "labctl" (Python engine for the kuber-cka multi-node cluster).
 	Backend string `json:"backend,omitempty"`
+	// LabID is the labctl definition id when Backend is "labctl"
+	// (e.g. "cka-01-pod"). When empty, the last path segment of ID is used.
+	LabID string `json:"labId,omitempty"`
 	// AWSEndpoint overrides the default LocalStack URL (see awsEndpoint()).
 	AWSEndpoint string `json:"awsEndpoint,omitempty"`
 	// AWSRegion defaults to us-east-1.
-	AWSRegion string `json:"awsRegion,omitempty"`
-	Setup   []Op    `json:"setup"`
-	Checks  []Check `json:"checks"`
-	Cleanup []Op    `json:"cleanup"`
+	AWSRegion string  `json:"awsRegion,omitempty"`
+	Setup     []Op    `json:"setup"`
+	Checks    []Check `json:"checks"`
+	Cleanup   []Op    `json:"cleanup"`
 }
 
 // Result is the outcome of a single check, mirrored 1:1 into the JSON API.
@@ -138,28 +142,78 @@ func (e *Engine) Load(lessonPath string) (*Definition, error) {
 // Start runs the lab's setup ops (create namespaces, clear or seed
 // resources) so the student begins from a known state.
 func (e *Engine) Start(def *Definition) error {
+	_, _, err := e.StartDetailed(def)
+	return err
+}
+
+// StartDetailed is Start plus optional initial-state results / note
+// (used by the labctl backend and the courses UI).
+func (e *Engine) StartDetailed(def *Definition) ([]Result, string, error) {
+	if def.isLabctl() {
+		payload, err := runLabctl("start", def.labctlID())
+		return payload.Results, payload.Note, err
+	}
 	for _, op := range def.Setup {
 		if err := e.runOp(op); err != nil {
-			return err
+			return nil, "", err
 		}
 	}
-	return nil
+	return nil, "", nil
 }
 
 // Cleanup runs the lab's cleanup ops. Only the lab's own resources are
 // removed — the cluster keeps running for the next lab.
 func (e *Engine) Cleanup(def *Definition) error {
+	_, err := e.CleanupDetailed(def)
+	return err
+}
+
+// CleanupDetailed is Cleanup plus an optional note from the labctl backend.
+func (e *Engine) CleanupDetailed(def *Definition) (string, error) {
+	if def.isLabctl() {
+		payload, err := runLabctl("cleanup", def.labctlID())
+		return payload.Note, err
+	}
 	for _, op := range def.Cleanup {
 		if err := e.runOp(op); err != nil {
-			return err
+			return "", err
 		}
 	}
-	return nil
+	return "", nil
+}
+
+// CheckReport is the full Check verdict, including optional score fields
+// from the labctl backend.
+type CheckReport struct {
+	Results  []Result
+	Passed   bool
+	Score    *int
+	MaxScore *int
+	Note     string
 }
 
 // Check evaluates every assertion and returns per-check results plus whether
 // all of them passed.
 func (e *Engine) Check(def *Definition) ([]Result, bool, error) {
+	rep, err := e.CheckDetailed(def)
+	if err != nil {
+		return nil, false, err
+	}
+	return rep.Results, rep.Passed, nil
+}
+
+// CheckDetailed is Check plus score / note from the labctl backend.
+func (e *Engine) CheckDetailed(def *Definition) (CheckReport, error) {
+	if def.isLabctl() {
+		payload, err := runLabctl("check", def.labctlID())
+		return CheckReport{
+			Results:  payload.Results,
+			Passed:   payload.Passed,
+			Score:    payload.Score,
+			MaxScore: payload.MaxScore,
+			Note:     payload.Note,
+		}, err
+	}
 	results := make([]Result, 0, len(def.Checks))
 	allPassed := true
 	for _, c := range def.Checks {
@@ -171,14 +225,14 @@ func (e *Engine) Check(def *Definition) ([]Result, bool, error) {
 			res, err = e.evaluate(c)
 		}
 		if err != nil {
-			return nil, false, err
+			return CheckReport{}, err
 		}
 		if !res.Passed {
 			allPassed = false
 		}
 		results = append(results, res)
 	}
-	return results, allPassed, nil
+	return CheckReport{Results: results, Passed: allPassed}, nil
 }
 
 func (e *Engine) runOp(op Op) error {

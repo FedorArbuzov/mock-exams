@@ -1,0 +1,30 @@
+id: cka-28-upgrade
+title: Kubernetes upgrade
+track: admin
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup: []
+initial_state:
+- type: nodes_ready
+  min: 3
+  desc: cluster healthy before upgrade
+task: Upgrade the cluster to the next supported 1.32.x (or the minor Kubespray documents).
+  Check health after each stage.
+verify:
+- type: kubernetes_version
+  value: v1.32
+  desc: server version 1.32.x
+  points: 6
+- type: nodes_ready
+  min: 3
+  desc: nodes Ready after upgrade
+  points: 4
+cleanup: []

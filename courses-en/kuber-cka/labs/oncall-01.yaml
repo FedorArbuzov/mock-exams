@@ -1,0 +1,55 @@
+id: oncall-01
+title: ON-CALL 01 — Pod Pending
+track: oncall
+namespace: oncall-01
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: oncall-01
+- op: ensure_namespace
+  name: oncall-01
+- op: apply
+  file: manifests/pending-nodeselector.yaml
+initial_state:
+- type: pod_pending
+  name: checkout
+  namespace: oncall-01
+  desc: workload checkout is Pending
+task: 'A production workload is stuck in Pending.
+
+
+  Investigate and restore service.'
+root_cause: The Pod has a nodeSelector that matches no node.
+hide_root_cause: true
+verify:
+- type: exists
+  kind: pod
+  name: checkout
+  namespace: oncall-01
+  desc: Pod checkout still exists
+  points: 2
+- type: pod_running
+  name: checkout
+  namespace: oncall-01
+  desc: Pod is Running
+  points: 8
+cleanup:
+- op: delete_namespace
+  name: oncall-01
+ticket:
+  id: INC-01
+  priority: P2
+  title: Pod Pending
+  body: 'A production workload is stuck in Pending.
+
+
+    Investigate and restore service.'

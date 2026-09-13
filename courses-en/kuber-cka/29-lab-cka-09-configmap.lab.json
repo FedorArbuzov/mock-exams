@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/29-lab-cka-09-configmap",
+  "title": "CKA 09 \u2014 ConfigMap",
+  "backend": "labctl",
+  "labId": "cka-09-configmap",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

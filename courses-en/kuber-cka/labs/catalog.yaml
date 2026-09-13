@@ -1,0 +1,193 @@
+course: kuber-cka
+tracks:
+- bootstrap
+- cka
+- troubleshooting
+- admin
+- oncall
+- mock
+labs:
+- id: bootstrap-01-nodes
+  title: Bootstrap 01 — Linux nodes
+  track: bootstrap
+  first: true
+- id: bootstrap-02-inventory
+  title: Bootstrap 02 — Kubespray inventory
+  track: bootstrap
+- id: bootstrap-03-deploy
+  title: Bootstrap 03 — Deploy Kubernetes
+  track: bootstrap
+- id: bootstrap-04-control-plane
+  title: Bootstrap 04 — Control plane
+  track: bootstrap
+- id: bootstrap-05-etcd
+  title: Bootstrap 05 — etcd
+  track: bootstrap
+- id: bootstrap-06-cni
+  title: Bootstrap 06 — CNI
+  track: bootstrap
+- id: bootstrap-07-coredns
+  title: Bootstrap 07 — CoreDNS
+  track: bootstrap
+- id: bootstrap-08-app
+  title: Bootstrap 08 — Shop app
+  track: bootstrap
+- id: bootstrap-09-ingress
+  title: Bootstrap 09 — Ingress
+  track: bootstrap
+- id: cka-01-pod
+  title: Create a Pod
+  track: cka
+- id: cka-02-deployment
+  title: Deployment
+  track: cka
+- id: cka-03-rollout
+  title: Rolling update
+  track: cka
+- id: cka-04-scheduling
+  title: Scheduling
+  track: cka
+- id: cka-05-taints
+  title: Taints / tolerations
+  track: cka
+- id: cka-06-service
+  title: Service
+  track: cka
+- id: cka-07-ingress
+  title: Ingress
+  track: cka
+- id: cka-08-networkpolicy
+  title: NetworkPolicy
+  track: cka
+- id: cka-09-configmap
+  title: ConfigMap
+  track: cka
+- id: cka-10-secret
+  title: Secret
+  track: cka
+- id: cka-11-pvc
+  title: PVC
+  track: cka
+- id: cka-12-pending
+  title: CKA 12 — Pod Pending
+  track: troubleshooting
+- id: cka-13-notready
+  title: CKA 13 — Node NotReady
+  track: troubleshooting
+- id: cka-14-service
+  title: CKA 14 — Broken Service
+  track: troubleshooting
+- id: cka-15-dns
+  title: CKA 15 — Broken DNS
+  track: troubleshooting
+- id: cka-16-egress
+  title: CKA 16 — No Internet egress
+  track: troubleshooting
+- id: cka-17-ingress
+  title: CKA 17 — Ingress broken
+  track: troubleshooting
+- id: cka-18-apiserver
+  title: CKA 18 — API Server timeout
+  track: troubleshooting
+- id: cka-19-etcd
+  title: CKA 19 — etcd degradation
+  track: troubleshooting
+- id: cka-20-oom
+  title: CKA 20 — OOMKilled
+  track: troubleshooting
+- id: cka-21-diskpressure
+  title: CKA 21 — DiskPressure
+  track: troubleshooting
+- id: cka-22-scheduling
+  title: CKA 22 — Scheduling failure
+  track: troubleshooting
+- id: cka-23-drain
+  title: CKA 23 — Cordon / drain
+  track: troubleshooting
+- id: cka-24-cni
+  title: CKA 24 — Broken CNI
+  track: troubleshooting
+- id: cka-25-coredns
+  title: CKA 25 — Broken CoreDNS
+  track: troubleshooting
+- id: cka-26-add-worker
+  title: Add a worker
+  track: admin
+- id: cka-27-remove-worker
+  title: Remove a worker
+  track: admin
+- id: cka-28-upgrade
+  title: Kubernetes upgrade
+  track: admin
+- id: cka-29-etcd-backup
+  title: etcd backup
+  track: admin
+- id: cka-30-etcd-restore
+  title: etcd restore
+  track: admin
+- id: oncall-01
+  title: ON-CALL 01 — Pod Pending
+  track: oncall
+- id: oncall-02
+  title: ON-CALL 02 — Node NotReady
+  track: oncall
+- id: oncall-03
+  title: ON-CALL 03 — Pod-to-Pod networking
+  track: oncall
+- id: oncall-04
+  title: ON-CALL 04 — Service unavailable
+  track: oncall
+- id: oncall-05
+  title: ON-CALL 05 — DNS failure
+  track: oncall
+- id: oncall-06
+  title: ON-CALL 06 — Internet egress
+  track: oncall
+- id: oncall-07
+  title: ON-CALL 07 — Ingress only works on one node
+  track: oncall
+- id: oncall-08
+  title: ON-CALL 08 — API Server timeout
+  track: oncall
+- id: oncall-09
+  title: ON-CALL 09 — etcd degradation
+  track: oncall
+- id: oncall-10
+  title: ON-CALL 10 — OOMKilled
+  track: oncall
+- id: oncall-11
+  title: ON-CALL 11 — DiskPressure
+  track: oncall
+- id: oncall-12
+  title: ON-CALL 12 — Scheduling
+  track: oncall
+- id: oncall-13
+  title: ON-CALL 13 — Node maintenance
+  track: oncall
+- id: oncall-14
+  title: ON-CALL 14 — CNI failure
+  track: oncall
+- id: oncall-15
+  title: ON-CALL 15 — CoreDNS failure
+  track: oncall
+- id: oncall-16
+  title: ON-CALL 16 — Add worker
+  track: oncall
+- id: oncall-17
+  title: ON-CALL 17 — Remove worker
+  track: oncall
+- id: oncall-18
+  title: ON-CALL 18 — Kubernetes upgrade
+  track: oncall
+- id: oncall-19
+  title: ON-CALL 19 — etcd backup
+  track: oncall
+- id: oncall-20
+  title: ON-CALL 20 — Disaster recovery
+  track: oncall
+- id: mock-exam
+  title: Final CKA mock
+  track: mock
+  optional: true
+  first: true
+  after: null

@@ -1,0 +1,36 @@
+id: oncall-14
+title: ON-CALL 14 — CNI failure
+track: oncall
+namespace: oncall-14
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: ssh
+  node: worker-1
+  command: ip link set cni0 down 2>/dev/null || ip link set flannel.1 down 2>/dev/null
+    || true
+initial_state:
+- type: api_reachable
+  desc: API reachable
+task: Pod networking is broken on part of the cluster.
+root_cause: A CNI bridge/interface was put down on a worker.
+hide_root_cause: true
+verify:
+- type: cni_healthy
+  desc: CNI healthy
+  points: 5
+- type: nodes_ready
+  min: 3
+  desc: nodes Ready
+  points: 5
+cleanup:
+- op: ssh
+  node: worker-1
+  command: ip link set cni0 up 2>/dev/null || ip link set flannel.1 up 2>/dev/null
+    || true
+ticket:
+  id: INC-14
+  priority: P1
+  title: CNI failure
+  body: Pod networking is broken on part of the cluster.

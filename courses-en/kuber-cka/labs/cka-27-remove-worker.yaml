@@ -1,0 +1,31 @@
+id: cka-27-remove-worker
+title: Remove a worker
+track: admin
+prerequisites:
+- type: api_reachable
+  desc: API reachable
+- type: node_count
+  min: 4
+  desc: node-04 still in the cluster
+setup: []
+initial_state:
+- type: node_count
+  min: 4
+  desc: four nodes present
+task: Permanently decommission node-04 from the cluster and from infrastructure (Kubespray
+  remove-node + drop the LXC node).
+verify:
+- type: node_count
+  min: 3
+  desc: back to three nodes
+  points: 4
+- type: nodes_ready
+  min: 3
+  desc: three Ready
+  points: 4
+- type: absent
+  kind: node
+  name: node-04
+  desc: node-04 gone
+  points: 2
+cleanup: []

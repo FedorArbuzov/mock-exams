@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/84-lab-oncall-14",
+  "title": "ON-CALL 14 \u2014 CNI failure",
+  "backend": "labctl",
+  "labId": "oncall-14",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

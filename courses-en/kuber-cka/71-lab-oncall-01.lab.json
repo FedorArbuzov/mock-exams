@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/71-lab-oncall-01",
+  "title": "ON-CALL 01 \u2014 Pod Pending",
+  "backend": "labctl",
+  "labId": "oncall-01",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

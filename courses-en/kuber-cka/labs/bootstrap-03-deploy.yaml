@@ -1,0 +1,16 @@
+id: bootstrap-03-deploy
+title: Bootstrap 03 — Deploy Kubernetes
+track: bootstrap
+prerequisites: []
+setup: []
+initial_state: []
+task: Bootstrap 03 — Deploy Kubernetes
+verify:
+- type: api_reachable
+  desc: Kubernetes API reachable
+  points: 6
+- type: node_count
+  min: 3
+  desc: three nodes registered
+  points: 4
+cleanup: []

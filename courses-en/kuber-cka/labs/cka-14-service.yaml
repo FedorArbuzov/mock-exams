@@ -1,0 +1,68 @@
+id: cka-14-service
+title: CKA 14 — Broken Service
+track: troubleshooting
+namespace: cka-14
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-14
+- op: ensure_namespace
+  name: cka-14
+- op: apply
+  file: manifests/broken-service.yaml
+- op: wait
+  kind: deployment
+  name: backend
+  namespace: cka-14
+initial_state:
+- type: deployment_ready
+  name: backend
+  namespace: cka-14
+  desc: backend Pods are healthy
+- type: exists
+  kind: service
+  name: backend-svc
+  namespace: cka-14
+  desc: Service backend-svc exists
+task: backend-svc in cka-14 is not reachable from other Pods. Pods look fine. Do not
+  modify the backend Deployment. Restore connectivity.
+root_cause: Wrong Service selector and targetPort.
+hide_root_cause: true
+verify:
+- type: selector
+  name: backend-svc
+  namespace: cka-14
+  key: app
+  value: backend
+  desc: selector matches Pods
+  points: 3
+- type: service_port
+  name: backend-svc
+  namespace: cka-14
+  port: 80
+  target_port: 80
+  desc: port/targetPort
+  points: 3
+- type: endpoints
+  name: backend-svc
+  namespace: cka-14
+  min: 1
+  desc: EndpointSlice populated
+  points: 2
+- type: http_get
+  namespace: cka-14
+  url: http://backend-svc.cka-14.svc.cluster.local
+  desc: Service reachable
+  points: 2
+cleanup:
+- op: delete_namespace
+  name: cka-14

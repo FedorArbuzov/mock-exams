@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/74-lab-oncall-04",
+  "title": "ON-CALL 04 \u2014 Service unavailable",
+  "backend": "labctl",
+  "labId": "oncall-04",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

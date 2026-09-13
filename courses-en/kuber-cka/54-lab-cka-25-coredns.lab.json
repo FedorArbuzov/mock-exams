@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/54-lab-cka-25-coredns",
+  "title": "CKA 25 \u2014 Broken CoreDNS",
+  "backend": "labctl",
+  "labId": "cka-25-coredns",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

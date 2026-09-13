@@ -1,0 +1,16 @@
+id: bootstrap-01-nodes
+title: Bootstrap 01 — Linux nodes
+track: bootstrap
+prerequisites: []
+setup: []
+initial_state: []
+task: Bootstrap 01 — Linux nodes
+verify:
+- type: ssh_reachable
+  nodes:
+  - node-01
+  - node-02
+  - node-03
+  desc: three nodes reachable over SSH
+  points: 10
+cleanup: []

@@ -1,0 +1,41 @@
+id: cka-15-dns
+title: CKA 15 — Broken DNS
+track: troubleshooting
+namespace: cka-15
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: backup_configmap
+  name: coredns
+  namespace: kube-system
+- op: apply
+  file: manifests/broken-coredns.yaml
+- op: sleep
+  value: '5'
+initial_state:
+- type: api_reachable
+  desc: API still reachable
+task: Pods cannot resolve Kubernetes Service names. Diagnose resolv.conf, kube-dns
+  Service, CoreDNS Pods and config. Restore DNS.
+root_cause: CoreDNS Corefile was replaced with a broken forwarder.
+hide_root_cause: true
+verify:
+- type: coredns_healthy
+  desc: CoreDNS healthy
+  points: 4
+- type: dns_resolves
+  name: kubernetes.default.svc.cluster.local
+  namespace: default
+  desc: kubernetes.default resolves
+  points: 6
+cleanup:
+- op: apply
+  file: manifests/coredns-good.yaml
+- op: kubectl
+  args:
+  - -n
+  - kube-system
+  - rollout
+  - restart
+  - deploy/coredns

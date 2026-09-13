@@ -1,0 +1,32 @@
+id: cka-26-add-worker
+title: Add a worker
+track: admin
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup: []
+initial_state:
+- type: nodes_ready
+  min: 3
+  desc: starting from three Ready nodes
+task: Add LXC node-04 (192.168.56.13) through Kubespray. Node Ready, CNI on it, schedulable.
+verify:
+- type: node_count
+  min: 4
+  desc: four nodes registered
+  points: 4
+- type: nodes_ready
+  min: 4
+  desc: four Ready
+  points: 4
+- type: cni_healthy
+  desc: CNI healthy
+  points: 2
+cleanup: []

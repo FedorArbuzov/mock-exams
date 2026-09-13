@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/13-lab-deploy",
+  "title": "Bootstrap 03 \u2014 Deploy Kubernetes",
+  "backend": "labctl",
+  "labId": "bootstrap-03-deploy",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

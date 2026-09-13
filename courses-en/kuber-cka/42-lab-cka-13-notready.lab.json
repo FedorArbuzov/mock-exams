@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/42-lab-cka-13-notready",
+  "title": "CKA 13 \u2014 Node NotReady",
+  "backend": "labctl",
+  "labId": "cka-13-notready",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

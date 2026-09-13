@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/31-lab-cka-11-pvc",
+  "title": "CKA 11 \u2014 PVC",
+  "backend": "labctl",
+  "labId": "cka-11-pvc",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

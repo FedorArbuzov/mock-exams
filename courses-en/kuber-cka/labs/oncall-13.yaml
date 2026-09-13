@@ -1,0 +1,59 @@
+id: oncall-13
+title: ON-CALL 13 — Node maintenance
+track: oncall
+namespace: oncall-13
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: oncall-13
+- op: ensure_namespace
+  name: oncall-13
+- op: apply
+  file: manifests/drain-web.yaml
+- op: wait
+  kind: deployment
+  name: web
+  namespace: oncall-13
+initial_state:
+- type: deployment_ready
+  name: web
+  namespace: oncall-13
+  desc: web is healthy
+task: 'A worker node must be taken out of service
+
+  without application downtime.'
+root_cause: Need cordon+drain respecting PDB (not delete --force).
+hide_root_cause: true
+verify:
+- type: node_unschedulable
+  node: worker-1
+  value: 'true'
+  desc: worker-1 cordoned
+  points: 4
+- type: deployment_ready
+  name: web
+  namespace: oncall-13
+  min: 1
+  desc: web still Ready
+  points: 6
+cleanup:
+- op: uncordon
+  node: worker-1
+- op: delete_namespace
+  name: oncall-13
+ticket:
+  id: INC-13
+  priority: P2
+  title: Node maintenance
+  body: 'A worker node must be taken out of service
+
+    without application downtime.'

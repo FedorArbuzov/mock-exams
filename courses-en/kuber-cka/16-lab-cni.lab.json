@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/16-lab-cni",
+  "title": "Bootstrap 06 \u2014 CNI",
+  "backend": "labctl",
+  "labId": "bootstrap-06-cni",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

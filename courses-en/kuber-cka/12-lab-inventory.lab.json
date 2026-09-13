@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/12-lab-inventory",
+  "title": "Bootstrap 02 \u2014 Kubespray inventory",
+  "backend": "labctl",
+  "labId": "bootstrap-02-inventory",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

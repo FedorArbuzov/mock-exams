@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/75-lab-oncall-05",
+  "title": "ON-CALL 05 \u2014 DNS failure",
+  "backend": "labctl",
+  "labId": "oncall-05",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

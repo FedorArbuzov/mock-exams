@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/79-lab-oncall-09",
+  "title": "ON-CALL 09 \u2014 etcd degradation",
+  "backend": "labctl",
+  "labId": "oncall-09",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

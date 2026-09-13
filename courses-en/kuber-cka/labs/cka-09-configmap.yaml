@@ -1,0 +1,50 @@
+id: cka-09-configmap
+title: ConfigMap
+track: cka
+namespace: cka-09
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-09
+- op: ensure_namespace
+  name: cka-09
+initial_state:
+- type: namespace_exists
+  name: cka-09
+  desc: Namespace ready
+task: Create ConfigMap app-config in cka-09 with COLOR=blue. Deployment web (nginx:1.27)
+  must consume it.
+verify:
+- type: exists
+  kind: configmap
+  name: app-config
+  namespace: cka-09
+  desc: ConfigMap exists
+  points: 3
+- type: has_key
+  kind: configmap
+  name: app-config
+  namespace: cka-09
+  key: COLOR
+  value: blue
+  desc: COLOR=blue
+  points: 3
+- type: env_from_configmap
+  kind: deployment
+  name: web
+  namespace: cka-09
+  value: app-config
+  desc: Deployment web uses the ConfigMap
+  points: 4
+cleanup:
+- op: delete_namespace
+  name: cka-09

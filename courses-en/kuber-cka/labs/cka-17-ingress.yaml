@@ -1,0 +1,92 @@
+id: cka-17-ingress
+title: CKA 17 — Ingress broken
+track: troubleshooting
+namespace: cka-17
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-17
+- op: ensure_namespace
+  name: cka-17
+- op: kubectl
+  args:
+  - -n
+  - cka-17
+  - create
+  - deployment
+  - frontend
+  - --image=nginx:1.27
+- op: kubectl
+  args:
+  - -n
+  - cka-17
+  - expose
+  - deploy
+  - frontend
+  - --port=80
+  - --name=frontend
+- op: kubectl
+  args:
+  - -n
+  - cka-17
+  - create
+  - ing
+  - app
+  - --rule=app.example.com/=frontend:80
+  - --class=nginx
+- op: kubectl
+  args:
+  - -n
+  - cka-17
+  - patch
+  - svc
+  - frontend
+  - -p
+  - '{"spec":{"selector":{"app":"nope"}}}'
+initial_state:
+- type: exists
+  kind: ingress
+  name: app
+  namespace: cka-17
+  desc: Ingress exists
+- type: exists
+  kind: service
+  name: frontend
+  namespace: cka-17
+  desc: Service exists
+task: Ingress app.example.com in cka-17 stopped working. Find whether the fault is
+  Ingress, Service, endpoints, controller, node, or network.
+root_cause: frontend Service selector no longer matches Pods.
+hide_root_cause: true
+verify:
+- type: selector
+  name: frontend
+  namespace: cka-17
+  key: app
+  value: frontend
+  desc: Service selector matches
+  points: 4
+- type: endpoints
+  name: frontend
+  namespace: cka-17
+  min: 1
+  desc: endpoints populated
+  points: 3
+- type: ingress_backend
+  name: app
+  namespace: cka-17
+  value: frontend
+  desc: Ingress still points at frontend
+  points: 3
+cleanup:
+- op: delete_namespace
+  name: cka-17

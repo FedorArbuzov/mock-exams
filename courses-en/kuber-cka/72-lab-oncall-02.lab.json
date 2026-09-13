@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/72-lab-oncall-02",
+  "title": "ON-CALL 02 \u2014 Node NotReady",
+  "backend": "labctl",
+  "labId": "oncall-02",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

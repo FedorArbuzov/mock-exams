@@ -1,0 +1,28 @@
+id: cka-19-etcd
+title: CKA 19 — etcd degradation
+track: troubleshooting
+namespace: cka-19
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: tc_delay
+  node: control-plane
+  value: 2000ms
+initial_state:
+- type: etcd_healthy
+  desc: etcd process still present
+task: The API is extremely slow. Investigate etcd members, leader, health, latency,
+  disk, quorum. Restore health.
+root_cause: Artificial latency in front of the control plane / etcd path.
+hide_root_cause: true
+verify:
+- type: etcd_healthy
+  desc: etcd healthy
+  points: 5
+- type: control_plane_healthy
+  desc: control plane healthy
+  points: 5
+cleanup:
+- op: tc_clear
+  node: control-plane

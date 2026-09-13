@@ -1,0 +1,6 @@
+# Merge into Kubespray group_vars for k8s_cluster (filename varies by release).
+kube_version: v1.31.4
+container_manager: containerd
+kube_network_plugin: calico
+# Optional:
+# ingress_nginx_enabled: true

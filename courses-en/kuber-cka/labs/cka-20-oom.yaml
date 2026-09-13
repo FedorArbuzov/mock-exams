@@ -1,0 +1,48 @@
+id: cka-20-oom
+title: CKA 20 — OOMKilled
+track: troubleshooting
+namespace: cka-20
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-20
+- op: ensure_namespace
+  name: cka-20
+- op: apply
+  file: manifests/oom-backend.yaml
+- op: sleep
+  value: '8'
+initial_state:
+- type: exists
+  kind: deployment
+  name: backend
+  namespace: cka-20
+  desc: backend Deployment exists
+task: Backend in cka-20 restarts repeatedly. Find the memory/cgroup issue and fix
+  it so the Pod stays Running with restartCount stable.
+root_cause: Memory limit below what the process allocates.
+hide_root_cause: true
+verify:
+- type: deployment_ready
+  name: backend
+  namespace: cka-20
+  desc: backend Ready
+  points: 6
+- type: restart_count
+  name: backend
+  namespace: cka-20
+  max: 8
+  desc: restarts not climbing without bound
+  points: 4
+cleanup:
+- op: delete_namespace
+  name: cka-20

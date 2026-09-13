@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/51-lab-cka-22-scheduling",
+  "title": "CKA 22 \u2014 Scheduling failure",
+  "backend": "labctl",
+  "labId": "cka-22-scheduling",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

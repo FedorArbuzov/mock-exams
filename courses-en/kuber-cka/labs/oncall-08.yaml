@@ -1,0 +1,32 @@
+id: oncall-08
+title: ON-CALL 08 — API Server timeout
+track: oncall
+namespace: oncall-08
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: tc_delay
+  node: control-plane
+  value: 2800ms
+initial_state:
+- type: api_reachable
+  desc: API still answers (slowly)
+task: kubectl requests are timing out intermittently.
+root_cause: netem delay on the control-plane data path.
+hide_root_cause: true
+verify:
+- type: control_plane_healthy
+  desc: control plane Running
+  points: 5
+- type: api_reachable
+  desc: API reachable without the injected delay
+  points: 5
+cleanup:
+- op: tc_clear
+  node: control-plane
+ticket:
+  id: INC-08
+  priority: P1
+  title: API Server timeout
+  body: kubectl requests are timing out intermittently.

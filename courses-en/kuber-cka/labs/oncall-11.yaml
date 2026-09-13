@@ -1,0 +1,40 @@
+id: oncall-11
+title: ON-CALL 11 — DiskPressure
+track: oncall
+namespace: oncall-11
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+setup:
+- op: fill_disk
+  node: worker-1
+  size: 3G
+initial_state:
+- type: api_reachable
+  desc: API reachable
+task: 'A node is evicting workloads because of
+
+  resource pressure.'
+root_cause: A large fill file under /var/tmp.
+hide_root_cause: true
+verify:
+- type: disk_usage_below
+  node: worker-1
+  path: /
+  max: 90
+  desc: root filesystem not full
+  points: 6
+- type: node_ready
+  node: worker-1
+  desc: worker Ready
+  points: 4
+cleanup:
+- op: unfill_disk
+  node: worker-1
+ticket:
+  id: INC-11
+  priority: P1
+  title: DiskPressure
+  body: 'A node is evicting workloads because of
+
+    resource pressure.'

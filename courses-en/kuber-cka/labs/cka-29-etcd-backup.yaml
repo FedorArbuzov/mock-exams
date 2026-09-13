@@ -1,0 +1,25 @@
+id: cka-29-etcd-backup
+title: etcd backup
+track: admin
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup: []
+initial_state:
+- type: etcd_healthy
+  desc: etcd healthy
+task: Create an etcd snapshot at ~/kuber-cka/etcd-snapshot.db and prove it is a valid
+  snapshot.
+verify:
+- type: snapshot_valid
+  path: ~/kuber-cka/etcd-snapshot.db
+  desc: snapshot file exists and is non-empty
+  points: 10
+cleanup: []

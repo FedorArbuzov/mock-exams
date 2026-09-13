@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/44-lab-cka-15-dns",
+  "title": "CKA 15 \u2014 Broken DNS",
+  "backend": "labctl",
+  "labId": "cka-15-dns",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}

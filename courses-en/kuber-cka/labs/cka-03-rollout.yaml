@@ -1,0 +1,68 @@
+id: cka-03-rollout
+title: Rolling update
+track: cka
+namespace: cka-03
+prerequisites:
+- type: api_reachable
+  desc: Kubernetes API reachable
+- type: nodes_ready
+  min: 3
+  desc: all required nodes Ready
+- type: coredns_healthy
+  desc: CoreDNS healthy
+- type: cni_healthy
+  desc: CNI healthy
+setup:
+- op: delete_namespace
+  name: cka-03
+- op: ensure_namespace
+  name: cka-03
+- op: kubectl
+  args:
+  - -n
+  - cka-03
+  - create
+  - deployment
+  - frontend
+  - --image=nginx:1.26
+  - --replicas=3
+- op: wait
+  kind: deployment
+  name: frontend
+  namespace: cka-03
+initial_state:
+- type: deployment_ready
+  name: frontend
+  namespace: cka-03
+  value: '3'
+  desc: frontend is healthy before the update
+task: Update Deployment frontend in cka-03 to image nginx:1.27. Keep 3 replicas. Rollout
+  complete. At least two ReplicaSets must exist (history).
+verify:
+- type: image
+  kind: deployment
+  name: frontend
+  namespace: cka-03
+  value: nginx:1.27
+  desc: image nginx:1.27
+  points: 3
+- type: replicas
+  name: frontend
+  namespace: cka-03
+  value: '3'
+  desc: 3 replicas
+  points: 2
+- type: rollout_complete
+  name: frontend
+  namespace: cka-03
+  desc: rollout complete
+  points: 3
+- type: replicaset_min
+  name: frontend
+  namespace: cka-03
+  min: 2
+  desc: rollout history (ReplicaSets)
+  points: 2
+cleanup:
+- op: delete_namespace
+  name: cka-03

@@ -1,0 +1,9 @@
+{
+  "id": "kuber-cka/87-lab-oncall-17",
+  "title": "ON-CALL 17 \u2014 Remove worker",
+  "backend": "labctl",
+  "labId": "oncall-17",
+  "setup": [],
+  "checks": [],
+  "cleanup": []
+}
