@@ -1,0 +1,17 @@
+---
+- name: Preferred replica election (never unclean)
+  hosts: kafka-01
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: Elect preferred leaders
+      ansible.builtin.command: >
+        kafka-leader-election --bootstrap-server {{ nimbus_bootstrap }}
+        --election-type PREFERRED --all-topic-partitions
+      register: election
+      changed_when: election.rc == 0
+      failed_when: election.rc != 0
+
+    - name: Show
+      ansible.builtin.debug:
+        var: election.stdout_lines

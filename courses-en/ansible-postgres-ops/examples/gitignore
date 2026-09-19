@@ -1,0 +1,4 @@
+backups/
+artifacts/
+*.retry
+group_vars/all/vault.yml

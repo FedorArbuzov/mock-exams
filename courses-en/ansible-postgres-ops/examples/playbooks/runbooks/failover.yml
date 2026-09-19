@@ -1,0 +1,20 @@
+---
+# Do not fold this into lag.yml. Seed is lesson 18b: stop patroni on the Leader.
+- name: Human-gated failover
+  hosts: localhost
+  gather_facts: false
+  vars_prompt:
+    - name: nimbus_failover_ok
+      prompt: "Leader Patroni is down. Type YES to print the Autobase command"
+      private: false
+  tasks:
+    - name: Abort unless YES
+      ansible.builtin.fail:
+        msg: "failover.yml is not switchover. Stop."
+      when: nimbus_failover_ok != "YES"
+
+    - name: Next command (read extra-vars in 2.11.0)
+      ansible.builtin.debug:
+        msg: >-
+          ansible-playbook -i inventory/hosts.ini
+          vitabaks.autobase.failover_pgcluster

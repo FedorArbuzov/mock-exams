@@ -1,0 +1,49 @@
+---
+# Sketch. Read role defaults in community.mongodb 1.7.12 before you fill knobs.
+# Order: linux → repository → mongod → pymongo → replicaset → status → auth.
+# Do not call mongodb_mongos / mongodb_config.
+
+- name: OS prep + MongoDB packages
+  hosts: mongo
+  become: true
+  roles:
+    - community.mongodb.mongodb_linux
+    - community.mongodb.mongodb_repository
+    - community.mongodb.mongodb_mongod
+  tasks:
+    - name: pymongo on the target (modules run here)
+      ansible.builtin.apt:
+        name:
+          - python3-pip
+          - python3-pymongo
+        state: present
+      # If the distro pymongo is too old for MongoDB 7, pip install pymongo>=4.
+
+- name: Initiate replica set nimbus
+  hosts: "{{ nimbus_bootstrap }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: rs.initiate via collection module
+      community.mongodb.mongodb_replicaset:
+        replica_set: "{{ nimbus_replica_set }}"
+        members:
+          - "mongo-01:27017"
+          - "mongo-02:27017"
+          - "mongo-03:27017"
+        # Names must resolve on every member (/etc/hosts). IPs work too — then objects.yml
+        # must map IP → inventory_hostname. login_* after auth. First run = localhost exception.
+
+    - name: Wait PRIMARY + two SECONDARY
+      community.mongodb.mongodb_status:
+        replica_set: "{{ nimbus_replica_set }}"
+        poll: 12
+        interval: 10
+
+- name: Auth after the set exists
+  hosts: "{{ nimbus_bootstrap }}"
+  become: true
+  roles:
+    - role: community.mongodb.mongodb_auth
+      # mongodb_admin_user / mongodb_admin_pwd — defaults in the role. Vault them.
+      # Then enable keyfile on all members if mongod started without it. Read the role README.

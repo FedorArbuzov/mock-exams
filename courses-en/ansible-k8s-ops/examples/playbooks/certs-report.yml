@@ -1,0 +1,28 @@
+---
+- name: kubeadm certificate expiration
+  hosts: k8s_cp
+  become: true
+  gather_facts: false
+  vars:
+    certs_out: "{{ lookup('env', 'HOME') }}/nimbus-ops/artifacts/certs.txt"
+  tasks:
+    - name: artifacts directory
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/nimbus-ops/artifacts"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: kubeadm certs check-expiration
+      ansible.builtin.command: kubeadm certs check-expiration
+      register: certs
+      changed_when: false
+
+    - name: Write certs report on the host
+      ansible.builtin.copy:
+        dest: "{{ certs_out }}"
+        mode: "0644"
+        content: "{{ certs.stdout }}\n"
+      delegate_to: localhost
+      become: false

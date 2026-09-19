@@ -1,0 +1,68 @@
+---
+- name: Import preflight
+  ansible.builtin.import_playbook: preflight.yml
+
+- name: Patch workers one at a time
+  hosts: k8s_workers
+  become: true
+  serial: 1
+  vars:
+    kubeconfig_local: "{{ lookup('env', 'HOME') }}/.kube/nimbus-ops.conf"
+  tasks:
+    - name: Drain, patch, reboot, uncordon
+      block:
+        - name: Drain worker
+          ansible.builtin.command: >
+            kubectl drain {{ inventory_hostname }}
+            --ignore-daemonsets --delete-emptydir-data --timeout=180s
+          delegate_to: localhost
+          become: false
+          environment:
+            KUBECONFIG: "{{ kubeconfig_local }}"
+          changed_when: true
+
+        - name: Security upgrades (kube* stay held)
+          ansible.builtin.apt:
+            upgrade: safe
+            update_cache: true
+
+        - name: Reboot required marker
+          ansible.builtin.stat:
+            path: /var/run/reboot-required
+          register: reboot_marker
+
+        - name: Reboot when marker exists
+          ansible.builtin.reboot:
+            reboot_timeout: 600
+          when: reboot_marker.stat.exists
+
+        - name: Wait for SSH
+          ansible.builtin.wait_for_connection:
+            timeout: 300
+
+        - name: Wait until kubelet reports Ready
+          ansible.builtin.command: >
+            kubectl get node {{ inventory_hostname }}
+            --no-headers
+          delegate_to: localhost
+          become: false
+          environment:
+            KUBECONFIG: "{{ kubeconfig_local }}"
+          register: node_line
+          until: node_line.stdout is search(' Ready')
+          retries: 30
+          delay: 10
+          changed_when: false
+
+        - name: Uncordon worker
+          ansible.builtin.command: kubectl uncordon {{ inventory_hostname }}
+          delegate_to: localhost
+          become: false
+          environment:
+            KUBECONFIG: "{{ kubeconfig_local }}"
+          changed_when: true
+
+      rescue:
+        - name: Stop the fleet — do not patch the next worker
+          ansible.builtin.fail:
+            msg: "{{ inventory_hostname }} did not finish drain/patch/uncordon. Fix this node before continuing."

@@ -1,0 +1,26 @@
+---
+- name: Journals
+  hosts: postgres_cluster
+  become: true
+  gather_facts: false
+  vars:
+    dest: "{{ lookup('env', 'HOME') }}/nimbus-pg/artifacts/{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+    nimbus_patroni_unit: "{{ nimbus_patroni_unit | default('patroni') }}"
+  tasks:
+    - name: Dir
+      ansible.builtin.file:
+        path: "{{ dest }}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: patroni journal
+      ansible.builtin.shell: journalctl -u {{ nimbus_patroni_unit }} -n 200 --no-pager > /tmp/nimbus-patroni.j
+      changed_when: false
+
+    - name: Fetch
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-patroni.j
+        dest: "{{ dest }}/{{ inventory_hostname }}/patroni.log"
+        flat: true

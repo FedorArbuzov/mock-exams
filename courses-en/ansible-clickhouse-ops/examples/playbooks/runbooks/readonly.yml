@@ -1,0 +1,62 @@
+---
+# Repair ONE replica. Limit the play. Do not wipe three datadirs.
+- name: Readonly / broken replica
+  hosts: clickhouse
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_clickhouse_unit: "{{ nimbus_clickhouse_unit | default('clickhouse-server') }}"
+  tasks:
+    - name: Server must be up
+      ansible.builtin.service:
+        name: "{{ nimbus_clickhouse_unit }}"
+        state: started
+
+    - name: Show replicas
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "SELECT replica_name, is_readonly, is_session_expired, queue_size
+         FROM system.replicas WHERE database='shop' AND table='events'"
+      register: reps
+      changed_when: false
+      failed_when: false
+
+    - name: Show EXISTS
+      ansible.builtin.command: clickhouse-client --query "EXISTS TABLE shop.events"
+      register: exists
+      changed_when: false
+      failed_when: false
+
+    - name: Debug
+      ansible.builtin.debug:
+        msg:
+          - "{{ reps.stdout | default('no system.replicas') }}"
+          - "exists={{ exists.stdout | default('?') }}"
+
+    - name: ATTACH if detached
+      ansible.builtin.command: clickhouse-client --query "ATTACH TABLE IF NOT EXISTS shop.events"
+      when: exists.stdout | default('0') | trim == '0'
+      register: att
+      failed_when: false
+
+    - name: SYSTEM RESTART REPLICA
+      ansible.builtin.command: clickhouse-client --query "SYSTEM RESTART REPLICA shop.events"
+      register: rst
+      failed_when: false
+
+    - name: SYSTEM RESTORE REPLICA if still missing or readonly
+      ansible.builtin.command: clickhouse-client --query "SYSTEM RESTORE REPLICA shop.events"
+      when: exists.stdout | default('0') | trim == '0' or ('1' in (reps.stdout | default('')))
+      register: restore
+      failed_when: false
+
+    - name: Wait writable
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "SELECT is_readonly FROM system.replicas
+         WHERE database='shop' AND table='events'"
+      register: ro
+      until: ro.stdout | trim == '0'
+      retries: 30
+      delay: 5
+      changed_when: false

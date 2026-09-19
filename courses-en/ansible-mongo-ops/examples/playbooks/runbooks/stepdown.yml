@@ -1,0 +1,20 @@
+---
+# Do not fold this into lag.yml. Seed is lesson 10: planned stepDown of a healthy PRIMARY.
+- name: Human-gated stepDown
+  hosts: localhost
+  gather_facts: false
+  vars_prompt:
+    - name: nimbus_stepdown_ok
+      prompt: "PRIMARY is healthy. Type YES to print the mongodb_stepdown reminder"
+      private: false
+  tasks:
+    - name: Abort unless YES
+      ansible.builtin.fail:
+        msg: "stepdown.yml is not failover. Stop."
+      when: nimbus_stepdown_ok != "YES"
+
+    - name: Next command
+      ansible.builtin.debug:
+        msg: >-
+          Discover PRIMARY with mongodb_status, then community.mongodb.mongodb_stepdown
+          on that host (login_user admin, replica_set nimbus). Do not assume mongo-01.

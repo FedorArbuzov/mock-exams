@@ -1,0 +1,61 @@
+---
+- name: Import preflight
+  ansible.builtin.import_playbook: preflight.yml
+
+- name: Restart secondaries one at a time
+  hosts: mongo
+  become: true
+  serial: 1
+  tasks:
+    - name: Who is PRIMARY
+      community.mongodb.mongodb_status:
+        replica_set: "{{ nimbus_replica_set }}"
+        login_user: "{{ nimbus_admin_user }}"
+        login_password: "{{ nimbus_admin_password }}"
+        login_database: "{{ nimbus_admin_database }}"
+        validate: minimal
+      register: rs
+      delegate_to: "{{ nimbus_bootstrap }}"
+      run_once: false
+      no_log: true
+
+    - name: PRIMARY name this pass
+      ansible.builtin.set_fact:
+        nimbus_primary_now: "{{ item.key.split(':')[0] }}"
+      loop: "{{ lookup('dict', rs.replicaset) }}"
+      when: "'PRIMARY' in item.value"
+
+    - name: Restart mongod on secondaries
+      when: inventory_hostname not in (nimbus_primary_now | default(''))
+      block:
+        - name: Restart
+          ansible.builtin.service:
+            name: "{{ nimbus_mongod_unit }}"
+            state: restarted
+
+        - name: Wait active
+          ansible.builtin.command: systemctl is-active {{ nimbus_mongod_unit }}
+          register: st
+          until: st.stdout == 'active'
+          retries: 30
+          delay: 5
+          changed_when: false
+
+        - name: PRIMARY still exists
+          community.mongodb.mongodb_status:
+            replica_set: "{{ nimbus_replica_set }}"
+            login_user: "{{ nimbus_admin_user }}"
+            login_password: "{{ nimbus_admin_password }}"
+            login_database: "{{ nimbus_admin_database }}"
+            validate: minimal
+            poll: 12
+            interval: 5
+          delegate_to: "{{ nimbus_bootstrap }}"
+          no_log: true
+      rescue:
+        - name: Stop the fleet
+          ansible.builtin.fail:
+            msg: "{{ inventory_hostname }} restart left no PRIMARY or a dead unit. Do not continue."
+
+# After secondaries: mongodb_stepdown on the remaining PRIMARY, restart that host, wait PRIMARY.
+# Keep that as a second play you write — do not restart PRIMARY in the serial loop above.

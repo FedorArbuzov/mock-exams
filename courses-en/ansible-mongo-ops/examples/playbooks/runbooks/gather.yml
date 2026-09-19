@@ -1,0 +1,25 @@
+---
+- name: Journals
+  hosts: mongo
+  become: true
+  gather_facts: false
+  vars:
+    dest: "{{ lookup('env', 'HOME') }}/nimbus-mongo/artifacts/{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+  tasks:
+    - name: Dir
+      ansible.builtin.file:
+        path: "{{ dest }}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: mongod journal
+      ansible.builtin.shell: journalctl -u {{ nimbus_mongod_unit }} -n 200 --no-pager > /tmp/nimbus-mongod.j
+      changed_when: false
+
+    - name: Fetch
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-mongod.j
+        dest: "{{ dest }}/{{ inventory_hostname }}/mongod.log"
+        flat: true

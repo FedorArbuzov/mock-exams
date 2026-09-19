@@ -1,0 +1,62 @@
+---
+- name: Control-plane static pods
+  hosts: k8s_cp
+  become: true
+  gather_facts: false
+  tasks:
+    - name: kubelet unit
+      ansible.builtin.command: systemctl is-active kubelet
+      register: kubelet_st
+      changed_when: false
+      failed_when: false
+
+    - name: Start kubelet if failed
+      ansible.builtin.service:
+        name: kubelet
+        state: started
+      when: kubelet_st.stdout != "active"
+
+    - name: Manifests
+      ansible.builtin.command: ls /etc/kubernetes/manifests
+      register: manifests
+      changed_when: false
+
+    - name: Show manifests
+      ansible.builtin.debug:
+        var: manifests.stdout_lines
+
+    - name: etcd.yaml on disk
+      ansible.builtin.stat:
+        path: /etc/kubernetes/manifests/etcd.yaml
+      register: etcd_manifest
+
+    - name: Quarantined etcd.yaml (lab seed only)
+      ansible.builtin.stat:
+        path: /root/nimbus-disabled/etcd.yaml
+      register: etcd_quarantine
+
+    - name: Put etcd.yaml back
+      ansible.builtin.command: mv /root/nimbus-disabled/etcd.yaml /etc/kubernetes/manifests/etcd.yaml
+      when:
+        - not etcd_manifest.stat.exists
+        - etcd_quarantine.stat.exists
+
+- name: Wait for API
+  hosts: localhost
+  gather_facts: false
+  vars:
+    kubeconfig_local: "{{ lookup('env', 'HOME') }}/.kube/nimbus-ops.conf"
+  tasks:
+    - name: readyz
+      ansible.builtin.command: kubectl get --raw=/readyz
+      environment:
+        KUBECONFIG: "{{ kubeconfig_local }}"
+      register: ready
+      retries: 30
+      delay: 5
+      until: ready.rc == 0
+      changed_when: false
+
+    - name: Show readyz
+      ansible.builtin.debug:
+        var: ready.stdout

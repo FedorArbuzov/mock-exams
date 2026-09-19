@@ -1,0 +1,18 @@
+---
+- name: Labels from host_vars
+  hosts: k8s
+  gather_facts: false
+  vars:
+    kubeconfig_local: "{{ lookup('env', 'HOME') }}/.kube/nimbus-ops.conf"
+  tasks:
+    - name: Apply node labels
+      ansible.builtin.command: >
+        kubectl label node {{ inventory_hostname }}
+        {{ item.key }}={{ item.value }} --overwrite
+      loop: "{{ node_labels | default({}) | dict2items }}"
+      delegate_to: localhost
+      become: false
+      environment:
+        KUBECONFIG: "{{ kubeconfig_local }}"
+      changed_when: true
+      when: node_labels is defined

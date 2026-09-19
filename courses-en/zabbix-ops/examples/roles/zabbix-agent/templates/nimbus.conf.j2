@@ -1,1 +1,7 @@
-
+# Nimbus drop-in — do not replace vendor zabbix_agent2.conf
+Hostname={{ inventory_hostname }}
+Server={{ zabbix_server_acl }}
+ServerActive={{ zabbix_server_active }}
+{% if zabbix_unsafe_userparameters %}
+UnsafeUserParameters=1
+{% endif %}

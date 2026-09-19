@@ -1,0 +1,12 @@
+---
+nimbus_bootstrap: 192.168.57.10:9092
+nimbus_kafka_topics_bin: kafka-topics
+nimbus_topics:
+  - name: shop.orders
+    partitions: 6
+    replication_factor: 3
+    config_csv: min.insync.replicas=2,retention.ms=604800000
+  - name: shop.dead
+    partitions: 3
+    replication_factor: 3
+    config_csv: min.insync.replicas=2

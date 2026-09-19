@@ -1,0 +1,15 @@
+---
+- name: Cluster members running
+  hosts: postgres_cluster
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_patroni_unit: "{{ nimbus_patroni_unit | default('patroni') }}"
+  tasks:
+    - name: Patroni active
+      ansible.builtin.command: systemctl is-active {{ nimbus_patroni_unit }}
+      changed_when: false
+
+    - name: chrony active
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false

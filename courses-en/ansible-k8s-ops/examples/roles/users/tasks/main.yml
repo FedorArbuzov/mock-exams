@@ -1,0 +1,48 @@
+---
+- name: Nimbus accounts
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+    groups: "{{ item.groups | default([]) }}"
+    append: true
+    shell: /bin/bash
+    create_home: true
+  loop: "{{ nimbus_users }}"
+  loop_control:
+    label: "{{ item.name }}={{ item.state | default('present') }}"
+
+- name: SSH keys for present users
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ lookup('file', item.pubkey_src) }}"
+    state: present
+    exclusive: false
+  loop: "{{ nimbus_users }}"
+  when:
+    - item.state | default('present') == 'present'
+    - item.pubkey_src is defined
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Sudoers drop-in for present sudo users
+  ansible.builtin.copy:
+    dest: "{{ nimbus_sudoers_dir }}/nimbus-{{ item.name }}"
+    mode: "0440"
+    validate: visudo -cf %s
+    content: |
+      {{ item.name }} ALL=(ALL) NOPASSWD:ALL
+  loop: "{{ nimbus_users }}"
+  when:
+    - item.state | default('present') == 'present'
+    - "'sudo' in (item.groups | default([]))"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Remove sudoers drop-in when user is absent
+  ansible.builtin.file:
+    path: "{{ nimbus_sudoers_dir }}/nimbus-{{ item.name }}"
+    state: absent
+  loop: "{{ nimbus_users }}"
+  when: item.state | default('present') == 'absent'
+  loop_control:
+    label: "{{ item.name }}"

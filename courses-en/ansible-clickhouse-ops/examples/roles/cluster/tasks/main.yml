@@ -1,0 +1,123 @@
+---
+# Frozen installer sketch. Students adjust. After lesson 04, do not edit these
+# templates during incidents — day-2 lives in playbooks/.
+
+- name: Keyrings directory
+  ansible.builtin.file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Official ClickHouse GPG key
+  ansible.builtin.get_url:
+    url: "{{ nimbus_clickhouse_key_url }}"
+    dest: /tmp/clickhouse-keyring.asc
+    mode: "0644"
+
+- name: Dearmor ClickHouse key
+  ansible.builtin.command: gpg --dearmor --yes -o /usr/share/keyrings/clickhouse-keyring.gpg /tmp/clickhouse-keyring.asc
+  args:
+    creates: /usr/share/keyrings/clickhouse-keyring.gpg
+
+- name: Official ClickHouse apt repo
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/clickhouse.list
+    mode: "0644"
+    content: "{{ nimbus_clickhouse_repo }}\n"
+
+- name: Install ClickHouse 24.8 packages
+  ansible.builtin.apt:
+    name:
+      - "clickhouse-keeper={{ nimbus_clickhouse_version }}"
+      - "clickhouse-server={{ nimbus_clickhouse_version }}"
+      - "clickhouse-client={{ nimbus_clickhouse_version }}"
+    state: present
+    update_cache: true
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+    CLICKHOUSE_SKIP_USER_SETUP: "1"
+
+- name: Server config.d directory
+  ansible.builtin.file:
+    path: /etc/clickhouse-server/config.d
+    state: directory
+    owner: clickhouse
+    group: clickhouse
+    mode: "0750"
+
+- name: Backup directory (allowed_path)
+  ansible.builtin.file:
+    path: "{{ nimbus_backup_path }}"
+    state: directory
+    owner: clickhouse
+    group: clickhouse
+    mode: "0750"
+
+- name: config.d listen / memory
+  ansible.builtin.template:
+    src: listen.xml.j2
+    dest: /etc/clickhouse-server/config.d/listen.xml
+    owner: clickhouse
+    group: clickhouse
+    mode: "0640"
+  notify: Restart clickhouse-server
+
+- name: config.d macros
+  ansible.builtin.template:
+    src: macros.xml.j2
+    dest: /etc/clickhouse-server/config.d/macros.xml
+    owner: clickhouse
+    group: clickhouse
+    mode: "0640"
+  notify: Restart clickhouse-server
+
+- name: config.d remote_servers
+  ansible.builtin.template:
+    src: remote_servers.xml.j2
+    dest: /etc/clickhouse-server/config.d/remote_servers.xml
+    owner: clickhouse
+    group: clickhouse
+    mode: "0640"
+  notify: Restart clickhouse-server
+
+- name: config.d zookeeper (Keeper client)
+  ansible.builtin.template:
+    src: zookeeper.xml.j2
+    dest: /etc/clickhouse-server/config.d/zookeeper.xml
+    owner: clickhouse
+    group: clickhouse
+    mode: "0640"
+  notify: Restart clickhouse-server
+
+- name: config.d backups allowed_path
+  ansible.builtin.template:
+    src: backups.xml.j2
+    dest: /etc/clickhouse-server/config.d/backups.xml
+    owner: clickhouse
+    group: clickhouse
+    mode: "0640"
+  notify: Restart clickhouse-server
+
+- name: Keeper config
+  ansible.builtin.template:
+    src: keeper_config.xml.j2
+    dest: /etc/clickhouse-keeper/keeper_config.xml
+    owner: clickhouse
+    group: clickhouse
+    mode: "0640"
+  notify: Restart clickhouse-keeper
+
+- name: Apply config before first healthy start
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start Keeper
+  ansible.builtin.service:
+    name: "{{ nimbus_keeper_unit }}"
+    state: started
+    enabled: true
+
+- name: Enable and start Server
+  ansible.builtin.service:
+    name: "{{ nimbus_clickhouse_unit }}"
+    state: started
+    enabled: true

@@ -1,0 +1,10 @@
+---
+- name: Restart clickhouse-keeper
+  ansible.builtin.service:
+    name: "{{ nimbus_keeper_unit }}"
+    state: restarted
+
+- name: Restart clickhouse-server
+  ansible.builtin.service:
+    name: "{{ nimbus_clickhouse_unit }}"
+    state: restarted

@@ -1,0 +1,28 @@
+---
+- name: mongod and chrony
+  hosts: mongo
+  become: true
+  gather_facts: false
+  tasks:
+    - name: mongod active
+      ansible.builtin.command: systemctl is-active {{ nimbus_mongod_unit }}
+      changed_when: false
+
+    - name: chrony active
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false
+
+- name: Replica set converged
+  hosts: "{{ nimbus_bootstrap }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: mongodb_status
+      community.mongodb.mongodb_status:
+        replica_set: "{{ nimbus_replica_set }}"
+        login_user: "{{ nimbus_admin_user }}"
+        login_password: "{{ nimbus_admin_password }}"
+        login_database: "{{ nimbus_admin_database }}"
+        poll: 3
+        interval: 5
+      no_log: true

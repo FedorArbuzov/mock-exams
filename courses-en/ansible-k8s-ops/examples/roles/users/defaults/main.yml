@@ -1,0 +1,3 @@
+---
+nimbus_users: []
+nimbus_sudoers_dir: /etc/sudoers.d

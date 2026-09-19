@@ -1,0 +1,49 @@
+---
+- name: Import preflight
+  ansible.builtin.import_playbook: preflight.yml
+
+- name: Restart brokers one host at a time
+  hosts: kafka_broker
+  become: true
+  serial: 1
+  vars:
+    nimbus_broker_unit: "{{ nimbus_broker_unit | default('confluent-kafka') }}"
+    nimbus_controller_unit: "{{ nimbus_controller_unit | default('confluent-kafka-controller', true) }}"
+  tasks:
+    - name: Restart and wait URP
+      block:
+        - name: Restart broker unit
+          ansible.builtin.service:
+            name: "{{ nimbus_broker_unit }}"
+            state: restarted
+
+        - name: Restart controller unit if it exists
+          ansible.builtin.service:
+            name: "{{ nimbus_controller_unit }}"
+            state: restarted
+          failed_when: false
+
+        - name: Wait until broker is active
+          ansible.builtin.command: systemctl is-active {{ nimbus_broker_unit }}
+          register: st
+          until: st.stdout == 'active'
+          retries: 30
+          delay: 5
+          changed_when: false
+
+        - name: Wait until URP empty
+          ansible.builtin.command: >
+            kafka-topics --bootstrap-server {{ nimbus_bootstrap }}
+            --describe --under-replicated-partitions
+          register: urp
+          until: urp.stdout | trim | length == 0
+          retries: 40
+          delay: 5
+          changed_when: false
+          delegate_to: kafka-01
+          become: false
+
+      rescue:
+        - name: Stop the fleet
+          ansible.builtin.fail:
+            msg: "{{ inventory_hostname }} restart left URP or a dead unit. Do not continue."

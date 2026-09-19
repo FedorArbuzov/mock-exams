@@ -1,0 +1,54 @@
+---
+- name: Units and clocks
+  hosts: clickhouse
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_clickhouse_unit: "{{ nimbus_clickhouse_unit | default('clickhouse-server') }}"
+    nimbus_keeper_unit: "{{ nimbus_keeper_unit | default('clickhouse-keeper') }}"
+  tasks:
+    - name: Server active
+      ansible.builtin.command: systemctl is-active {{ nimbus_clickhouse_unit }}
+      changed_when: false
+
+    - name: Keeper active
+      ansible.builtin.command: systemctl is-active {{ nimbus_keeper_unit }}
+      changed_when: false
+
+    - name: chrony active
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false
+
+    - name: df datadir
+      ansible.builtin.command: df -P /var/lib/clickhouse
+      register: df
+      changed_when: false
+
+    - name: Fail if datadir ≥ 95%
+      ansible.builtin.fail:
+        msg: "preflight: /var/lib/clickhouse is too full\n{{ df.stdout }}"
+      when: (df.stdout_lines | last).split()[4] | regex_replace('%','') | int >= 95
+
+- name: Replicas writable
+  hosts: clickhouse
+  become: true
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: system.replicas shop.events
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "SELECT replica_name, is_readonly, queue_size
+         FROM system.replicas WHERE database='shop' AND table='events'"
+      register: reps
+      changed_when: false
+
+    - name: Show replicas
+      ansible.builtin.debug:
+        var: reps.stdout_lines
+
+    - name: Fail if any readonly
+      ansible.builtin.fail:
+        msg: "preflight: readonly replica\n{{ reps.stdout }}"
+      when: "'\t1\t' in reps.stdout or reps.stdout.split('\n') | select('search', '\\s1\\s') | list | length > 0"
+      # Refine: parse columns. This sketch is a reminder — fail on is_readonly=1.

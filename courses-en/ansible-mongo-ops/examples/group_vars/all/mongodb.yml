@@ -1,0 +1,16 @@
+---
+# Confirm names against community.mongodb 1.7.12 role defaults.
+# mongodb_repository defaults to a newer series — pin 7.0.
+mongodb_version: "7.0"
+repl_set_name: nimbus
+replicaset: true
+sharding: false
+bind_ip: 0.0.0.0
+mongod_port: 27017
+# authorization / openssl_keyfile_* — read mongodb_mongod defaults.
+# Enable auth AFTER mongodb_replicaset. Do not invent extra-vars the role ignores.
+nimbus_bootstrap: mongo-01
+nimbus_replica_set: nimbus
+nimbus_mongod_unit: mongod
+# 2 GiB LXC: default WT cache is already small. If you OOM, add a drop-in — the 1.7.12
+# mongod.conf.j2 has no cacheSizeGB knob.

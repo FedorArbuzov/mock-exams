@@ -1,0 +1,59 @@
+---
+- name: Import preflight
+  ansible.builtin.import_playbook: preflight.yml
+
+- name: Restart clickhouse-server one host at a time
+  hosts: clickhouse
+  become: true
+  serial: 1
+  vars:
+    nimbus_clickhouse_unit: "{{ nimbus_clickhouse_unit | default('clickhouse-server') }}"
+  tasks:
+    - name: Restart server and wait writable
+      block:
+        - name: Restart clickhouse-server
+          ansible.builtin.service:
+            name: "{{ nimbus_clickhouse_unit }}"
+            state: restarted
+
+        - name: Wait until server is active
+          ansible.builtin.command: systemctl is-active {{ nimbus_clickhouse_unit }}
+          register: st
+          until: st.stdout == 'active'
+          retries: 30
+          delay: 5
+          changed_when: false
+
+        - name: Wait until this replica is not readonly
+          ansible.builtin.command: >
+            clickhouse-client --query
+            "SELECT is_readonly FROM system.replicas
+             WHERE database='shop' AND table='events'"
+          register: ro
+          until: ro.stdout | trim == '0' or ro.stdout | trim == ''
+          retries: 40
+          delay: 5
+          changed_when: false
+
+      rescue:
+        - name: Stop the fleet
+          ansible.builtin.fail:
+            msg: "{{ inventory_hostname }} server restart left a dead unit or readonly replica. Do not continue. Do not restart Keepers."
+
+# Optional second play — run only after servers are healthy (comment in / extra-var).
+# - name: Restart clickhouse-keeper one host at a time
+#   hosts: clickhouse_keeper
+#   become: true
+#   serial: 1
+#   tasks:
+#     - name: Restart keeper
+#       ansible.builtin.service:
+#         name: clickhouse-keeper
+#         state: restarted
+#     - name: Wait active
+#       ansible.builtin.command: systemctl is-active clickhouse-keeper
+#       register: k
+#       until: k.stdout == 'active'
+#       retries: 30
+#       delay: 5
+#       changed_when: false

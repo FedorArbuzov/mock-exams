@@ -1,0 +1,11 @@
+<clickhouse>
+  <!-- Tag name is historical. These are ClickHouse Keeper nodes, not ZK. -->
+  <zookeeper>
+{% for host in groups['clickhouse_keeper'] %}
+    <node index="{{ loop.index }}">
+      <host>{{ hostvars[host].ansible_host }}</host>
+      <port>{{ nimbus_keeper_port }}</port>
+    </node>
+{% endfor %}
+  </zookeeper>
+</clickhouse>

@@ -1,0 +1,28 @@
+---
+- name: Packages for operators (not CRI)
+  ansible.builtin.apt:
+    name: "{{ nimbus_packages }}"
+    state: present
+    update_cache: true
+
+- name: Chrony enabled
+  ansible.builtin.service:
+    name: chrony
+    state: started
+    enabled: true
+
+- name: Stop systemd-timesyncd if present
+  ansible.builtin.service:
+    name: systemd-timesyncd
+    state: stopped
+    enabled: false
+  failed_when: false
+
+- name: sshd drop-in — no passwords, no root
+  ansible.builtin.copy:
+    dest: "{{ nimbus_sshd_dropin }}"
+    mode: "0644"
+    content: |
+      PasswordAuthentication no
+      PermitRootLogin no
+  notify: Reload sshd

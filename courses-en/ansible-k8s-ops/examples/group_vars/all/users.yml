@@ -1,0 +1,15 @@
+---
+# Lab keys: generate under ~/nimbus-ops/files/keys/ (see lesson 08).
+nimbus_users:
+  - name: nimbus
+    state: present
+    groups: [sudo]
+    pubkey_src: files/keys/nimbus.pub
+  - name: lena
+    state: present
+    groups: [sudo]
+    pubkey_src: files/keys/lena.pub
+  - name: contractor
+    state: absent
+    groups: [sudo]
+    pubkey_src: files/keys/contractor.pub

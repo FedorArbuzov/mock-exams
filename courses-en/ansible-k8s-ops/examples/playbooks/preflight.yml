@@ -1,0 +1,54 @@
+---
+- name: Cluster preflight from the control node
+  hosts: localhost
+  gather_facts: false
+  vars:
+    kubeconfig_local: "{{ lookup('env', 'HOME') }}/.kube/nimbus-ops.conf"
+  tasks:
+    - name: Nodes must exist
+      ansible.builtin.command: kubectl get nodes --no-headers
+      environment:
+        KUBECONFIG: "{{ kubeconfig_local }}"
+      register: nodes_out
+      changed_when: false
+
+    - name: All listed nodes Ready
+      ansible.builtin.fail:
+        msg: "preflight: a node is not Ready:\n{{ nodes_out.stdout }}"
+      when: (nodes_out.stdout_lines | select('regex', '\\sReady\\s') | list | length) < 3
+
+    - name: DiskPressure must be absent
+      ansible.builtin.command: >
+        kubectl get nodes -o jsonpath={.items[*].status.conditions[?(@.type=='DiskPressure')].status}
+      environment:
+        KUBECONFIG: "{{ kubeconfig_local }}"
+      register: disk_pressure
+      changed_when: false
+
+    - name: Fail on DiskPressure True
+      ansible.builtin.fail:
+        msg: "preflight: DiskPressure is True on at least one node"
+      when: "'True' in disk_pressure.stdout"
+
+- name: Node preflight
+  hosts: k8s
+  become: true
+  gather_facts: false
+  tasks:
+    - name: chrony is active
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false
+
+    - name: chronyc tracking works
+      ansible.builtin.command: chronyc tracking
+      changed_when: false
+
+    - name: kubelet package is held
+      ansible.builtin.command: dpkg --get-selections kubelet
+      register: kubelet_hold
+      changed_when: false
+
+    - name: Fail if kubelet is not on hold
+      ansible.builtin.fail:
+        msg: "preflight: kubelet is not held: {{ kubelet_hold.stdout }}"
+      when: "'hold' not in kubelet_hold.stdout"

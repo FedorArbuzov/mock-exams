@@ -1,0 +1,60 @@
+---
+- name: Collect ClickHouse journals
+  hosts: clickhouse
+  become: true
+  gather_facts: false
+  vars:
+    stamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+    dest: "{{ lookup('env', 'HOME') }}/nimbus-ch/artifacts/{{ stamp }}"
+    nimbus_clickhouse_unit: "{{ nimbus_clickhouse_unit | default('clickhouse-server') }}"
+    nimbus_keeper_unit: "{{ nimbus_keeper_unit | default('clickhouse-keeper') }}"
+  tasks:
+    - name: Artifact dir
+      ansible.builtin.file:
+        path: "{{ dest }}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: Server journal
+      ansible.builtin.shell: journalctl -u {{ nimbus_clickhouse_unit }} -n 200 --no-pager > /tmp/nimbus-ch-server.j
+      changed_when: false
+
+    - name: Keeper journal
+      ansible.builtin.shell: journalctl -u {{ nimbus_keeper_unit }} -n 200 --no-pager > /tmp/nimbus-ch-keeper.j
+      changed_when: false
+
+    - name: Fetch server journal
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-ch-server.j
+        dest: "{{ dest }}/{{ inventory_hostname }}/clickhouse-server.log"
+        flat: true
+
+    - name: Fetch keeper journal
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-ch-keeper.j
+        dest: "{{ dest }}/{{ inventory_hostname }}/clickhouse-keeper.log"
+        flat: true
+
+- name: Cluster snapshot
+  hosts: ch-01
+  gather_facts: false
+  run_once: true
+  become: true
+  tasks:
+    - name: system.clusters + system.replicas
+      ansible.builtin.shell: |
+        clickhouse-client --query "SELECT * FROM system.clusters WHERE cluster='nimbus'"
+        echo '---'
+        clickhouse-client --query "SELECT database, table, replica_name, is_readonly, queue_size FROM system.replicas"
+      register: snap
+      changed_when: false
+
+    - name: Write snapshot
+      ansible.builtin.copy:
+        dest: "{{ lookup('env', 'HOME') }}/nimbus-ch/artifacts/latest-cluster.txt"
+        mode: "0644"
+        content: "{{ snap.stdout }}\n"
+      delegate_to: localhost
+      become: false

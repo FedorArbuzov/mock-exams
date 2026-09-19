@@ -1,1 +1,31 @@
+---
+- name: Zabbix 7.0 apt repo
+  ansible.builtin.apt:
+    deb: "{{ zabbix_release_deb }}"
+    state: present
 
+- name: zabbix-agent2
+  ansible.builtin.apt:
+    name: "{{ zabbix_agent_package }}"
+    state: present
+    update_cache: true
+
+- name: Agent drop-in — hostname and Server ACL
+  ansible.builtin.template:
+    src: nimbus.conf.j2
+    dest: /etc/zabbix/zabbix_agent2.d/nimbus.conf
+    mode: "0644"
+  notify: Restart zabbix-agent2
+
+- name: UserParameter keys
+  ansible.builtin.copy:
+    src: userparameter_nimbus.conf
+    dest: /etc/zabbix/zabbix_agent2.d/userparameter_nimbus.conf
+    mode: "0644"
+  notify: Restart zabbix-agent2
+
+- name: zabbix-agent2 enabled
+  ansible.builtin.service:
+    name: zabbix-agent2
+    state: started
+    enabled: true

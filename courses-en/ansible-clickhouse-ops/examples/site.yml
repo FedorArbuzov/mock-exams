@@ -1,0 +1,9 @@
+---
+- name: Nimbus ClickHouse baseline and cluster
+  hosts: clickhouse
+  become: true
+  roles:
+    - role: common
+      tags: [baseline]
+    - role: cluster
+      tags: [cluster]

@@ -1,0 +1,5 @@
+backups/
+artifacts/
+*.retry
+files/keys/*
+!files/keys/*.pub

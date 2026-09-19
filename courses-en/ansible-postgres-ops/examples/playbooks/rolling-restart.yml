@@ -1,0 +1,37 @@
+---
+- name: Import preflight
+  ansible.builtin.import_playbook: preflight.yml
+
+- name: Restart inventory replicas one at a time
+  hosts: replica
+  become: true
+  serial: 1
+  vars:
+    nimbus_patroni_unit: "{{ nimbus_patroni_unit | default('patroni') }}"
+  tasks:
+    - name: Who is leader
+      ansible.builtin.command: patronictl list
+      become_user: postgres
+      register: pctl
+      changed_when: false
+      delegate_to: "{{ groups['master'][0] }}"
+
+    - name: Skip if this host is the Patroni leader
+      ansible.builtin.debug:
+        msg: "Skip {{ inventory_hostname }} if it is Leader — confirm in patronictl before restart"
+      when: inventory_hostname in pctl.stdout
+
+    - name: Restart Patroni
+      ansible.builtin.service:
+        name: "{{ nimbus_patroni_unit }}"
+        state: restarted
+      when: inventory_hostname not in pctl.stdout
+      # Refine: parse Leader column. This sketch is a reminder, not a parser.
+
+    - name: Wait active
+      ansible.builtin.command: systemctl is-active {{ nimbus_patroni_unit }}
+      register: st
+      until: st.stdout == 'active'
+      retries: 30
+      delay: 5
+      changed_when: false

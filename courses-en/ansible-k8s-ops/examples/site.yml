@@ -1,0 +1,11 @@
+---
+- name: Nimbus node baseline
+  hosts: k8s
+  become: true
+  roles:
+    - role: common
+      tags: [baseline]
+    - role: users
+      tags: [users]
+    - role: node-hygiene
+      tags: [hygiene]

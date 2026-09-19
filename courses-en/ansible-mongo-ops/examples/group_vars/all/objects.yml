@@ -1,0 +1,30 @@
+---
+nimbus_admin_user: admin
+nimbus_admin_password: "{{ vault_mongodb_admin_password }}"
+nimbus_admin_database: admin
+shop_app_password: "{{ vault_shop_app_password }}"
+nimbus_write_concern: majority
+nimbus_databases:
+  - name: shop
+nimbus_users:
+  - name: shop_app
+    database: shop
+    password: "{{ shop_app_password }}"
+    roles: [readWrite]
+nimbus_indexes:
+  - database: shop
+    collection: orders
+    keys:
+      order_id: 1
+    options:
+      name: idx_order_id
+      unique: true
+    state: present
+  - database: shop
+    collection: customers
+    keys:
+      email: 1
+    options:
+      name: idx_email
+      unique: true
+    state: present

@@ -1,0 +1,38 @@
+---
+- name: Start mongod if down
+  hosts: mongo
+  become: true
+  gather_facts: false
+  tasks:
+    - name: State
+      ansible.builtin.command: systemctl is-active {{ nimbus_mongod_unit }}
+      register: st
+      changed_when: false
+      failed_when: false
+
+    - name: Start
+      ansible.builtin.service:
+        name: "{{ nimbus_mongod_unit }}"
+        state: started
+      when: st.stdout != 'active'
+
+- name: Member states
+  hosts: "{{ nimbus_bootstrap }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: mongodb_status
+      community.mongodb.mongodb_status:
+        replica_set: "{{ nimbus_replica_set }}"
+        login_user: "{{ nimbus_admin_user }}"
+        login_password: "{{ nimbus_admin_password }}"
+        login_database: "{{ nimbus_admin_database }}"
+        validate: minimal
+        poll: 6
+        interval: 5
+      register: rs
+      no_log: true
+
+    - name: Show states
+      ansible.builtin.debug:
+        var: rs.replicaset

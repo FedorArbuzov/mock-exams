@@ -1,0 +1,102 @@
+---
+- name: Snapshot etcd on the control plane
+  hosts: k8s_cp
+  become: true
+  gather_facts: false
+  vars:
+    etcd_snap_remote: /var/backups/nimbus/etcd-snapshot.db
+    pki_tar_remote: /var/backups/nimbus/pki.tar
+  tasks:
+    - name: Backup directory on CP
+      ansible.builtin.file:
+        path: /var/backups/nimbus
+        state: directory
+        mode: "0700"
+
+    - name: Save etcd snapshot
+      ansible.builtin.command: >
+        etcdctl snapshot save {{ etcd_snap_remote }}
+      environment:
+        ETCDCTL_API: "3"
+        ETCDCTL_CACERT: /etc/kubernetes/pki/etcd/ca.crt
+        ETCDCTL_CERT: /etc/kubernetes/pki/etcd/server.crt
+        ETCDCTL_KEY: /etc/kubernetes/pki/etcd/server.key
+      changed_when: true
+
+    - name: Tar PKI (certs stay off git)
+      ansible.builtin.command: tar -C /etc/kubernetes -cf {{ pki_tar_remote }} pki
+      changed_when: true
+
+    - name: Daily snapshot cron
+      ansible.builtin.cron:
+        name: nimbus-etcd-snapshot
+        minute: "17"
+        hour: "3"
+        job: >
+          ETCDCTL_API=3
+          ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt
+          ETCDCTL_CERT=/etc/kubernetes/pki/etcd/server.crt
+          ETCDCTL_KEY=/etc/kubernetes/pki/etcd/server.key
+          etcdctl snapshot save /var/backups/nimbus/etcd-$(date +\%F).db
+          >/var/backups/nimbus/cron.log 2>&1
+
+- name: Fetch disaster kit to the control node
+  hosts: k8s_cp
+  become: true
+  gather_facts: false
+  vars:
+    stamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+    kit: "{{ lookup('env', 'HOME') }}/nimbus-ops/backups/{{ stamp }}"
+    kubespray_inv: "{{ lookup('env', 'HOME') }}/kubespray/inventory/lab"
+  tasks:
+    - name: Kit directory on the host
+      ansible.builtin.file:
+        path: "{{ kit }}"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+      become: false
+
+    - name: Fetch etcd snapshot
+      ansible.builtin.fetch:
+        src: /var/backups/nimbus/etcd-snapshot.db
+        dest: "{{ kit }}/etcd.db"
+        flat: true
+
+    - name: Fetch PKI tar
+      ansible.builtin.fetch:
+        src: /var/backups/nimbus/pki.tar
+        dest: "{{ kit }}/pki.tar"
+        flat: true
+
+    - name: Extract PKI on the host
+      ansible.builtin.command: tar -xf {{ kit }}/pki.tar -C {{ kit }}
+      delegate_to: localhost
+      become: false
+      changed_when: true
+
+    - name: Kubespray inventory present?
+      ansible.builtin.stat:
+        path: "{{ kubespray_inv }}"
+      register: ks_inv
+      delegate_to: localhost
+      become: false
+
+    - name: Copy Kubespray inventory
+      ansible.builtin.copy:
+        src: "{{ kubespray_inv }}/"
+        dest: "{{ kit }}/kubespray-inventory/"
+      delegate_to: localhost
+      become: false
+      when: ks_inv.stat.isdir | default(false)
+
+    - name: Prove snapshot
+      ansible.builtin.shell: |
+        if command -v etcdutl >/dev/null 2>&1; then
+          etcdutl snapshot status {{ kit }}/etcd.db
+        else
+          ETCDCTL_API=3 etcdctl snapshot status {{ kit }}/etcd.db
+        fi
+      delegate_to: localhost
+      become: false
+      changed_when: false

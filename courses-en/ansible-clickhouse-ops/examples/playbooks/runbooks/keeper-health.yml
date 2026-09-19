@@ -1,0 +1,48 @@
+---
+- name: Keeper units — start one dead unit, never two as a panic
+  hosts: clickhouse_keeper
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_keeper_unit: "{{ nimbus_keeper_unit | default('clickhouse-keeper') }}"
+    nimbus_keeper_port: "{{ nimbus_keeper_port | default(9181) }}"
+  tasks:
+    - name: State
+      ansible.builtin.command: systemctl is-active {{ nimbus_keeper_unit }}
+      register: st
+      changed_when: false
+      failed_when: false
+
+    - name: Start if down
+      ansible.builtin.service:
+        name: "{{ nimbus_keeper_unit }}"
+        state: started
+      when: st.stdout != 'active'
+
+    - name: mntr (four-letter)
+      ansible.builtin.shell: echo mntr | nc -w 2 127.0.0.1 {{ nimbus_keeper_port }} || true
+      register: mntr
+      changed_when: false
+
+    - name: Show mntr
+      ansible.builtin.debug:
+        var: mntr.stdout_lines
+
+- name: Servers still talking to Keeper
+  hosts: ch-01
+  become: true
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: Session / readonly snapshot
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "SELECT replica_name, is_readonly, is_session_expired
+         FROM system.replicas WHERE table='events'"
+      register: sess
+      changed_when: false
+      failed_when: false
+
+    - name: Show
+      ansible.builtin.debug:
+        var: sess.stdout_lines

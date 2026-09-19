@@ -1,0 +1,9 @@
+---
+# Confluent Ansible 7.9.x — community Kafka, lab-only plaintext.
+confluent_server_enabled: false
+ssl_enabled: false
+sasl_protocol: none
+kafka_broker_configure_multiple_listeners: false
+# If 7.9.2 uses different names, see the collection docs/VARIABLES.md
+kafka_broker_heap: 768m
+kafka_controller_heap: 512m

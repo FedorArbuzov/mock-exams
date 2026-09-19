@@ -1,0 +1,72 @@
+---
+- name: journald drop-in directory
+  ansible.builtin.file:
+    path: /etc/systemd/journald.conf.d
+    state: directory
+    mode: "0755"
+
+- name: journald nimbus limits
+  ansible.builtin.copy:
+    dest: /etc/systemd/journald.conf.d/nimbus.conf
+    mode: "0644"
+    content: |
+      [Journal]
+      SystemMaxUse={{ nimbus_journal_max }}
+      SystemKeepFree={{ nimbus_journal_keep_free }}
+  notify: Restart journald
+
+- name: Disk GC script
+  ansible.builtin.copy:
+    dest: "{{ nimbus_gc_script }}"
+    mode: "0755"
+    content: |
+      #!/bin/bash
+      set -euo pipefail
+      journalctl --vacuum-size={{ nimbus_journal_max }} || true
+      if command -v crictl >/dev/null 2>&1; then
+        crictl rmi --prune || true
+      fi
+      rm -f /var/tmp/nimbus-junk
+
+- name: Disk GC systemd unit
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/nimbus-disk-gc.service
+    mode: "0644"
+    content: |
+      [Unit]
+      Description=Nimbus unused image and journal vacuum
+
+      [Service]
+      Type=oneshot
+      ExecStart={{ nimbus_gc_script }}
+  notify: Reload systemd
+
+- name: Disk GC weekly timer
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/nimbus-disk-gc.timer
+    mode: "0644"
+    content: |
+      [Unit]
+      Description=Weekly Nimbus disk GC
+
+      [Timer]
+      OnCalendar=weekly
+      Persistent=true
+
+      [Install]
+      WantedBy=timers.target
+  notify: Reload systemd
+
+- name: Enable disk GC timer
+  ansible.builtin.systemd:
+    name: nimbus-disk-gc.timer
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Keep kube packages on hold
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop: "{{ nimbus_kube_holds }}"
+  when: ansible_os_family == 'Debian'

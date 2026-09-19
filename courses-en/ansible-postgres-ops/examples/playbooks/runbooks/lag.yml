@@ -1,0 +1,37 @@
+---
+- name: Start Patroni if down
+  hosts: postgres_cluster
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_patroni_unit: "{{ nimbus_patroni_unit | default('patroni') }}"
+  tasks:
+    - name: State
+      ansible.builtin.command: systemctl is-active {{ nimbus_patroni_unit }}
+      register: st
+      changed_when: false
+      failed_when: false
+
+    - name: Start
+      ansible.builtin.service:
+        name: "{{ nimbus_patroni_unit }}"
+        state: started
+      when: st.stdout != 'active'
+
+- name: Replication view on master group (use current leader in real life)
+  hosts: master
+  become: true
+  gather_facts: false
+  vars:
+    ansible_become_user: postgres
+  tasks:
+    - name: pg_stat_replication
+      community.postgresql.postgresql_query:
+        db: postgres
+        query: SELECT application_name, state, replay_lag FROM pg_stat_replication
+        login_unix_socket: /var/run/postgresql
+      register: lag
+
+    - name: Show
+      ansible.builtin.debug:
+        var: lag

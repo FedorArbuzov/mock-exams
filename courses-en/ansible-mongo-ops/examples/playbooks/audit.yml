@@ -1,0 +1,68 @@
+---
+- name: Node audit
+  hosts: mongo
+  become: true
+  gather_facts: false
+  tasks:
+    - name: sshd drop-in
+      ansible.builtin.stat:
+        path: /etc/ssh/sshd_config.d/99-nimbus.conf
+      register: sshd
+
+    - name: Assert sshd
+      ansible.builtin.assert:
+        that: sshd.stat.exists
+        fail_msg: "audit: missing sshd drop-in — site.yml --tags baseline"
+
+    - name: chrony
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false
+
+    - name: mongod
+      ansible.builtin.command: systemctl is-active {{ nimbus_mongod_unit }}
+      changed_when: false
+
+- name: Replica set and shop
+  hosts: "{{ nimbus_bootstrap }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: mongodb_status
+      community.mongodb.mongodb_status:
+        replica_set: "{{ nimbus_replica_set }}"
+        login_user: "{{ nimbus_admin_user }}"
+        login_password: "{{ nimbus_admin_password }}"
+        login_database: "{{ nimbus_admin_database }}"
+      register: rs
+      no_log: true
+
+    - name: Assert PRIMARY
+      ansible.builtin.assert:
+        that: rs.replicaset is defined
+        fail_msg: "audit: replica set not converged"
+
+    - name: PRIMARY host
+      ansible.builtin.set_fact:
+        nimbus_primary: "{{ item.key.split(':')[0] }}"
+      loop: "{{ lookup('dict', rs.replicaset) }}"
+      when: "'PRIMARY' in item.value"
+
+    - name: shop user exists
+      community.mongodb.mongodb_user:
+        login_host: "{{ nimbus_primary | default(omit) }}"
+        login_user: "{{ nimbus_admin_user }}"
+        login_password: "{{ nimbus_admin_password }}"
+        login_database: "{{ nimbus_admin_database }}"
+        replica_set: "{{ nimbus_replica_set }}"
+        database: shop
+        name: shop_app
+        state: present
+        update_password: on_create
+      register: shop_user
+      check_mode: true
+      failed_when: false
+
+    - name: Assert shop
+      ansible.builtin.assert:
+        that: shop_user is not skipped
+        fail_msg: "audit: shop / shop_app missing — run objects.yml (and connect to the current PRIMARY)"

@@ -1,0 +1,3 @@
+---
+shop_app_password: "{{ vault_shop_app_password }}"
+nimbus_pg_superuser: postgres

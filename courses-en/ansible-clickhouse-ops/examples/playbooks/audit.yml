@@ -1,0 +1,87 @@
+---
+- name: Node audit
+  hosts: clickhouse
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_clickhouse_unit: "{{ nimbus_clickhouse_unit | default('clickhouse-server') }}"
+    nimbus_keeper_unit: "{{ nimbus_keeper_unit | default('clickhouse-keeper') }}"
+  tasks:
+    - name: sshd drop-in
+      ansible.builtin.stat:
+        path: /etc/ssh/sshd_config.d/99-nimbus.conf
+      register: sshd
+
+    - name: Assert sshd
+      ansible.builtin.assert:
+        that: sshd.stat.exists
+        fail_msg: "audit: missing sshd drop-in — site.yml --tags baseline"
+
+    - name: sshd -T
+      ansible.builtin.command: sshd -T
+      register: sshd_t
+      changed_when: false
+
+    - name: Assert sshd policy
+      ansible.builtin.assert:
+        that:
+          - "'permitrootlogin no' in sshd_t.stdout"
+          - "'passwordauthentication no' in sshd_t.stdout"
+
+    - name: chrony
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false
+
+    - name: clickhouse-server
+      ansible.builtin.command: systemctl is-active {{ nimbus_clickhouse_unit }}
+      changed_when: false
+
+    - name: clickhouse-keeper
+      ansible.builtin.command: systemctl is-active {{ nimbus_keeper_unit }}
+      changed_when: false
+
+- name: Schema and replicas
+  hosts: ch-01
+  become: true
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: shop.events exists
+      ansible.builtin.command: clickhouse-client --query "EXISTS TABLE shop.events"
+      register: exists
+      changed_when: false
+
+    - name: Assert table
+      ansible.builtin.assert:
+        that: exists.stdout | trim == '1'
+        fail_msg: "audit: shop.events missing — run schema.yml"
+
+    - name: Readonly check
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "SELECT count() FROM system.replicas
+         WHERE database='shop' AND table='events' AND is_readonly = 1"
+      register: ro
+      changed_when: false
+
+    - name: Assert no readonly
+      ansible.builtin.assert:
+        that: ro.stdout | trim == '0'
+        fail_msg: "audit: readonly replica — runbooks/readonly.yml"
+
+- name: Backup stamp on the control node
+  hosts: localhost
+  gather_facts: false
+  become: false
+  tasks:
+    - name: backups/ has a stamp
+      ansible.builtin.find:
+        paths: "{{ lookup('env', 'HOME') }}/nimbus-ch/backups"
+        file_type: directory
+      register: stamps
+
+    - name: Assert stamp
+      ansible.builtin.assert:
+        that: stamps.files | length > 0
+        fail_msg: "audit: no backups/<stamp> — lesson 14"
+      when: stamps.examined is defined

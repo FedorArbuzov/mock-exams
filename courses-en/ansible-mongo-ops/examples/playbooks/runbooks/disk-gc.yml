@@ -1,0 +1,14 @@
+---
+- name: Disk — not dbPath
+  hosts: mongo
+  become: true
+  gather_facts: false
+  tasks:
+    - name: df
+      ansible.builtin.command: df -h /
+      changed_when: false
+
+    - name: Lab junk
+      ansible.builtin.file:
+        path: /var/tmp/nimbus-junk
+        state: absent

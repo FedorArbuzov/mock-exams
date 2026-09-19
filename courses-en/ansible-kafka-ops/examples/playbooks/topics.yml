@@ -1,0 +1,29 @@
+---
+- name: Ensure shop topics
+  hosts: kafka-01
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: Create topic if missing
+      ansible.builtin.command: >
+        {{ nimbus_kafka_topics_bin }}
+        --bootstrap-server {{ nimbus_bootstrap }}
+        --create --if-not-exists
+        --topic {{ item.name }}
+        --partitions {{ item.partitions }}
+        --replication-factor {{ item.replication_factor }}
+      loop: "{{ nimbus_topics }}"
+      register: created
+      changed_when: "'Created' in (created.stdout | default(''))"
+      failed_when: created.rc != 0 and 'already exists' not in (created.stderr | default('') ~ created.stdout | default(''))
+
+    - name: Apply topic configs
+      ansible.builtin.command: >
+        kafka-configs
+        --bootstrap-server {{ nimbus_bootstrap }}
+        --entity-type topics --entity-name {{ item.name }}
+        --alter --add-config {{ item.config_csv }}
+      loop: "{{ nimbus_topics }}"
+      when: item.config_csv is defined
+      register: cfg
+      changed_when: cfg.rc == 0

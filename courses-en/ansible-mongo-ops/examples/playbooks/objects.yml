@@ -1,0 +1,55 @@
+---
+- name: Discover PRIMARY
+  hosts: "{{ nimbus_bootstrap }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: mongodb_status
+      community.mongodb.mongodb_status:
+        replica_set: "{{ nimbus_replica_set }}"
+        login_user: "{{ nimbus_admin_user }}"
+        login_password: "{{ nimbus_admin_password }}"
+        login_database: "{{ nimbus_admin_database }}"
+        poll: 3
+        interval: 5
+      register: rs
+      no_log: true
+
+    - name: PRIMARY hostname
+      ansible.builtin.set_fact:
+        nimbus_primary: "{{ item.key.split(':')[0] }}"
+      loop: "{{ lookup('dict', rs.replicaset) }}"
+      when: "'PRIMARY' in item.value"
+
+    - name: Fail if no PRIMARY
+      ansible.builtin.assert:
+        that: nimbus_primary | length > 0
+        fail_msg: "objects: no PRIMARY — do not assume 192.168.59.10"
+
+- name: Shop user and indexes on PRIMARY
+  hosts: "{{ hostvars[nimbus_bootstrap].nimbus_primary | default(nimbus_bootstrap) }}"
+  become: true
+  gather_facts: false
+  tasks:
+    - name: shop_app
+      community.mongodb.mongodb_user:
+        login_user: "{{ nimbus_admin_user }}"
+        login_password: "{{ nimbus_admin_password }}"
+        login_database: "{{ nimbus_admin_database }}"
+        replica_set: "{{ nimbus_replica_set }}"
+        database: "{{ item.database }}"
+        name: "{{ item.name }}"
+        password: "{{ item.password }}"
+        roles: "{{ item.roles }}"
+        state: present
+        update_password: on_create
+      loop: "{{ nimbus_users }}"
+      no_log: true
+
+    - name: Indexes
+      community.mongodb.mongodb_index:
+        login_user: "{{ nimbus_admin_user }}"
+        login_password: "{{ nimbus_admin_password }}"
+        login_database: "{{ nimbus_admin_database }}"
+        replica_set: "{{ nimbus_replica_set }}"
+        indexes: "{{ nimbus_indexes }}"

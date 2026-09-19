@@ -1,0 +1,19 @@
+---
+- name: Disk runbook — never /var/lib/clickhouse
+  hosts: clickhouse
+  become: true
+  gather_facts: false
+  tasks:
+    - name: df root and datadir
+      ansible.builtin.command: df -h / /var/lib/clickhouse
+      register: df
+      changed_when: false
+
+    - name: Show df
+      ansible.builtin.debug:
+        var: df.stdout_lines
+
+    - name: Remove lab junk only
+      ansible.builtin.file:
+        path: /var/tmp/nimbus-junk
+        state: absent

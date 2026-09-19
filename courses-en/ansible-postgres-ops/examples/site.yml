@@ -1,0 +1,7 @@
+---
+- name: Nimbus node baseline
+  hosts: postgres_cluster
+  become: true
+  roles:
+    - role: common
+      tags: [baseline]

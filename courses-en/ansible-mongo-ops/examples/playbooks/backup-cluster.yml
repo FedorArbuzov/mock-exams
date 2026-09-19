@@ -1,0 +1,60 @@
+---
+- name: Logical dump on bootstrap host (adjust to current PRIMARY)
+  hosts: "{{ nimbus_bootstrap }}"
+  become: true
+  gather_facts: false
+  vars:
+    stamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+    remote_dir: /var/backups/nimbus/mongo
+    kit: "{{ lookup('env', 'HOME') }}/nimbus-mongo/backups/{{ stamp }}"
+    nimbus_keyfile_src: /etc/keyfile
+  tasks:
+    - name: Discover PRIMARY first
+      ansible.builtin.debug:
+        msg: "Run mongodb_status and delegate this play to the PRIMARY. Sketch uses nimbus_bootstrap."
+
+    - name: Remote backup dir
+      ansible.builtin.file:
+        path: "{{ remote_dir }}"
+        state: directory
+        mode: "0700"
+
+    - name: mongodump
+      ansible.builtin.command: >
+        mongodump --host {{ inventory_hostname }} --port 27017
+        --username {{ nimbus_admin_user }} --password {{ nimbus_admin_password }}
+        --authenticationDatabase {{ nimbus_admin_database }}
+        --out {{ remote_dir }}/dump
+      no_log: true
+
+    - name: Kit dir
+      ansible.builtin.file:
+        path: "{{ kit }}"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+      become: false
+
+    - name: Tar dump
+      ansible.builtin.command: tar -C {{ remote_dir }} -cf /tmp/nimbus-mongo-dump.tar .
+      become: true
+
+    - name: Fetch dump
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-mongo-dump.tar
+        dest: "{{ kit }}/dump.tar"
+        flat: true
+
+    - name: Fetch keyfile
+      ansible.builtin.fetch:
+        src: "{{ nimbus_keyfile_src }}"
+        dest: "{{ kit }}/keyfile"
+        flat: true
+      failed_when: false
+
+    - name: Copy inventory into the stamp (control node)
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../inventory/"
+        dest: "{{ kit }}/inventory/"
+      delegate_to: localhost
+      become: false

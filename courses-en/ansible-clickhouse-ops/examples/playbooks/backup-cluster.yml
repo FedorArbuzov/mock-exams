@@ -1,0 +1,63 @@
+---
+- name: BACKUP shop on one replica and fetch off-node
+  hosts: ch-01
+  become: true
+  gather_facts: false
+  vars:
+    stamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+    remote_dir: "{{ nimbus_backup_path | default('/var/backups/nimbus-ch') }}"
+    kit: "{{ lookup('env', 'HOME') }}/nimbus-ch/backups/{{ stamp }}"
+  tasks:
+    - name: Remote backup dir
+      ansible.builtin.file:
+        path: "{{ remote_dir }}"
+        state: directory
+        owner: clickhouse
+        group: clickhouse
+        mode: "0750"
+
+    - name: BACKUP DATABASE shop TO File
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "BACKUP DATABASE shop TO File('{{ remote_dir }}/shop.zip')"
+      register: bak
+      failed_when: bak.rc != 0
+
+    - name: Kit dir
+      ansible.builtin.file:
+        path: "{{ kit }}"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+      become: false
+
+    - name: Manifest
+      ansible.builtin.copy:
+        dest: "{{ kit }}/MANIFEST.txt"
+        mode: "0644"
+        content: |
+          stamp={{ stamp }}
+          source={{ inventory_hostname }}
+          restore is not this playbook
+      delegate_to: localhost
+      become: false
+
+    - name: Fetch zip
+      ansible.builtin.fetch:
+        src: "{{ remote_dir }}/shop.zip"
+        dest: "{{ kit }}/shop.zip"
+        flat: true
+
+    - name: Fail if empty
+      ansible.builtin.stat:
+        path: "{{ kit }}/shop.zip"
+      register: z
+      delegate_to: localhost
+      become: false
+
+    - name: Assert bytes
+      ansible.builtin.assert:
+        that: z.stat.exists and z.stat.size > 0
+        fail_msg: "backup: fetched file missing or empty"
+      delegate_to: localhost
+      become: false

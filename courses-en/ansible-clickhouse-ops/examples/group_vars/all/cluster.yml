@@ -1,0 +1,14 @@
+---
+# Official ClickHouse 24.8 LTS — adjust the patch after apt-cache madison.
+nimbus_cluster_name: nimbus
+nimbus_clickhouse_version: "24.8.*"
+nimbus_native_port: 9000
+nimbus_http_port: 8123
+nimbus_interserver_port: 9009
+nimbus_keeper_port: 9181
+nimbus_keeper_raft_port: 9234
+# ~1 GiB so Server + Keeper fit in a 2 GiB LXC
+nimbus_max_server_memory: 1000000000
+nimbus_backup_path: /var/backups/nimbus-ch
+nimbus_clickhouse_unit: clickhouse-server
+nimbus_keeper_unit: clickhouse-keeper

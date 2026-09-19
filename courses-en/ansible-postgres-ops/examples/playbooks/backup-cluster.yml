@@ -1,0 +1,39 @@
+---
+- name: Physical backup on master group host (adjust to current leader)
+  hosts: master
+  become: true
+  gather_facts: false
+  vars:
+    stamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+    remote_dir: /var/backups/nimbus/pg
+    kit: "{{ lookup('env', 'HOME') }}/nimbus-pg/backups/{{ stamp }}"
+  tasks:
+    - name: Remote backup dir
+      ansible.builtin.file:
+        path: "{{ remote_dir }}"
+        state: directory
+        owner: postgres
+        mode: "0700"
+
+    - name: pg_basebackup
+      ansible.builtin.command: >
+        pg_basebackup -D {{ remote_dir }}/data -F tar -X fetch -P
+      become_user: postgres
+
+    - name: Kit dir
+      ansible.builtin.file:
+        path: "{{ kit }}"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+      become: false
+
+    - name: Fetch tarball pieces
+      ansible.builtin.command: tar -C {{ remote_dir }} -cf /tmp/nimbus-pg-base.tar .
+      become: true
+
+    - name: Fetch
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-pg-base.tar
+        dest: "{{ kit }}/base.tar"
+        flat: true

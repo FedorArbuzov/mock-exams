@@ -1,0 +1,47 @@
+---
+- name: Discover Patroni leader
+  hosts: postgres_cluster
+  become: true
+  gather_facts: false
+  tasks:
+    - name: patronictl list
+      ansible.builtin.command: patronictl list
+      become_user: postgres
+      register: pctl
+      changed_when: false
+      failed_when: false
+      run_once: true
+
+    - name: Leader hostname from inventory default
+      ansible.builtin.set_fact:
+        nimbus_pg_leader: "{{ (groups['master'] | first) }}"
+      run_once: true
+
+- name: Shop objects on the leader
+  hosts: "{{ hostvars[groups['postgres_cluster'][0]].nimbus_pg_leader | default(groups['master'][0]) }}"
+  become: true
+  gather_facts: false
+  vars:
+    ansible_become_user: postgres
+  tasks:
+    - name: Database shop
+      community.postgresql.postgresql_db:
+        name: shop
+        state: present
+        login_unix_socket: /var/run/postgresql
+
+    - name: Role shop_app
+      community.postgresql.postgresql_user:
+        name: shop_app
+        password: "{{ shop_app_password }}"
+        state: present
+        login_unix_socket: /var/run/postgresql
+      no_log: true
+
+    - name: Privileges
+      community.postgresql.postgresql_privs:
+        db: shop
+        role: shop_app
+        type: database
+        privs: CONNECT
+        login_unix_socket: /var/run/postgresql

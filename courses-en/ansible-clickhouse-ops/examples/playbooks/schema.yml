@@ -1,0 +1,69 @@
+---
+- name: Schema ON CLUSTER (once)
+  hosts: clickhouse
+  become: true
+  gather_facts: false
+  run_once: true
+  vars:
+    nimbus_cluster_name: "{{ nimbus_cluster_name | default('nimbus') }}"
+  tasks:
+    - name: CREATE DATABASE shop ON CLUSTER
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "CREATE DATABASE IF NOT EXISTS shop ON CLUSTER {{ nimbus_cluster_name }}"
+      register: db
+      changed_when: "'CREATE' in (db.stdout | default(''))"
+      failed_when: db.rc != 0
+
+    - name: CREATE TABLE shop.events ReplicatedMergeTree ON CLUSTER
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "CREATE TABLE IF NOT EXISTS shop.events ON CLUSTER {{ nimbus_cluster_name }}
+        (event_time DateTime, user_id UInt64, payload String)
+        ENGINE = ReplicatedMergeTree('/clickhouse/tables/{shard}/shop/events', '{replica}')
+        PARTITION BY toYYYYMM(event_time)
+        ORDER BY (event_time, user_id)"
+      register: tbl
+      changed_when: "'CREATE' in (tbl.stdout | default(''))"
+      failed_when: tbl.rc != 0
+
+- name: users.d shop_app on every replica
+  hosts: clickhouse
+  become: true
+  gather_facts: false
+  tasks:
+    - name: users.d drop-in
+      ansible.builtin.copy:
+        dest: /etc/clickhouse-server/users.d/shop_app.xml
+        owner: clickhouse
+        group: clickhouse
+        mode: "0640"
+        content: |
+          <clickhouse>
+            <users>
+              <shop_app>
+                <password>{{ vault_shop_app_password }}</password>
+                <networks>
+                  <ip>192.168.60.0/24</ip>
+                  <ip>127.0.0.1</ip>
+                </networks>
+                <profile>default</profile>
+                <quota>default</quota>
+              </shop_app>
+            </users>
+          </clickhouse>
+      no_log: true
+      notify: Reload clickhouse users
+
+    - name: GRANT shop_app (SQL — XML grants vary by 24.8 build)
+      ansible.builtin.command: >
+        clickhouse-client --query
+        "GRANT SELECT, INSERT ON shop.* TO shop_app"
+      register: g
+      changed_when: g.rc == 0
+      failed_when: false
+
+  handlers:
+    - name: Reload clickhouse users
+      ansible.builtin.command: clickhouse-client --query "SYSTEM RELOAD CONFIG"
+      changed_when: true

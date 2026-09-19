@@ -1,0 +1,8 @@
+---
+nimbus_journal_max: 256M
+nimbus_journal_keep_free: 128M
+nimbus_gc_script: /usr/local/sbin/nimbus-disk-gc
+nimbus_kube_holds:
+  - kubelet
+  - kubeadm
+  - kubectl

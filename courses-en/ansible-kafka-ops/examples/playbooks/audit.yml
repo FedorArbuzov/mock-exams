@@ -1,0 +1,65 @@
+---
+- name: Monday audit
+  hosts: kafka
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_broker_unit: "{{ nimbus_broker_unit | default('confluent-kafka') }}"
+  tasks:
+    - name: sshd drop-in
+      ansible.builtin.stat:
+        path: /etc/ssh/sshd_config.d/99-nimbus.conf
+      register: sshd_dropin
+
+    - name: Assert sshd drop-in
+      ansible.builtin.assert:
+        that: sshd_dropin.stat.exists
+        fail_msg: "audit: missing sshd drop-in — site.yml --tags baseline"
+
+    - name: sshd -T
+      ansible.builtin.command: sshd -T
+      register: sshd_t
+      changed_when: false
+
+    - name: Assert sshd policy
+      ansible.builtin.assert:
+        that:
+          - "'permitrootlogin no' in sshd_t.stdout"
+          - "'passwordauthentication no' in sshd_t.stdout"
+
+    - name: chrony
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false
+
+    - name: broker unit
+      ansible.builtin.command: systemctl is-active {{ nimbus_broker_unit }}
+      changed_when: false
+
+- name: Topic and URP audit
+  hosts: kafka-01
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: shop.orders exists
+      ansible.builtin.command: >
+        kafka-topics --bootstrap-server {{ nimbus_bootstrap }}
+        --describe --topic shop.orders
+      register: orders
+      changed_when: false
+
+    - name: Assert RF
+      ansible.builtin.assert:
+        that: "'ReplicationFactor: 3' in orders.stdout or 'ReplicationFactor:3' in orders.stdout"
+        fail_msg: "audit: shop.orders missing or RF!=3\n{{ orders.stdout }}"
+
+    - name: URP
+      ansible.builtin.command: >
+        kafka-topics --bootstrap-server {{ nimbus_bootstrap }}
+        --describe --under-replicated-partitions
+      register: urp
+      changed_when: false
+
+    - name: Assert no URP
+      ansible.builtin.assert:
+        that: urp.stdout | trim | length == 0
+        fail_msg: "audit: under-replicated partitions\n{{ urp.stdout }}"

@@ -1,0 +1,8 @@
+---
+# Confirm names against vitabaks.autobase 2.11.0 defaults.
+postgresql_version: 16
+patroni_cluster_name: nimbus-pg
+dcs_type: etcd
+with_haproxy_load_balancing: false
+# Keep LXC alive — override whatever the collection uses for shared_buffers:
+# postgresql_shared_buffers: 128MB

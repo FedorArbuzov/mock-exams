@@ -1,0 +1,46 @@
+---
+- name: Collect Kafka journals
+  hosts: kafka
+  become: true
+  gather_facts: false
+  vars:
+    stamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+    dest: "{{ lookup('env', 'HOME') }}/nimbus-kafka/artifacts/{{ stamp }}"
+    nimbus_broker_unit: "{{ nimbus_broker_unit | default('confluent-kafka') }}"
+  tasks:
+    - name: Artifact dir
+      ansible.builtin.file:
+        path: "{{ dest }}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: Journal
+      ansible.builtin.shell: journalctl -u {{ nimbus_broker_unit }} -n 200 --no-pager > /tmp/nimbus-kafka.j
+      changed_when: false
+
+    - name: Fetch journal
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-kafka.j
+        dest: "{{ dest }}/{{ inventory_hostname }}/kafka.log"
+        flat: true
+
+- name: Cluster describe
+  hosts: kafka-01
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: Describe all topics
+      ansible.builtin.command: >
+        kafka-topics --bootstrap-server {{ nimbus_bootstrap }} --describe
+      register: desc
+      changed_when: false
+
+    - name: Write describe
+      ansible.builtin.copy:
+        dest: "{{ lookup('env', 'HOME') }}/nimbus-kafka/artifacts/latest-describe.txt"
+        mode: "0644"
+        content: "{{ desc.stdout }}\n"
+      delegate_to: localhost
+      become: false

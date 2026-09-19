@@ -1,0 +1,60 @@
+---
+- name: Collect evidence
+  hosts: k8s
+  become: true
+  gather_facts: false
+  vars:
+    stamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+    dest: "{{ lookup('env', 'HOME') }}/nimbus-ops/artifacts/{{ stamp }}"
+  tasks:
+    - name: Artifact host dir
+      ansible.builtin.file:
+        path: "{{ dest }}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: kubelet journal
+      ansible.builtin.shell: journalctl -u kubelet -n 200 --no-pager > /tmp/nimbus-kubelet.j
+      changed_when: false
+
+    - name: containerd journal
+      ansible.builtin.shell: journalctl -u containerd -n 200 --no-pager > /tmp/nimbus-containerd.j
+      changed_when: false
+
+    - name: Fetch kubelet journal
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-kubelet.j
+        dest: "{{ dest }}/{{ inventory_hostname }}/kubelet.log"
+        flat: true
+
+    - name: Fetch containerd journal
+      ansible.builtin.fetch:
+        src: /tmp/nimbus-containerd.j
+        dest: "{{ dest }}/{{ inventory_hostname }}/containerd.log"
+        flat: true
+
+- name: API snapshot once
+  hosts: localhost
+  gather_facts: false
+  vars:
+    kubeconfig_local: "{{ lookup('env', 'HOME') }}/.kube/nimbus-ops.conf"
+    dest: "{{ lookup('env', 'HOME') }}/nimbus-ops/artifacts/latest-api.txt"
+  tasks:
+    - name: kubectl get nodes and pods
+      ansible.builtin.shell: |
+        kubectl --request-timeout=5s get nodes -o wide
+        echo
+        kubectl --request-timeout=5s get pods -A
+      environment:
+        KUBECONFIG: "{{ kubeconfig_local }}"
+      register: api
+      changed_when: false
+      failed_when: false
+
+    - name: Write API dump
+      ansible.builtin.copy:
+        dest: "{{ dest }}"
+        mode: "0644"
+        content: "{{ api.stdout | default('') }}\n{{ api.stderr | default('') }}\n"

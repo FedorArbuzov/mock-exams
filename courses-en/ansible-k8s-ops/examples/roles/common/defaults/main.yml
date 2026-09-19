@@ -1,0 +1,6 @@
+---
+nimbus_packages:
+  - chrony
+  - jq
+  - htop
+nimbus_sshd_dropin: /etc/ssh/sshd_config.d/99-nimbus.conf

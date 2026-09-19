@@ -1,1 +1,7 @@
-
+---
+zabbix_release_deb: https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest_7.0+ubuntu22.04_all.deb
+zabbix_agent_package: zabbix-agent2
+# ACL: control-node bridge IP + Docker bridge sources (lesson 01).
+zabbix_server_acl: 192.168.61.1,172.16.0.0/12
+zabbix_server_active: 192.168.61.1
+zabbix_unsafe_userparameters: true

@@ -1,0 +1,7 @@
+---
+- name: Nimbus node baseline
+  hosts: mongo
+  become: true
+  roles:
+    - role: common
+      tags: [baseline]

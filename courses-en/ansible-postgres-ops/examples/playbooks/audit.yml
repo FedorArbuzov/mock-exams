@@ -1,0 +1,43 @@
+---
+- name: Node audit
+  hosts: postgres_cluster
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_patroni_unit: "{{ nimbus_patroni_unit | default('patroni') }}"
+  tasks:
+    - name: sshd drop-in
+      ansible.builtin.stat:
+        path: /etc/ssh/sshd_config.d/99-nimbus.conf
+      register: sshd
+
+    - name: Assert sshd
+      ansible.builtin.assert:
+        that: sshd.stat.exists
+
+    - name: chrony
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false
+
+    - name: patroni
+      ansible.builtin.command: systemctl is-active {{ nimbus_patroni_unit }}
+      changed_when: false
+
+- name: Shop exists
+  hosts: master
+  become: true
+  gather_facts: false
+  vars:
+    ansible_become_user: postgres
+  tasks:
+    - name: Query shop
+      community.postgresql.postgresql_query:
+        db: postgres
+        query: SELECT 1 FROM pg_database WHERE datname = 'shop'
+        login_unix_socket: /var/run/postgresql
+      register: shop
+
+    - name: Assert shop
+      ansible.builtin.assert:
+        that: shop.query_result | default(shop.query_result) | length > 0 or shop.rowcount | default(0) > 0
+        fail_msg: "audit: database shop missing — run objects.yml (and connect to the current leader)"

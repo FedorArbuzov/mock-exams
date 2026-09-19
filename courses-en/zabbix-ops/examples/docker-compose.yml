@@ -1,1 +1,50 @@
+# Reference — lives in ~/nimbus-zabbix/compose/docker-compose.yml
+# Lab passwords. Production: Vault. Do not publish 8080/10051 on a public NIC.
 
+services:
+  postgres-server:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix_lab
+      POSTGRES_DB: zabbix
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zabbix -d zabbix"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  zabbix-server:
+    image: zabbix/zabbix-server-pgsql:alpine-7.0-latest
+    depends_on:
+      postgres-server:
+        condition: service_healthy
+    ports:
+      - "10051:10051"
+    environment:
+      DB_SERVER_HOST: postgres-server
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix_lab
+      POSTGRES_DB: zabbix
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-7.0-latest
+    depends_on:
+      - zabbix-server
+      - postgres-server
+    ports:
+      - "8080:8080"
+    environment:
+      ZBX_SERVER_HOST: zabbix-server
+      DB_SERVER_HOST: postgres-server
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix_lab
+      POSTGRES_DB: zabbix
+      PHP_TZ: Europe/Moscow
+
+volumes:
+  postgres-data:

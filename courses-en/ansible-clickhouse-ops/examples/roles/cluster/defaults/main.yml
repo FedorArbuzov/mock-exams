@@ -1,0 +1,14 @@
+---
+nimbus_cluster_name: nimbus
+nimbus_clickhouse_version: "24.8.*"
+nimbus_native_port: 9000
+nimbus_http_port: 8123
+nimbus_interserver_port: 9009
+nimbus_keeper_port: 9181
+nimbus_keeper_raft_port: 9234
+nimbus_max_server_memory: 1000000000
+nimbus_backup_path: /var/backups/nimbus-ch
+nimbus_clickhouse_unit: clickhouse-server
+nimbus_keeper_unit: clickhouse-keeper
+nimbus_clickhouse_repo: "deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main"
+nimbus_clickhouse_key_url: https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key

@@ -1,0 +1,32 @@
+---
+- name: Broker units
+  hosts: kafka_broker
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_broker_unit: "{{ nimbus_broker_unit | default('confluent-kafka') }}"
+  tasks:
+    - name: Broker unit active
+      ansible.builtin.command: systemctl is-active {{ nimbus_broker_unit }}
+      changed_when: false
+
+    - name: chrony active
+      ansible.builtin.command: systemctl is-active chrony
+      changed_when: false
+
+- name: Cluster URP
+  hosts: kafka-01
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: Under-replicated partitions
+      ansible.builtin.command: >
+        kafka-topics --bootstrap-server {{ nimbus_bootstrap }}
+        --describe --under-replicated-partitions
+      register: urp
+      changed_when: false
+
+    - name: Fail if URP listed
+      ansible.builtin.fail:
+        msg: "preflight: under-replicated partitions\n{{ urp.stdout }}"
+      when: urp.stdout | trim | length > 0

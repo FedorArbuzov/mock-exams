@@ -1,0 +1,47 @@
+---
+- name: Under-replicated / offline report
+  hosts: kafka-01
+  gather_facts: false
+  run_once: true
+  tasks:
+    - name: URP
+      ansible.builtin.command: >
+        kafka-topics --bootstrap-server {{ nimbus_bootstrap }}
+        --describe --under-replicated-partitions
+      register: urp
+      changed_when: false
+
+    - name: Show URP
+      ansible.builtin.debug:
+        var: urp.stdout_lines
+
+    - name: Unavailable
+      ansible.builtin.command: >
+        kafka-topics --bootstrap-server {{ nimbus_bootstrap }}
+        --describe --unavailable-partitions
+      register: off
+      changed_when: false
+      failed_when: false
+
+    - name: Show unavailable
+      ansible.builtin.debug:
+        var: off.stdout_lines
+
+- name: Start a dead broker unit only
+  hosts: kafka_broker
+  become: true
+  gather_facts: false
+  vars:
+    nimbus_broker_unit: "{{ nimbus_broker_unit | default('confluent-kafka') }}"
+  tasks:
+    - name: Unit state
+      ansible.builtin.command: systemctl is-active {{ nimbus_broker_unit }}
+      register: st
+      changed_when: false
+      failed_when: false
+
+    - name: Start if failed
+      ansible.builtin.service:
+        name: "{{ nimbus_broker_unit }}"
+        state: started
+      when: st.stdout != 'active'
